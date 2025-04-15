@@ -79,13 +79,13 @@ function HeroSlideshow() {
         onClick={prevSlide}
         className="absolute top-1/2 left-4 z-20 transform -translate-y-1/2 bg-blackPrimary opacity-75 text-white p-2 rounded-full duration-150 cursor-pointer hover:opacity-100"
       >
-        <FaChevronLeft size={24} />
+        <FaChevronLeft size={24} className="pr-0.5"/>
       </button>
       <button
         onClick={nextSlide}
         className="absolute top-1/2 right-4 z-20 transform -translate-y-1/2 bg-blackPrimary opacity-75 text-white p-2 rounded-full duration-150 cursor-pointer hover:opacity-100"
       >
-        <FaChevronRight size={24} />
+        <FaChevronRight size={24} className="pl-0.5" />
       </button>
 
       {/* Overlay content block with pause on hover */}

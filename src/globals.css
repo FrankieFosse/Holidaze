@@ -9,8 +9,10 @@ body {
 
 @theme {
     --color-blackPrimary: #1F1F1F;
+    --color-blackSecondary: #303030;
     --color-bluePrimary: #192A4A;
     --color-whitePrimary: #F5F5F5;
     --color-buttonPrimary: #3274ED;
     --color-buttonSecondary: #7FACFF;
+    --color-grayPrimary: #888888;
 }
