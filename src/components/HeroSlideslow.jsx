@@ -96,8 +96,8 @@ function HeroSlideshow() {
       >
         <h1 className="text-4xl font-bold">{slides[current].title}</h1>
         <p className="font-thin mt-2">{slides[current].description}</p>
-        <div className="flex items-center w-max py-4 px-6 bg-buttonPrimary hover:bg-buttonSecondary text-xl mt-4 duration-150 cursor-pointer">
-          <p className="mr-4">View more</p>
+        <div className="flex items-center w-max py-4 px-6 bg-buttonPrimary hover:bg-buttonSecondary text-xl mt-4 duration-150 cursor-pointer gap-4">
+          <p>View more</p>
           <FaLongArrowAltRight />
         </div>
       </div>
