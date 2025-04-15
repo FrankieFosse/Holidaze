@@ -40,7 +40,7 @@ function Navbar() {
       {/* Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-5 right-5 z-50 text-whitePrimary"
+        className="fixed top-5 right-5 z-50 text-whitePrimary cursor-pointer"
       >
         {isOpen ? <IoClose size={24} /> : <PiList size={24} />}
       </button>
