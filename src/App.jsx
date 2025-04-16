@@ -6,6 +6,7 @@ import Browse from './pages/Browse';
 import Bookings from './pages/Bookings';
 import Profile from './pages/Profile';
 import Layout from './components/Layout';
+import Create from './pages/Create';
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
         <Route path="/browse" element={<Browse />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/bookings" element={<Bookings />} />
+        <Route path="/create" element={<Create />} />
         </Route>
       </Routes>
     </Router>

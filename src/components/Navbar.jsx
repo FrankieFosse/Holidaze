@@ -5,10 +5,12 @@ import { MdExplore } from "react-icons/md";
 import { FiLogIn } from "react-icons/fi";
 import { PiList } from "react-icons/pi";
 import { IoClose } from "react-icons/io5";
+import { FaCirclePlus } from "react-icons/fa6";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isVenueManager, setIsVenueManager] = useState(false);
   const navRef = useRef(null);
   const location = useLocation();
 
@@ -16,7 +18,9 @@ function Navbar() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const email = localStorage.getItem("email");
+    const venueManager = localStorage.getItem("venueManager");
     setIsLoggedIn(!!(token && email));
+    setIsVenueManager(venueManager === "true");
   }, [location]);
 
   // Close navbar on route change
@@ -60,7 +64,7 @@ function Navbar() {
 
       {/* Overlay bar */}
       {isOpen && (
-        <div className="fixed top-0 left-0 w-full h-16 bg-blackPrimary z-30" />
+        <div id="overlayBar" className="fixed top-0 left-0 w-full h-16 bg-blackPrimary z-30" />
       )}
 
       {/* Navbar Content */}
@@ -71,6 +75,14 @@ function Navbar() {
         }`}
       >
         <div className="flex flex-col gap-4 p-4">
+            {isVenueManager && (
+            <Link
+                to="/create"
+                className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
+            >
+                <FaCirclePlus size={24} /> Create venue
+            </Link>
+            )}
           <Link
             to="/"
             className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
