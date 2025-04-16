@@ -17,12 +17,22 @@ async function getToken(email, password) {
       if (response.ok) {
         const data = await response.json();
   
-        const { name, accessToken, venueManager } = data.data;
-  
+        const { name, accessToken, venueManager, bio, avatar, banner } = data.data;
+
         localStorage.setItem("name", name);
         localStorage.setItem("email", email);
         localStorage.setItem("token", accessToken);
-        localStorage.setItem("venueManager", venueManager); // Optional: store for future use
+        localStorage.setItem("venueManager", venueManager);
+        localStorage.setItem("bio", bio);
+        
+        // Safely set avatar details
+        localStorage.setItem("avatar.url", avatar?.url || "");
+        localStorage.setItem("avatar.alt", avatar?.alt || "");
+        
+        // Safely set banner details
+        localStorage.setItem("banner.url", banner?.url || "");
+        localStorage.setItem("banner.alt", banner?.alt || "");
+        
   
         console.log("Logged in");
   
