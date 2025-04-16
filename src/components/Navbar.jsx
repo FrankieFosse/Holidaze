@@ -8,8 +8,16 @@ import { IoClose } from "react-icons/io5";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navRef = useRef(null);
   const location = useLocation();
+
+  // Check login status
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
+    setIsLoggedIn(!!(token && email));
+  }, [location]);
 
   // Close navbar on route change
   useEffect(() => {
@@ -35,6 +43,11 @@ function Navbar() {
     };
   }, [isOpen]);
 
+  const handleLogout = () => {
+    localStorage.clear();
+    setIsLoggedIn(false);
+  };
+
   return (
     <>
       {/* Toggle Button */}
@@ -47,47 +60,60 @@ function Navbar() {
 
       {/* Overlay bar */}
       {isOpen && (
-        <div className="fixed top-0 left-0 w-full h-16 bg-blackPrimary/75 z-30" />
+        <div className="fixed top-0 left-0 w-full h-16 bg-blackPrimary z-30" />
       )}
 
       {/* Navbar Content */}
       <div
         ref={navRef}
-        className={`fixed top-16 z-40 w-full bg-blackPrimary/90 text-whitePrimary overflow-hidden transition-all duration-500 ease-in-out ${
+        className={`fixed top-16 z-40 w-full bg-blackPrimary/95 text-whitePrimary overflow-hidden transition-all duration-500 ease-in-out ${
           isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="flex flex-col gap-4 p-4">
           <Link
             to="/"
-            className="p-4 border-blackSecondary border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary/50 hover:border-grayPrimary"
+            className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
           >
             <FaHome size={24} /> Home
           </Link>
           <Link
             to="/browse"
-            className="p-4 border-blackSecondary border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary/50 hover:border-grayPrimary"
+            className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
           >
             <MdExplore size={24} /> Browse
           </Link>
           <Link
             to="/bookings"
-            className="p-4 border-blackSecondary border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary/50 hover:border-grayPrimary"
+            className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
           >
             <FaCalendarAlt size={24} /> Bookings
           </Link>
           <Link
             to="/profile"
-            className="p-4 border-blackSecondary border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary/50 hover:border-grayPrimary"
+            className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
           >
             <FaUser size={24} /> Profile
           </Link>
-          <Link
-            to="/login"
-            className="p-4 border-blackSecondary border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary/50 hover:border-grayPrimary"
-          >
-            <FiLogIn size={24} /> Log in
-          </Link>
+
+          {isLoggedIn ? (
+            <button
+                onClick={() => {
+                    handleLogout();
+                    setIsOpen(false);
+                }}              
+                className="text-left w-full p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 cursor-pointer hover:bg-blackPrimary hover:border-grayPrimary"
+            >
+              <FiLogIn size={24} /> Log out
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
+            >
+              <FiLogIn size={24} /> Log in
+            </Link>
+          )}
         </div>
       </div>
     </>
