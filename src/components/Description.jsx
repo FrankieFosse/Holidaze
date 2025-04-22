@@ -33,8 +33,8 @@ const Description = ({ text, onExpandToggle }) => {
         </p>
       </div>
 
-      {/* Show Read more or Show less based on expanded state */}
-      {text.length > 120 && (
+      {/* Only show the "Read more" or "Show less" button if the text length is more than 150 characters */}
+      {text.length > 150 && (
         <button
           onClick={toggleExpanded}
           className="mt-1 text-xs bg-buttonPrimary px-4 py-1 cursor-pointer duration-150 hover:bg-buttonSecondary focus:outline-none"
