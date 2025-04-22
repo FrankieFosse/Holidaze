@@ -70,7 +70,7 @@ function Navbar() {
       {/* Navbar Content */}
       <div
         ref={navRef}
-        className={`fixed top-16 z-40 w-full bg-blackPrimary/95 text-whitePrimary overflow-hidden transition-all duration-500 ease-in-out ${
+        className={`fixed top-16 z-90 w-full bg-blackPrimary/95 text-whitePrimary overflow-hidden transition-all duration-500 ease-in-out ${
           isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
