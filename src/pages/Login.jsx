@@ -32,7 +32,6 @@ async function getToken(email, password) {
         // Safely set banner details
         localStorage.setItem("banner.url", banner?.url || "");
         localStorage.setItem("banner.alt", banner?.alt || "");
-        
   
         console.log("Logged in");
   
