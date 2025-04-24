@@ -1,94 +1,9 @@
-import useAPI from "../hooks/useAPI";
-import { useState, useEffect } from "react";
-import { BsSearch } from "react-icons/bs";
-import { FaWifi } from "react-icons/fa";
-import { MdLocalParking, MdFreeBreakfast, MdOutlinePets } from "react-icons/md";
-import VenueCard from "../components/VenueCard";
-
-const Browse = () => {
-  const [venues, setVenues] = useState([]);
-  const [filteredVenues, setFilteredVenues] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(""); // 🔍 Add search term state
-  const [filters, setFilters] = useState({
-    wifi: false,
-    parking: false,
-    breakfast: false,
-    pets: false,
-  });
-
-  const { data, loading, error } = useAPI("https://v2.api.noroff.dev/holidaze/venues");
-  const [sortBy, setSortBy] = useState("date"); // 🆕 Sort option
+function Filter() {
 
 
-  useEffect(() => {
-    if (data) {
-      setVenues(data.data);
-      setFilteredVenues(data.data);
-    }
-  }, [data]);
-
-  // Apply filters + search
-  useEffect(() => {
-    let filtered = [...venues];
-
-    if (filters.wifi) {
-      filtered = filtered.filter((venue) => venue.meta?.wifi === true);
-    }
-    if (filters.parking) {
-      filtered = filtered.filter((venue) => venue.meta?.parking === true);
-    }
-    if (filters.breakfast) {
-      filtered = filtered.filter((venue) => venue.meta?.breakfast === true);
-    }
-    if (filters.pets) {
-      filtered = filtered.filter((venue) => venue.meta?.pets === true);
-    }
-
-    if (searchTerm.trim()) {
-      const term = searchTerm.toLowerCase();
-      filtered = filtered.filter((venue) =>
-        venue.name?.toLowerCase().includes(term) ||
-        venue.description?.toLowerCase().includes(term) ||
-        venue.location?.address?.toLowerCase().includes(term)
-      );
-    }
-
-        // Sorting logic
-    if (sortBy === "name") {
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortBy === "date") {
-        filtered.sort((a, b) => new Date(b.created) - new Date(a.created));
-    } else if (sortBy === "rating") {
-        filtered.sort((a, b) => b.rating - a.rating);
-    }
-  
-
-    setFilteredVenues(filtered);
-  }, [filters, searchTerm, venues, sortBy]);
-
-  const toggleFilter = (key) => {
-    setFilters((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error</p>;
-
-  return (
-    <>
-      <div className="pt-20 flex flex-row items-center justify-center mb-8">
-        <div className="h-8 w-8 bg-whitePrimary flex justify-center items-center">
-          <BsSearch className="text-grayPrimary" />
-        </div>
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)} // 🔁 Track input
-          className="bg-whitePrimary text-blackPrimary w-3/5 p-1 outline-none h-8"
-        />
-      </div>
-
-      <div className="flex justify-center mb-6">
+    return (
+        <>
+        <div className="flex justify-center mb-6">
         <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
@@ -175,17 +90,8 @@ const Browse = () => {
           </span>
         </div>
       </div>
+      </>
+    )
+}
 
-      {/* Venue list */}
-    <ul>
-        {filteredVenues.map((venue) => (
-            <VenueCard key={venue.id} venue={venue} />
-        ))}
-    </ul>
-
-    </>
-  );
-};
-
-export default Browse;
-
+export default Filter;
