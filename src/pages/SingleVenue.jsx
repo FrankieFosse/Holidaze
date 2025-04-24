@@ -108,9 +108,9 @@ const SingleVenue = () => {
 
         {/* Media Section: Displaying all images only if media exists */}
         {venue.media && venue.media.length > 0 && (
-        <div className="border-1 border-blackSecondary mx-2 my-4">
+        <div className="border-1 border-blackSecondary mx-2 my-4 flex justify-center items-center flex-col">
             <h2>Media</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 justify-center items-center self-center">
             {venue.media.map((mediaItem, index) => (
                 <div key={index} className="overflow-hidden cursor-pointer" onClick={() => handleImageClick(index)}>
                 <img

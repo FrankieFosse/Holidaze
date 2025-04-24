@@ -65,7 +65,7 @@ const Login = () => {
       setErrorMsg(result.message);
     } else {
       setErrorMsg("");
-      navigate("/");
+      navigate("/", { state: { message: "You are now logged in" } });
     }
   };
 

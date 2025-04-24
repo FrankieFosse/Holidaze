@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import ProfileEditor from "../components/ProfileEditor";
+import VenuesByProfile from "../components/VenuesByProfile";
 
 const Profile = () => {
   // State to manage the visibility of the ProfileEditor
@@ -56,6 +57,7 @@ const Profile = () => {
       {/* Venues Section */}
       <div className="mt-10 px-4">
         <h2 className="text-2xl font-semibold">Venues</h2>
+        <VenuesByProfile />
       </div>
     </div>
   );

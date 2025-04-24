@@ -1,4 +1,7 @@
-function Filter() {
+import { FaWifi } from "react-icons/fa";
+import { MdLocalParking, MdFreeBreakfast, MdOutlinePets } from "react-icons/md";
+
+function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
 
 
     return (
@@ -12,6 +15,8 @@ function Filter() {
             <option value="date">Latest</option>
             <option value="name">Name (A-Z)</option>
             <option value="rating">Highest Rated</option>
+            <option value="priceHighToLow">Highest Price</option>
+            <option value="priceLowToHigh">Lowest Price</option>
         </select>
         </div>
 

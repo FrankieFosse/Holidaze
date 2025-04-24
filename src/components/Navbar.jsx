@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { FaHome, FaCalendarAlt, FaUser } from "react-icons/fa";
 import { MdExplore } from "react-icons/md";
 import { FiLogIn } from "react-icons/fi";
@@ -47,10 +47,15 @@ function Navbar() {
     };
   }, [isOpen]);
 
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     localStorage.clear();
     setIsLoggedIn(false);
+    setIsOpen(false);
+    navigate("/", { state: { message: "You are now logged out" } });
   };
+  
 
   return (
     <>
@@ -95,18 +100,23 @@ function Navbar() {
           >
             <MdExplore size={24} /> Browse
           </Link>
-          <Link
-            to="/bookings"
-            className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
-          >
-            <FaCalendarAlt size={24} /> Bookings
-          </Link>
-          <Link
-            to="/profile"
-            className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
-          >
-            <FaUser size={24} /> Profile
-          </Link>
+
+          {isLoggedIn && (
+            <>
+              <Link
+                to="/bookings"
+                className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
+              >
+                <FaCalendarAlt size={24} /> Bookings
+              </Link>
+              <Link
+                to="/profile"
+                className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
+              >
+                <FaUser size={24} /> Profile
+              </Link>
+            </>
+          )}
 
           {isLoggedIn ? (
             <button
