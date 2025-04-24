@@ -8,6 +8,7 @@ function ProfileEditor({ onCancel }) {
   const [bannerUrl, setBannerUrl] = useState("");
   const [bannerAlt, setBannerAlt] = useState("");
   const [venueManager, setVenueManager] = useState(false);
+  const [pendingVenueManager, setPendingVenueManager] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -16,8 +17,11 @@ function ProfileEditor({ onCancel }) {
     setAvatarAlt(localStorage.getItem("avatar.alt") || "");
     setBannerUrl(localStorage.getItem("banner.url") || "");
     setBannerAlt(localStorage.getItem("banner.alt") || "");
-    setVenueManager(localStorage.getItem("venueManager") === "true");
+    const isManager = localStorage.getItem("venueManager") === "true";
+    setVenueManager(isManager);
+    setPendingVenueManager(isManager); // ← Set initial checkbox value
   }, []);
+  
 
   async function updateProfile(event) {
     event.preventDefault();
@@ -41,8 +45,9 @@ function ProfileEditor({ onCancel }) {
           url: bannerUrl,
           alt: bannerAlt,
         },
-        venueManager,
+        venueManager: pendingVenueManager, // ← use pending value
       };
+      
 
       const response = await fetch(`https://v2.api.noroff.dev/holidaze/profiles/${name}`, {
         method: "PUT",
@@ -66,7 +71,9 @@ function ProfileEditor({ onCancel }) {
       localStorage.setItem("avatar.alt", avatarAlt);
       localStorage.setItem("banner.url", bannerUrl);
       localStorage.setItem("banner.alt", bannerAlt);
-      localStorage.setItem("venueManager", venueManager.toString());
+      setVenueManager(pendingVenueManager); // update the actual state
+      localStorage.setItem("venueManager", pendingVenueManager.toString());
+
 
       alert("Profile updated!");
       location.reload();
@@ -133,8 +140,8 @@ function ProfileEditor({ onCancel }) {
               <input
                 id="checkbox"
                 type="checkbox"
-                checked={venueManager}
-                onChange={(e) => setVenueManager(e.target.checked)}
+                checked={pendingVenueManager}
+                onChange={(e) => setPendingVenueManager(e.target.checked)}
                 className="h-6 w-6"
               />
             </div>
