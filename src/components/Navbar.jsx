@@ -75,7 +75,7 @@ function Navbar() {
       {/* Navbar Content */}
       <div
         ref={navRef}
-        className={`fixed top-16 z-90 w-full bg-blackPrimary/95 text-whitePrimary overflow-hidden transition-all duration-500 ease-in-out ${
+        className={`fixed top-16 z-90 w-full bg-blackPrimary/95 text-whitePrimary overflow-hidden text-sm transition-all duration-500 ease-in-out ${
           isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
@@ -85,20 +85,20 @@ function Navbar() {
                 to="/create"
                 className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
             >
-                <FaCirclePlus size={24} /> Create venue
+                <FaCirclePlus size={20} /> Create venue
             </Link>
             )}
           <Link
             to="/"
             className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
           >
-            <FaHome size={24} /> Home
+            <FaHome size={20} /> Home
           </Link>
           <Link
             to="/browse"
             className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
           >
-            <MdExplore size={24} /> Browse
+            <MdExplore size={20} /> Browse
           </Link>
 
           {isLoggedIn && (
@@ -107,13 +107,13 @@ function Navbar() {
                 to="/bookings"
                 className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
               >
-                <FaCalendarAlt size={24} /> Bookings
+                <FaCalendarAlt size={20} /> Bookings
               </Link>
               <Link
                 to="/profile"
                 className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
               >
-                <FaUser size={24} /> Profile
+                <FaUser size={20} /> Profile
               </Link>
             </>
           )}
