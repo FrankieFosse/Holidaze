@@ -6,11 +6,14 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
 
     return (
         <>
-        <div className="flex justify-center mb-6">
+        <div className="border-blackSecondary border-1 p-4 m-2">
+          <div className="flex flex-row justify-center items-center">
+        <div className="flex flex-row items-center justify-center mb-6 gap-2 border-1 border-blackSecondary rounded w-max pl-2">
+          <p>Sort by</p>
         <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-whitePrimary text-blackPrimary p-2 border border-gray-300 rounded outline-none"
+            className="bg-whitePrimary text-blackPrimary pb-2 pt-1.5 px-2 h-8 border rounded outline-none text-sm"
         >
             <option value="date">Latest</option>
             <option value="name">Name (A-Z)</option>
@@ -18,6 +21,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
             <option value="priceHighToLow">Highest Price</option>
             <option value="priceLowToHigh">Lowest Price</option>
         </select>
+        </div>
         </div>
 
 
@@ -94,6 +98,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
             Pets allowed
           </span>
         </div>
+      </div>
       </div>
       </>
     )
