@@ -60,7 +60,7 @@ const SingleVenue = () => {
     <>
       <SingleVenueHero media={venue.media} expanded={expanded} />
 
-      <div className="absolute z-30 text-white p-4 bottom-24 w-full overflow-hidden flex flex-row justify-between items-center">
+      <div className="absolute z-30 text-white p-4 bottom-24 w-full overflow-hidden flex flex-row justify-between items-center gap-4">
         <div className="text-left w-3/5">
           <h1 className="text-xl font-bold break-words overflow-hidden text-ellipsis">{venue.name}</h1>
           <Description text={venue.description} onExpandToggle={handleExpandToggle} />

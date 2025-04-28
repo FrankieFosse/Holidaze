@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { BsSearch } from "react-icons/bs";
 import VenueCard from "../components/VenueCard";
 import Filter from "../components/Filter"; // ✅ Import the Filter component
+import Pagination from "../components/Pagination";
+import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 
 const Browse = () => {
   const [venues, setVenues] = useState([]); // Stores all venues
@@ -17,8 +19,12 @@ const Browse = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [showFilters, setShowFilters] = useState(false);
+
   const [page, setPage] = useState(1); // Track current page
   const pageSize = 50; // Number of venues per page
+  const totalPages = Math.ceil(filteredVenues.length / pageSize);
+
 
 
   // Function to fetch all pages of venues from the API
@@ -109,8 +115,14 @@ const Browse = () => {
   return (
     <>
       {/* Search bar */}
-      <div className="pt-20 flex flex-row items-center justify-center mb-8">
-        <div className="h-8 w-8 bg-whitePrimary flex justify-center items-center">
+      <div className="pt-20 flex flex-row items-center justify-center mb-2">
+      <div
+          onClick={() => setShowFilters((prev) => !prev)}
+          className="bg-blackSecondary h-8 w-8 flex justify-center items-center rounded-full mr-6 duration-150 cursor-pointer border-1 border-blackSecondary hover:border-grayPrimary"
+        >
+          <HiOutlineAdjustmentsHorizontal />
+      </div>
+        <div className="h-8 w-8 bg-whitePrimary flex justify-center items-center rounded-l">
           <BsSearch className="text-grayPrimary" />
         </div>
         <input
@@ -118,17 +130,22 @@ const Browse = () => {
           placeholder="Search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="bg-whitePrimary text-blackPrimary w-3/5 p-1 outline-none h-8"
+          className="bg-whitePrimary text-blackPrimary w-3/5 p-1 outline-none h-8 rounded-r"
         />
       </div>
 
-      {/* Filters and sorting */}
+    {/* Filters and sorting */}
+    {showFilters && (
       <Filter
         sortBy={sortBy}
         setSortBy={setSortBy}
         filters={filters}
         toggleFilter={toggleFilter}
       />
+    )}
+
+
+      <Pagination page={page} totalPages={totalPages} setPage={setPage} />
 
       {/* Venue list */}
       <ul>
@@ -139,20 +156,8 @@ const Browse = () => {
           ))}
       </ul>
 
-      <div className="pagination-controls">
-        <button
-          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          disabled={page === 1}
-        >
-          Previous
-        </button>
-        <button
-          onClick={() => setPage((prev) => prev + 1)}
-          disabled={filteredVenues.length <= page * pageSize}
-        >
-          Next
-        </button>
-      </div>
+      <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+
 
 
     </>
