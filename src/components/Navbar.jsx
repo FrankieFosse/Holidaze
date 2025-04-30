@@ -75,7 +75,7 @@ function Navbar() {
       {/* Navbar Content */}
       <div
         ref={navRef}
-        className={`fixed top-16 z-90 w-full bg-blackPrimary/95 text-whitePrimary overflow-hidden text-sm transition-all duration-500 ease-in-out ${
+        className={`fixed top-16 z-90 w-full h-full bg-blackPrimary/90 backdrop-blur-xs text-whitePrimary overflow-hidden text-sm transition-all duration-500 ease-in-out ${
           isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
@@ -83,20 +83,20 @@ function Navbar() {
             {isVenueManager && (
             <Link
                 to="/create"
-                className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
+                className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-grayPrimary"
             >
                 <FaCirclePlus size={20} /> Create venue
             </Link>
             )}
           <Link
             to="/"
-            className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
+            className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-grayPrimary"
           >
             <FaHome size={20} /> Home
           </Link>
           <Link
             to="/browse"
-            className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
+            className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-grayPrimary"
           >
             <MdExplore size={20} /> Browse
           </Link>
@@ -105,13 +105,13 @@ function Navbar() {
             <>
               <Link
                 to="/bookings"
-                className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
+                className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-grayPrimary"
               >
                 <FaCalendarAlt size={20} /> Bookings
               </Link>
               <Link
                 to="/profile"
-                className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
+                className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-grayPrimary"
               >
                 <FaUser size={20} /> Profile
               </Link>
@@ -124,16 +124,16 @@ function Navbar() {
                     handleLogout();
                     setIsOpen(false);
                 }}              
-                className="text-left w-full p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 cursor-pointer hover:bg-blackPrimary hover:border-grayPrimary"
+                className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-grayPrimary cursor-pointer"
             >
-              <FiLogIn size={24} /> Log out
+              <FiLogIn size={20} /> Log out
             </button>
           ) : (
             <Link
               to="/login"
-              className="p-4 border-blackSecondary bg-blackPrimary/90 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-blackPrimary hover:border-grayPrimary"
+              className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-grayPrimary"
             >
-              <FiLogIn size={24} /> Log in
+              <FiLogIn size={20} /> Log in
             </Link>
           )}
         </div>
