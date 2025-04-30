@@ -115,7 +115,7 @@ const Browse = () => {
   return (
     <>
       {/* Search bar */}
-      <div className="pt-20 flex flex-row items-center justify-center mb-2">
+      <div className="pt-16 flex flex-row items-center justify-center mb-2">
       <div
           onClick={() => setShowFilters((prev) => !prev)}
           className="bg-blackSecondary h-8 w-8 flex justify-center items-center rounded-full mr-6 duration-150 cursor-pointer border-1 border-blackSecondary hover:border-grayPrimary"

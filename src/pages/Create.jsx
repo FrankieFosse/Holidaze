@@ -173,7 +173,7 @@ function Create({ handleVenueCreated }) {
   };
 
   return (
-    <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-16 text-xs">
+    <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-8 text-xs">
       <StatusMessage message={statusMessage} type={statusType} />
       <h1 className="text-xl mb-4">Create New Venue</h1>
 
