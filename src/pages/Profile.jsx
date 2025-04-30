@@ -1,15 +1,24 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import ProfileEditor from "../components/ProfileEditor";
 import VenuesByProfile from "../components/VenuesByProfile";
 
 const Profile = () => {
-  // State to manage the visibility of the ProfileEditor
   const [isEditorVisible, setIsEditorVisible] = useState(false);
+  const editorRef = useRef(null);
 
   const toggleEditorVisibility = () => {
     setIsEditorVisible((prevState) => !prevState);
   };
+
+  useEffect(() => {
+    if (isEditorVisible && editorRef.current) {
+      // Delay slightly to allow transition
+      setTimeout(() => {
+        editorRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+      }, 300); // matches the transition duration
+    }
+  }, [isEditorVisible]);
 
   return (
     <div>
@@ -21,7 +30,7 @@ const Profile = () => {
         />
       </div>
 
-      {/* Profile Details - on top of banner */}
+      {/* Profile Details */}
       <div className="relative z-10 mt-20 mx-4 h-64 bg-blackPrimary/25 border border-blackSecondary p-4 flex flex-row">
         <div className="w-2/4 flex justify-center items-center">
           <img
@@ -46,8 +55,9 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Profile Editor - Slide in/out effect */}
+      {/* Profile Editor */}
       <div
+        ref={editorRef}
         className={`transition-all duration-500 ${isEditorVisible ? "max-h-screen" : "max-h-0"} overflow-hidden`}
       >
         <ProfileEditor onCancel={toggleEditorVisibility} />
