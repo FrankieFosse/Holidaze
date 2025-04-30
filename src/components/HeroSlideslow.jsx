@@ -77,26 +77,26 @@ function HeroSlideshow() {
       {/* Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute top-1/2 left-4 z-20 transform -translate-y-1/2 bg-blackPrimary opacity-75 text-white p-2 rounded-full duration-150 cursor-pointer hover:opacity-100"
+        className="absolute top-1/2 left-2 z-20 transform -translate-y-1/2 bg-blackPrimary/25 p-2 rounded-full duration-150 cursor-pointer hover:bg-blackPrimary/75"
       >
-        <FaChevronLeft size={24} className="pr-0.5"/>
+        <FaChevronLeft size={20} className="pr-0.5"/>
       </button>
       <button
         onClick={nextSlide}
-        className="absolute top-1/2 right-4 z-20 transform -translate-y-1/2 bg-blackPrimary opacity-75 text-white p-2 rounded-full duration-150 cursor-pointer hover:opacity-100"
+        className="absolute top-1/2 right-2 z-20 transform -translate-y-1/2 bg-blackPrimary/25 p-2 rounded-full duration-150 cursor-pointer hover:bg-blackPrimary/75"
       >
-        <FaChevronRight size={24} className="pl-0.5" />
+        <FaChevronRight size={20} className="pl-0.5" />
       </button>
 
       {/* Overlay content block with pause on hover */}
       <div
-        className="absolute bottom-1/8 right-8 w-2/4 text-white z-20 text-left px-4"
+        className="absolute bottom-1/8 right-4 w-2/4 z-20 text-left"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
-        <h1 className="text-4xl font-bold">{slides[current].title}</h1>
-        <p className="font-thin mt-2">{slides[current].description}</p>
-        <div className="flex items-center w-max py-4 px-6 bg-buttonPrimary hover:bg-buttonSecondary text-xl mt-4 duration-150 cursor-pointer gap-4">
+        <h1 className="text-xl font-bold">{slides[current].title}</h1>
+        <p className="font-thin text-xs mt-2">{slides[current].description}</p>
+        <div className="flex items-center w-max py-2 px-4 bg-buttonPrimary hover:bg-buttonSecondary text-md mt-4 duration-150 cursor-pointer gap-4">
           <p>View more</p>
           <FaLongArrowAltRight />
         </div>

@@ -58,14 +58,14 @@ const Profile = () => {
       {/* Profile Editor */}
       <div
         ref={editorRef}
-        className={`transition-all duration-500 ${isEditorVisible ? "max-h-screen" : "max-h-0"} overflow-hidden`}
+        className={`transition-all duration-500 ${isEditorVisible ? "max-h-full" : "max-h-0"} overflow-hidden`}
       >
         <ProfileEditor onCancel={toggleEditorVisibility} />
       </div>
 
       {/* Venues Section */}
       <div className="mt-10">
-        <h2 className="text-2xl font-semibold">Venues</h2>
+        <h2 className="text-lg font-semibold">Venues</h2>
         <VenuesByProfile />
       </div>
     </div>
