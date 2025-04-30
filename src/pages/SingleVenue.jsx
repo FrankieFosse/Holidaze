@@ -60,9 +60,16 @@ const SingleVenue = () => {
     <>
       <SingleVenueHero media={venue.media} expanded={expanded} />
 
-      <div className="absolute z-30 text-white p-4 bottom-24 w-full overflow-hidden flex flex-row justify-between items-center gap-4">
+      <div className="absolute z-30 text-white p-4 bottom-4 w-full overflow-hidden flex flex-row justify-between items-center gap-4">
         <div className="text-left w-3/5">
-          <h1 className="text-xl font-bold break-words overflow-hidden text-ellipsis">{venue.name}</h1>
+        <h2
+          className={`font-bold break-words overflow-hidden text-ellipsis ${
+            venue.name.length > 100 ? "text-sm" : "text-xl"
+          }`}
+        >
+          {venue.name}
+        </h2>
+
           <Description text={venue.description} onExpandToggle={handleExpandToggle} />
         </div>
         <div>
@@ -82,8 +89,8 @@ const SingleVenue = () => {
 
       <div className="border-1 border-blackSecondary mx-2 my-4">
         <div className="flex flex-row justify-evenly items-center my-4 mx-2 gap-4">
-          <p>{venue.price} NOK / night</p>
-          <button className="flex items-center w-max py-2 px-4 bg-buttonPrimary hover:bg-buttonSecondary text-xl duration-150 cursor-pointer gap-4">
+          <p className="text-sm">{venue.price} NOK / night</p>
+          <button className="flex items-center w-max py-2 px-2 bg-buttonPrimary hover:bg-buttonSecondary text-md duration-150 cursor-pointer gap-2">
             Book now <FaLongArrowAltRight />
           </button>
         </div>
@@ -138,7 +145,7 @@ const SingleVenue = () => {
 
       <div className="border-1 border-blackSecondary mx-2 p-8 my-8">
         <h2>Owner</h2>
-        <div className="flex flex-row items-center justify-between mx-8">
+        <div className="flex flex-row items-center justify-between gap-4">
           <img
             src={venue.owner.avatar.url}
             className="rounded-full border-1 border-grayPrimary max-h-24 min-h-24 max-w-24 min-w-24 object-cover"

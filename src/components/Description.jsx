@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Description = ({ text, onExpandToggle }) => {
   const [expanded, setExpanded] = useState(false);
   const contentRef = useRef(null);
+  const isLongText = text.length > 200;
 
   const toggleExpanded = () => {
     setExpanded((prev) => !prev);
@@ -11,35 +12,41 @@ const Description = ({ text, onExpandToggle }) => {
 
   useEffect(() => {
     if (contentRef.current) {
-      // Adjust max-height based on whether the text is expanded
-      contentRef.current.style.maxHeight = expanded
-        ? `${contentRef.current.scrollHeight}px` // Expand to the content height
-        : "50px"; // Collapsed height (approx. 2 lines)
+      contentRef.current.style.maxHeight =
+        expanded && isLongText
+          ? "150px"
+          : expanded
+          ? `${contentRef.current.scrollHeight}px`
+          : "50px";
     }
-  }, [expanded]); // Re-run whenever `expanded` changes
+  }, [expanded, isLongText]);
 
   return (
     <div className="overflow-hidden transition-all duration-1000 ease-in-out">
       <div
         ref={contentRef}
-        className="transition-all duration-1000 ease-in-out overflow-hidden"
+        className={`transition-all duration-1000 ease-in-out break-words text-ellipsis ${
+          expanded && isLongText ? "overflow-y-auto" : "overflow-hidden"
+        }`}
         style={{
-          maxHeight: expanded ? `${contentRef.current?.scrollHeight}px` : "50px", // Dynamically adjust max-height
+          maxHeight:
+            expanded && isLongText
+              ? "150px"
+              : expanded
+              ? `${contentRef.current?.scrollHeight}px`
+              : "50px",
         }}
       >
-        {/* Conditionally display full text or preview text */}
-        <p className="text-xs font-thin">
-          {expanded ? text : text} {/* Show full text if expanded, preview text if not */}
-        </p>
+        <p className="text-xs font-thin whitespace-pre-wrap">{text}</p>
       </div>
 
-      {/* Only show the "Read more" or "Show less" button if the text length is more than 150 characters */}
+      {/* Show the toggle button if the text is long enough to need expansion */}
       {text.length > 150 && (
         <button
           onClick={toggleExpanded}
           className="mt-1 text-xs bg-buttonPrimary px-4 py-1 cursor-pointer duration-150 hover:bg-buttonSecondary focus:outline-none"
         >
-          {expanded ? "Show less" : "Read more"} {/* Toggle button text */}
+          {expanded ? "Show less" : "Read more"}
         </button>
       )}
     </div>

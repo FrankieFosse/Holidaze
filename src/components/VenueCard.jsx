@@ -50,14 +50,14 @@ const VenueCard = ({ venue }) => {
 
       {/* Card content */}
       {!isLoading && (
-        <div className="bg-blackPrimary/90 text-whitePrimary max-h-24 w-full px-4 py-4 overflow-hidden flex flex-row items-center gap-4 z-10">
-          <div className="w-2/3 max-h-16 overflow-hidden text-left">
-            <p className={`font-bold break-words ${venue.name.length > 20 ? "text-xs" : "text-lg"}`}>
-              {venue.name}
-            </p>
+        <div className="bg-blackPrimary/90 text-whitePrimary max-h-24 w-full overflow-hidden px-4 py-4 flex flex-row items-center gap-4 z-10">
+          <div className="w-2/3 max-h-16 text-left">
+          <p className={`font-bold break-words ${venue.name.length > 8 ? "text-sm" : "text-md"}`}>
+            {venue.name.length > 20 ? `${venue.name.slice(0, 20)}...` : venue.name}
+          </p>
             <p className="font-thin text-xs break-words text-ellipsis overflow-hidden">
-              {venue.description.length > 80
-                ? `${venue.description.slice(0, 80)}...`
+              {venue.description.length > 30
+                ? `${venue.description.slice(0, 30)}...`
                 : venue.description}
             </p>
           </div>

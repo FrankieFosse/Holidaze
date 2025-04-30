@@ -26,7 +26,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
 
 
       {/* Filter buttons (unchanged) */}
-      <div className="text-whitePrimary text-2xl flex flex-row items-center justify-center gap-8">
+      <div className="text-whitePrimary text-2xl flex flex-row items-center justify-center gap-4">
         {/* Wifi */}
         <div className="relative group">
           <button
@@ -40,7 +40,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
           >
             <FaWifi />
           </button>
-          <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-whitePrimary bg-blackPrimary rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-[500ms] pointer-events-none">
+          <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-whitePrimary bg-buttonPrimary rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-[500ms] pointer-events-none">
             Wifi included
           </span>
         </div>
@@ -58,7 +58,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
           >
             <MdLocalParking />
           </button>
-          <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-whitePrimary bg-blackPrimary rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-[500ms] pointer-events-none">
+          <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-whitePrimary bg-buttonPrimary rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-[500ms] pointer-events-none">
             Parking included
           </span>
         </div>
@@ -76,7 +76,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
           >
             <MdFreeBreakfast />
           </button>
-          <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-whitePrimary bg-blackPrimary rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-[500ms] pointer-events-none">
+          <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-whitePrimary bg-buttonPrimary rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-[500ms] pointer-events-none">
             Breakfast included
           </span>
         </div>
@@ -94,7 +94,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
           >
             <MdOutlinePets />
           </button>
-          <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-whitePrimary bg-blackPrimary rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-[500ms] pointer-events-none">
+          <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-whitePrimary bg-buttonPrimary rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-[500ms] pointer-events-none">
             Pets allowed
           </span>
         </div>
