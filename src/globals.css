@@ -9,6 +9,10 @@ body {
     color: #F5F5F5;
 }
 
+input, textarea {
+    outline: none;
+}
+
 @theme {
     --color-blackPrimary: #1F1F1F;
     --color-blackSecondary: #303030;

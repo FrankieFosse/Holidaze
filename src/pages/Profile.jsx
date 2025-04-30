@@ -13,7 +13,6 @@ const Profile = () => {
 
   return (
     <div>
-      {/* Banner Image as Background */}
       <div className="absolute top-0 left-0 w-full z-0">
         <img
           src={localStorage.getItem("banner.url")}
@@ -28,7 +27,7 @@ const Profile = () => {
           <img
             src={localStorage.getItem("avatar.url")}
             alt={localStorage.getItem("avatar.alt") || "User avatar"}
-            className="rounded-full h-36 w-36 object-cover border-1 border-blackSecondary"
+            className="rounded-full min-h-24 min-w-24 max-h-36 max-w-36 object-cover border-1 border-blackSecondary"
           />
         </div>
         <div className="w-2/4 flex flex-col justify-between items-center">
@@ -55,7 +54,7 @@ const Profile = () => {
       </div>
 
       {/* Venues Section */}
-      <div className="mt-10 px-4">
+      <div className="mt-10">
         <h2 className="text-2xl font-semibold">Venues</h2>
         <VenuesByProfile />
       </div>

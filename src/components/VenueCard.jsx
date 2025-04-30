@@ -36,7 +36,7 @@ const VenueCard = ({ venue }) => {
   return (
     <li
       onClick={handleClick}
-      className="relative bg-cover bg-center max-w-screen min-h-96 max-h-96 flex flex-col justify-end items-center m-8 duration-150 cursor-pointer hover:scale-102"
+      className="relative bg-cover bg-center max-w-screen min-h-96 max-h-96 flex flex-col justify-end items-center m-4 duration-150 cursor-pointer hover:scale-102"
       style={{
         backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
       }}

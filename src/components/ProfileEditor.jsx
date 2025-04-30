@@ -19,9 +19,8 @@ function ProfileEditor({ onCancel }) {
     setBannerAlt(localStorage.getItem("banner.alt") || "");
     const isManager = localStorage.getItem("venueManager") === "true";
     setVenueManager(isManager);
-    setPendingVenueManager(isManager); // ← Set initial checkbox value
+    setPendingVenueManager(isManager);
   }, []);
-  
 
   async function updateProfile(event) {
     event.preventDefault();
@@ -45,9 +44,8 @@ function ProfileEditor({ onCancel }) {
           url: bannerUrl,
           alt: bannerAlt,
         },
-        venueManager: pendingVenueManager, // ← use pending value
+        venueManager: pendingVenueManager,
       };
-      
 
       const response = await fetch(`https://v2.api.noroff.dev/holidaze/profiles/${name}`, {
         method: "PUT",
@@ -65,15 +63,13 @@ function ProfileEditor({ onCancel }) {
         throw new Error(data.errors?.[0]?.message || "Profile update failed.");
       }
 
-      // Save to localStorage
       localStorage.setItem("bio", bio);
       localStorage.setItem("avatar.url", avatarUrl);
       localStorage.setItem("avatar.alt", avatarAlt);
       localStorage.setItem("banner.url", bannerUrl);
       localStorage.setItem("banner.alt", bannerAlt);
-      setVenueManager(pendingVenueManager); // update the actual state
+      setVenueManager(pendingVenueManager);
       localStorage.setItem("venueManager", pendingVenueManager.toString());
-
 
       alert("Profile updated!");
       location.reload();
@@ -87,44 +83,62 @@ function ProfileEditor({ onCancel }) {
 
   return (
     <div className="bg-blackSecondary text-whitePrimary w-full p-10 relative top-5">
-      <form onSubmit={updateProfile} className="flex flex-col gap-4 items-center">
-        <textarea
-          placeholder="Bio (max 160 characters)"
-          className="bg-whitePrimary text-blackPrimary w-full min-h-24 p-2 outline-none"
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
-          maxLength={160}
-        />
+      <form onSubmit={updateProfile} className="flex flex-col gap-4 items-center text-xs">
 
-        <input
-          type="text"
-          placeholder="Avatar URL"
-          className="bg-whitePrimary text-blackPrimary w-full p-2 outline-none"
-          value={avatarUrl}
-          onChange={(e) => setAvatarUrl(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Avatar alt text"
-          className="bg-whitePrimary text-blackPrimary w-full p-2 outline-none"
-          value={avatarAlt}
-          onChange={(e) => setAvatarAlt(e.target.value)}
-        />
+        <div className="w-full flex flex-col gap-1">
+          <label htmlFor="bio">Bio (max 160 characters)</label>
+          <textarea
+            id="bio"
+            className="bg-whitePrimary text-blackPrimary w-full min-h-16 p-2 outline-none"
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            maxLength={160}
+          />
+        </div>
 
-        <input
-          type="text"
-          placeholder="Banner URL"
-          className="bg-whitePrimary text-blackPrimary w-full p-2 outline-none"
-          value={bannerUrl}
-          onChange={(e) => setBannerUrl(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Banner alt text"
-          className="bg-whitePrimary text-blackPrimary w-full p-2 outline-none"
-          value={bannerAlt}
-          onChange={(e) => setBannerAlt(e.target.value)}
-        />
+        <div className="w-full flex flex-col gap-1">
+          <label htmlFor="avatarUrl">Avatar URL</label>
+          <input
+            id="avatarUrl"
+            type="text"
+            className="bg-whitePrimary text-blackPrimary w-full p-2 outline-none"
+            value={avatarUrl}
+            onChange={(e) => setAvatarUrl(e.target.value)}
+          />
+        </div>
+
+        <div className="w-full flex flex-col gap-1">
+          <label htmlFor="avatarAlt">Avatar Alt Text</label>
+          <input
+            id="avatarAlt"
+            type="text"
+            className="bg-whitePrimary text-blackPrimary w-full p-2 outline-none"
+            value={avatarAlt}
+            onChange={(e) => setAvatarAlt(e.target.value)}
+          />
+        </div>
+
+        <div className="w-full flex flex-col gap-1 mt-4">
+          <label htmlFor="bannerUrl">Banner URL</label>
+          <input
+            id="bannerUrl"
+            type="text"
+            className="bg-whitePrimary text-blackPrimary w-full p-2 outline-none"
+            value={bannerUrl}
+            onChange={(e) => setBannerUrl(e.target.value)}
+          />
+        </div>
+
+        <div className="w-full flex flex-col gap-1">
+          <label htmlFor="bannerAlt">Banner Alt Text</label>
+          <input
+            id="bannerAlt"
+            type="text"
+            className="bg-whitePrimary text-blackPrimary w-full p-2 outline-none"
+            value={bannerAlt}
+            onChange={(e) => setBannerAlt(e.target.value)}
+          />
+        </div>
 
         {!venueManager && (
           <div className="w-full border border-grayPrimary p-4 flex flex-col items-center">
@@ -154,13 +168,13 @@ function ProfileEditor({ onCancel }) {
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 cursor-pointer hover:scale-105"
+            className="px-4 py-2 cursor-pointer duration-150 hover:scale-105"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="bg-buttonPrimary text-white px-4 py-2 hover:bg-buttonSecondary duration-150"
+            className="bg-buttonPrimary text-white px-4 py-2 hover:bg-buttonSecondary duration-150 cursor-pointer"
           >
             Confirm
           </button>
