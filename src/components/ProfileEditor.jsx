@@ -15,7 +15,6 @@ function ProfileEditor({ onCancel }) {
 
   const [loading, setLoading] = useState(false);
 
-
   const [statusMessage, setStatusMessage] = useState("");
   const [statusType, setStatusType] = useState("error");
 
@@ -26,16 +25,32 @@ function ProfileEditor({ onCancel }) {
       setTimeout(() => setStatusMessage(""), 2000);
     }
   }
-  
-
 
   const defaultBanners = [
-    "https://imgur.com/kY8WyV2.jpg",
-    "https://imgur.com/3KqlrQ0.jpg",
-    "https://imgur.com/LslUoJu.jpg",
-    "https://imgur.com/cXJVLKT.jpg",
-    "https://imgur.com/5hJGRwo.jpg",
-    "https://imgur.com/cocbC1G.jpg",
+    {
+      url: "https://imgur.com/kY8WyV2.jpg",
+      alt: "Calm misty lake surrounded by mountains",
+    },
+    {
+      url: "https://imgur.com/3KqlrQ0.jpg",
+      alt: "Abstract vintage wavy lines",
+    },
+    {
+      url: "https://imgur.com/LslUoJu.jpg",
+      alt: "Modern digital dark blue wavy lines",
+    },
+    {
+      url: "https://imgur.com/cXJVLKT.jpg",
+      alt: "Abstract wavy lines light themed",
+    },
+    {
+      url: "https://imgur.com/5hJGRwo.jpg",
+      alt: "Abstract multi-color painted wallpaper",
+    },
+    {
+      url: "https://imgur.com/cocbC1G.jpg",
+      alt: "Abstract geometric snowy mountains",
+    },
   ];
 
   useEffect(() => {
@@ -51,19 +66,19 @@ function ProfileEditor({ onCancel }) {
 
   async function updateProfile(event) {
     event.preventDefault();
-  
+
     if (bio.length > 160) {
       setError("Bio must be 160 characters or less.");
       return;
     }
-  
+
     setLoading(true);
     setError("");
-  
+
     try {
       const name = localStorage.getItem("name");
       const token = localStorage.getItem("token");
-  
+
       const body = {
         bio,
         avatar: {
@@ -76,7 +91,7 @@ function ProfileEditor({ onCancel }) {
         },
         venueManager: pendingVenueManager,
       };
-  
+
       const response = await fetch(`https://v2.api.noroff.dev/holidaze/profiles/${name}`, {
         method: "PUT",
         headers: {
@@ -86,13 +101,13 @@ function ProfileEditor({ onCancel }) {
         },
         body: JSON.stringify(body),
       });
-  
+
       const data = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(data.errors?.[0]?.message || "Profile update failed.");
       }
-  
+
       localStorage.setItem("bio", bio);
       localStorage.setItem("avatar.url", avatarUrl);
       localStorage.setItem("avatar.alt", avatarAlt);
@@ -100,50 +115,44 @@ function ProfileEditor({ onCancel }) {
       localStorage.setItem("banner.alt", bannerAlt);
       setVenueManager(pendingVenueManager);
       localStorage.setItem("venueManager", pendingVenueManager.toString());
-  
+
       // Scroll to top
       window.scrollTo({ top: 0, behavior: "smooth" });
-  
+
       // Optional: Refresh after a delay
       setTimeout(() => {
         location.reload();
       }, 1500);
-  
+
     } catch (error) {
       console.error(error.message);
       setError(error.message);
       setLoading(false);
     }
   }
-  
-  
+
+  // New function to handle default banner click and update alt text
+  function handleBannerClick(url, alt) {
+    setBannerUrl(url);
+    setBannerAlt(alt); // Set alt text when banner is selected
+  }
 
   return (
-
     <div className="bg-blackSecondary text-whitePrimary w-full p-4 mt-5">
+      <StatusMessage message={statusMessage} type={statusType} />
 
-    <StatusMessage message={statusMessage} type={statusType} />
+      {loading && (
+        <div className="flex items-center justify-center gap-3 bg-buttonPrimary py-2 px-4 rounded mt-2 text-sm">
+          <div className="border-2 border-white border-t-transparent rounded-full w-5 h-5 animate-spin" />
+          Updating profile...
+        </div>
+      )}
 
-    {loading && (
-      <div className="flex items-center justify-center gap-3 bg-buttonPrimary py-2 px-4 rounded mt-2 text-sm">
-        <div className="border-2 border-white border-t-transparent rounded-full w-5 h-5 animate-spin" />
-        Updating profile...
-      </div>
-    )}
-
-{error && (
-  <div className="text-red-500 bg-red-100 px-4 py-2 mt-2 text-sm rounded">
-    {error}
-  </div>
-)}
-
-
-    {error && (
-      <div className="text-red-500 bg-red-100 px-4 py-2 mt-2 text-sm rounded">
-        {error}
-      </div>
-    )}
-
+      {error && (
+        <div className="text-red-500 bg-red-100 px-4 py-2 mt-2 text-sm rounded">
+          {error}
+        </div>
+      )}
 
       <form onSubmit={updateProfile} className="flex flex-col gap-4 items-center text-xs">
         <div className="w-full flex flex-col gap-1">
@@ -169,7 +178,7 @@ function ProfileEditor({ onCancel }) {
         </div>
 
         <div className="w-full flex flex-col gap-1">
-          <label htmlFor="avatarAlt">Avatar Alt Text</label>
+          <label htmlFor="avatarAlt">Avatar Description</label>
           <input
             id="avatarAlt"
             type="text"
@@ -191,7 +200,7 @@ function ProfileEditor({ onCancel }) {
         </div>
 
         <div className="w-full flex flex-col gap-1">
-          <label htmlFor="bannerAlt">Banner Alt Text</label>
+          <label htmlFor="bannerAlt">Banner Description</label>
           <input
             id="bannerAlt"
             type="text"
@@ -227,18 +236,18 @@ function ProfileEditor({ onCancel }) {
         <div className="w-full">
           <h3 className="text-xs mb-2">Default Banners</h3>
           <div className="grid grid-cols-3 gap-2">
-            {defaultBanners.map((url, idx) => (
+            {defaultBanners.map((banner, idx) => (
               <img
                 key={idx}
-                src={url}
-                alt={`Default banner ${idx + 1}`}
+                src={banner.url}
+                alt={banner.alt}
                 className={clsx(
                   "cursor-pointer rounded-lg border-2 duration-150 h-12 object-cover",
-                  bannerUrl === url
+                  bannerUrl === banner.url
                     ? "border-buttonPrimary scale-105"
                     : "border-transparent hover:border-grayPrimary"
                 )}
-                onClick={() => setBannerUrl(url)}
+                onClick={() => handleBannerClick(banner.url, banner.alt)} // Update both URL and alt
               />
             ))}
           </div>

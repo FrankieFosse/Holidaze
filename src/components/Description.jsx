@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 const Description = ({ text, onExpandToggle }) => {
   const [expanded, setExpanded] = useState(false);
+  const [showScroll, setShowScroll] = useState(false); // New state to control scrollbar delay
   const contentRef = useRef(null);
   const isLongText = text.length > 200;
 
@@ -9,6 +10,22 @@ const Description = ({ text, onExpandToggle }) => {
     setExpanded((prev) => !prev);
     onExpandToggle();
   };
+
+  useEffect(() => {
+    let timeoutId;
+
+    if (expanded && isLongText) {
+      // Delay scroll activation by 1s
+      timeoutId = setTimeout(() => {
+        setShowScroll(true);
+      }, 1000);
+    } else {
+      // Remove scroll immediately when collapsed
+      setShowScroll(false);
+    }
+
+    return () => clearTimeout(timeoutId);
+  }, [expanded, isLongText]);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -26,7 +43,7 @@ const Description = ({ text, onExpandToggle }) => {
       <div
         ref={contentRef}
         className={`transition-all duration-1000 ease-in-out break-words text-ellipsis ${
-          expanded && isLongText ? "overflow-y-auto" : "overflow-hidden"
+          showScroll ? "overflow-y-auto" : "overflow-hidden"
         }`}
         style={{
           maxHeight:
@@ -40,7 +57,6 @@ const Description = ({ text, onExpandToggle }) => {
         <p className="text-xs font-thin whitespace-pre-wrap">{text}</p>
       </div>
 
-      {/* Show the toggle button if the text is long enough to need expansion */}
       {text.length > 150 && (
         <button
           onClick={toggleExpanded}
