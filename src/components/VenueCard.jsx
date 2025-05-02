@@ -34,7 +34,7 @@ const VenueCard = ({ venue }) => {
   };
 
   return (
-    <li
+    <div
       onClick={handleClick}
       className="relative bg-cover bg-center max-w-screen min-h-96 max-h-96 flex flex-col justify-end items-center m-4 duration-150 cursor-pointer hover:scale-102"
       style={{
@@ -66,7 +66,7 @@ const VenueCard = ({ venue }) => {
           </div>
         </div>
       )}
-    </li>
+    </div>
   );
 };
 

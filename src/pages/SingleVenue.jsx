@@ -17,6 +17,32 @@ const SingleVenue = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const navigate = useNavigate();
 
+  // Assume current user is stored in localStorage
+  const currentUser = localStorage.getItem("name"); // Adjust this to match your auth structure
+  const isOwner = venue && currentUser === venue.owner.name;
+  const token = localStorage.getItem("token");
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const handleDelete = () => {
+    fetch(`https://v2.api.noroff.dev/holidaze/venues/${venue.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to delete venue");
+        navigate("/profile", { state: { message: "Venue deleted successfully" } });
+      })
+      .catch((err) => {
+        console.error(err);
+        // Optionally show error message in UI
+      });
+  };  
+
   const handleExpandToggle = () => {
     setExpanded((prev) => !prev);
   };
@@ -143,6 +169,25 @@ const SingleVenue = () => {
         />
       )}
 
+    {isOwner && (
+      <div className="border-1 border-blackSecondary mx-2 py-4 flex justify-center gap-4  text-sm">
+        <button
+          onClick={() => navigate(`/venues/edit/${venue.id}`)}
+          className="bg-buttonPrimary hover:bg-buttonSecondary px-4 py-2 cursor-pointer duration-150"
+        >
+          Edit Venue
+        </button>
+        <button
+          onClick={() => setIsDeleteModalOpen(true)}
+          className="bg-redPrimary hover:bg-redSecondary px-4 py-2 cursor-pointer duration-150"
+        >
+          Delete Venue
+        </button>
+
+      </div>
+    )}
+
+
       <div className="border-1 border-blackSecondary mx-2 p-8 my-8">
         <h2>Owner</h2>
         <div className="flex flex-row items-center justify-between gap-4">
@@ -154,6 +199,29 @@ const SingleVenue = () => {
           <p>{venue.owner.name}</p>
         </div>
       </div>
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 z-50 bg-blackPrimary/25 backdrop-blur-xs flex items-center justify-center text-xs">
+          <div className="bg-blackSecondary rounded-xl p-6 w-full mx-4 text-center">
+            <p className="text-sm mb-6">Are you sure you want to delete this venue?</p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="px-4 py-2 rounded duration-150 cursor-pointer hover:scale-105"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-redPrimary rounded hover:bg-redSecondary duration-150 cursor-pointer"
+              >
+                Confirm Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </>
   );
 };

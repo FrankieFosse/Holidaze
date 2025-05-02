@@ -83,20 +83,20 @@ function Navbar() {
             {isVenueManager && (
             <Link
                 to="/create"
-                className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-grayPrimary"
+                className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-whitePrimary"
             >
                 <FaCirclePlus size={20} /> Create venue
             </Link>
             )}
           <Link
             to="/"
-            className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-grayPrimary"
+            className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-whitePrimary"
           >
             <FaHome size={20} /> Home
           </Link>
           <Link
             to="/browse"
-            className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-grayPrimary"
+            className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-whitePrimary"
           >
             <MdExplore size={20} /> Browse
           </Link>
@@ -105,13 +105,13 @@ function Navbar() {
             <>
               <Link
                 to="/bookings"
-                className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-grayPrimary"
+                className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-whitePrimary"
               >
                 <FaCalendarAlt size={20} /> Bookings
               </Link>
               <Link
                 to="/profile"
-                className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-grayPrimary"
+                className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-whitePrimary"
               >
                 <FaUser size={20} /> Profile
               </Link>
@@ -124,14 +124,14 @@ function Navbar() {
                     handleLogout();
                     setIsOpen(false);
                 }}              
-                className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-grayPrimary cursor-pointer"
+                className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-whitePrimary cursor-pointer"
             >
               <FiLogIn size={20} /> Log out
             </button>
           ) : (
             <Link
               to="/login"
-              className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-grayPrimary"
+              className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-whitePrimary"
             >
               <FiLogIn size={20} /> Log in
             </Link>

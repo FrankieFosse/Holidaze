@@ -8,6 +8,7 @@ import Profile from './pages/Profile';
 import Layout from './components/Layout';
 import Create from './pages/Create';
 import SingleVenue from './pages/SingleVenue';
+import Edit from './pages/Edit';
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
         <Route path="/bookings" element={<Bookings />} />
         <Route path="/create" element={<Create />} />
         <Route path="/venues/:id" element={<SingleVenue />} />
+        <Route path="/venues/edit/:id" element={<Edit />} />
         </Route>
       </Routes>
     </Router>
