@@ -4,6 +4,8 @@ import { FaPlus, FaTrash } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaLocationDot } from "react-icons/fa6";
 import StatusMessage from "../components/StatusMessage";
+import VenuePreview from "../components/VenuePreview";
+
 
 function Create({ handleVenueCreated }) {
   const [name, setName] = useState("");
@@ -28,6 +30,8 @@ function Create({ handleVenueCreated }) {
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const [showPreview, setShowPreview] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -341,12 +345,35 @@ function Create({ handleVenueCreated }) {
 
         {error && <p className="text-redPrimary">{error}</p>}
 
-        <button
-          type="submit"
-          className="bg-buttonPrimary text-white py-2 px-4 hover:bg-buttonSecondary"
-        >
-          Create Venue
-        </button>
+        <div className="flex gap-4">
+      <button
+            type="button"
+            onClick={() => setShowPreview(true)}
+            className="bg-buttonSecondary text-white py-2 px-4 hover:bg-buttonPrimary"
+          >
+            Preview Venue
+          </button>
+
+          <button
+            type="submit"
+            className="bg-buttonPrimary text-white py-2 px-4 hover:bg-buttonSecondary"
+          >
+            Create Venue
+          </button>
+        </div>
+
+        {showPreview && (
+          <VenuePreview
+            name={name}
+            description={description}
+            media={media}
+            price={price}
+            maxGuests={maxGuests}
+            meta={meta}
+            location={location}
+            onClose={() => setShowPreview(false)}
+          />
+        )}
       </form>
     </div>
   );
