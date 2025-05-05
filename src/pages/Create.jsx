@@ -70,6 +70,20 @@ function Create({ handleVenueCreated }) {
     });
   };
 
+  useEffect(() => {
+    const draft = localStorage.getItem("draftVenue");
+    if (draft) {
+      const data = JSON.parse(draft);
+      setName(data.name || "");
+      setDescription(data.description || "");
+      setMedia(data.media || [{ url: "", alt: "" }]);
+      setPrice(data.price || "");
+      setMaxGuests(data.maxGuests || "");
+      setMeta(data.meta || {});
+      setLocation(data.location || {});
+    }
+  }, []);  
+
   const fieldPlaceholders = {
     address: "Address",
     city: "City",
@@ -91,16 +105,62 @@ function Create({ handleVenueCreated }) {
     }, 3000); // 3 seconds
   };
 
+  function validateVenueInputs() {
+    const requiredFields = [];
+    if (!name) requiredFields.push("name");
+    if (!description) requiredFields.push("description");
+    if (!price) requiredFields.push("price");
+    if (!maxGuests) requiredFields.push("maxGuests");
+  
+    const validMedia = media.filter((item) => item.url.trim() !== "" && item.alt.trim() !== "");
+  
+    if (validMedia.length === 0) {
+      showStatusMessage("You must provide at least one image with a description.", "error");
+      return { isValid: false };
+    }
+  
+    const hasInvalidAlt = media.some((item) => item.url.trim() && !item.alt.trim());
+    if (hasInvalidAlt) {
+      showStatusMessage("All images must have a description.", "error");
+      return { isValid: false };
+    }
+  
+    if (requiredFields.length > 0) {
+      setInvalidFields(requiredFields);
+      const fieldText = requiredFields.length === 1 ? "field" : "fields";
+      showStatusMessage(`Please fill out the required ${fieldText}.`, "error");
+      return { isValid: false };
+    }
+  
+    setInvalidFields([]);
+    return {
+      isValid: true,
+      venueData: {
+        name,
+        description,
+        media: validMedia,
+        price,
+        maxGuests,
+        meta,
+        location,
+      },
+    };
+  }
+  
+
   async function handleSubmit(e) {
     e.preventDefault();
-
+  
     const token = localStorage.getItem("token");
     const owner = localStorage.getItem("name");
-
+  
     if (!token || !owner) {
       showStatusMessage("You must be logged in to create a venue.", "error");
       return;
     }
+  
+    const validation = validateVenueInputs();
+    if (!validation.isValid) return;
 
     const requiredFields = [];
     if (!name) requiredFields.push("name");
@@ -162,6 +222,7 @@ function Create({ handleVenueCreated }) {
 
       setTimeout(() => {
         navigate("/profile");
+        localStorage.removeItem("draftVenue");
       }, 2000);
     } catch (err) {
       console.error(err);
@@ -275,7 +336,7 @@ function Create({ handleVenueCreated }) {
           </div>
         </div>
 
-        <fieldset className="flex flex-col items-left justify-center border-b-1 border-blackSecondary pb-8 gap-4 w-max">
+        <fieldset className="flex flex-col items-left justify-center gap-4 w-max">
           {Object.entries(meta).map(([key, value]) => (
             <label key={key} className="flex items-center gap-2">
               <input
@@ -289,7 +350,7 @@ function Create({ handleVenueCreated }) {
           ))}
         </fieldset>
 
-        <div className="flex flex-col gap-2 justify-center items-center">
+        <div className="flex flex-col gap-2 justify-center items-center border-t-1 border-blackSecondary pt-4">
           <h3 className="text-sm">Location (Optional)</h3>
 
           {!showLocation && (
@@ -346,13 +407,21 @@ function Create({ handleVenueCreated }) {
         {error && <p className="text-redPrimary">{error}</p>}
 
         <div className="flex gap-4">
-      <button
-            type="button"
-            onClick={() => setShowPreview(true)}
-            className="bg-buttonSecondary text-white py-2 px-4 hover:bg-buttonPrimary"
-          >
-            Preview Venue
-          </button>
+
+        <button
+        type="button"
+        onClick={() => {
+          const validation = validateVenueInputs();
+          if (!validation.isValid) return;
+
+          localStorage.setItem("draftVenue", JSON.stringify(validation.venueData));
+          navigate("/preview", { state: validation.venueData });
+        }}
+        className="bg-buttonSecondary text-white py-2 px-4 hover:bg-buttonPrimary"
+      >
+        Preview Venue
+      </button>
+
 
           <button
             type="submit"
@@ -362,18 +431,9 @@ function Create({ handleVenueCreated }) {
           </button>
         </div>
 
-        {showPreview && (
-          <VenuePreview
-            name={name}
-            description={description}
-            media={media}
-            price={price}
-            maxGuests={maxGuests}
-            meta={meta}
-            location={location}
-            onClose={() => setShowPreview(false)}
-          />
-        )}
+
+      
+
       </form>
     </div>
   );
