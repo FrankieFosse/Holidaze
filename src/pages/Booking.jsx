@@ -1,100 +1,167 @@
-import { useState } from "react";
-import { useLocation } from "react-router";
-import { DateRange } from "react-date-range";
-import { addDays } from "date-fns";
-import "react-date-range/dist/styles.css"; // main style file
-import "react-date-range/dist/theme/default.css"; // theme css file
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import BookingCalendar from "../components/BookingCalendar";
-
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router";
+import SingleVenueHero from "../components/SingleVenueHero";
+import { FaLongArrowAltRight } from "react-icons/fa";
+import Return from "../components/Return";
+import StatusMessage from "../components/StatusMessage"; // ✅ Import the component
+import DeleteModal from "../components/DeleteModal";
+import BookingForm from "../components/BookingForm";
+import Modal from "../components/Modal";
 
 
 const Booking = () => {
-  const location = useLocation();
-  const { venueId, venueName, price, maxGuests } = location.state || {};
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [bookingDetails, setBookingDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [statusMessage, setStatusMessage] = useState("");       // ✅ Message content
+  const [statusType, setStatusType] = useState("success");      // ✅ "success" | "error" | "loading"
+  const token = localStorage.getItem("token");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const [guests, setGuests] = useState(1);
-  const [range, setRange] = useState([
-    {
-      startDate: new Date(),
-      endDate: addDays(new Date(), 1),
-      key: "selection",
-    },
-  ]);
 
-  const [dateFrom, setDateFrom] = useState(null);
-  const [dateTo, setDateTo] = useState(null);
 
-  const handleBookingSubmit = () => {
-    const bookingData = {
-      dateFrom: range[0].startDate.toISOString(),
-      dateTo: range[0].endDate.toISOString(),
-      guests,
-      venueId,
+  useEffect(() => {
+    const fetchBookingDetails = async () => {
+      try {
+        setStatusMessage("Loading booking...");
+        setStatusType("loading");
+
+        const response = await fetch(`https://v2.api.noroff.dev/holidaze/bookings/${id}?_venue=true`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+            "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch booking details");
+
+        const data = await response.json();
+        setBookingDetails(data.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+        setStatusMessage("");
+      }
     };
 
-    fetch("https://v2.api.noroff.dev/holidaze/bookings", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
-      },
-      body: JSON.stringify(bookingData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Booking successful:", data);
-        // Optionally redirect or show a success message
-      })
-      .catch((err) => {
-        console.error("Error booking:", err);
-      });
+    fetchBookingDetails();
+  }, [id]);
+
+  const showTemporaryMessage = (message, type = "success") => {
+    setStatusMessage(message);
+    setStatusType(type);
+    setTimeout(() => setStatusMessage(""), 3000);
   };
 
+  const handleViewVenue = () => {
+    if (bookingDetails?.venue?.id) {
+      navigate(`/venues/${bookingDetails.venue.id}`);
+    }
+  };
+
+  const handleCancelBooking = async () => {
+    setIsDeleteModalOpen(false); // Close the modal first
+  
+    try {
+      showTemporaryMessage("Cancelling booking...", "loading");
+  
+      const response = await fetch(`https://v2.api.noroff.dev/holidaze/bookings/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
+        },
+      });
+  
+      if (!response.ok) throw new Error("Failed to cancel booking");
+  
+      showTemporaryMessage("Booking cancelled successfully.", "success");
+      setTimeout(() => navigate("/profile"), 1500);
+    } catch (error) {
+      showTemporaryMessage("Error cancelling booking: " + error.message, "error");
+    }
+  };
+  
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!bookingDetails) return <p>No booking found</p>;
+
+  const { venue, customer, dateFrom, dateTo, guests } = bookingDetails;
+  const totalPrice = venue ? venue.price * Math.ceil((new Date(dateTo) - new Date(dateFrom)) / (1000 * 60 * 60 * 24)) : 0;
+
   return (
-    <div className="booking-container mt-16 p-4 max-w-xl mx-auto">
-      <h1 className="text-xl font-bold mb-4">Book your stay at {venueName}</h1>
+    <div className="booking-details-container max-w-xl mx-auto">
+      <Return />
+      <StatusMessage message={statusMessage} type={statusType} /> {/* ✅ Show feedback */}
 
-      <div className="venue-details mb-4">
-        <p>{price} NOK / night</p>
-        <p>Max Guests: {maxGuests}</p>
+      <div className="brightness-50 blur-xs">
+        <SingleVenueHero media={venue.media} />
       </div>
 
-      <BookingCalendar onDateChange={({ dateFrom, dateTo }) => {
-        setDateFrom(dateFrom);
-        setDateTo(dateTo);
-        }} />
+      <div className="venue-details mb-4 absolute w-full top-16 z-10 flex flex-col justify-center items-center">
+        <h1 className="text-lg font-semibold mb-2">{venue?.name}</h1>
+        <button
+          onClick={handleViewVenue}
+          className="bg-buttonPrimary px-3 py-1 text-sm flex gap-2 items-center justify-center duration-150 hover:bg-buttonSecondary cursor-pointer"
+        >
+          View Venue <FaLongArrowAltRight />
+        </button>
 
+        <div className="border-y-1 border-grayPrimary p-4 my-8">
+          <p>{venue?.price} NOK / night</p>
+          <p>Max Guests: {venue?.maxGuests}</p>
+          <div className="booking-dates mb-4">
+            <p><strong>Booking Dates:<br /></strong> {new Date(dateFrom).toLocaleDateString()} - {new Date(dateTo).toLocaleDateString()}</p>
+          </div>
+          <div className="guests mb-4">
+            <p><strong>Guests:</strong> {guests}</p>
+          </div>
+          <div className="total-price mb-4">
+            <p><strong>Total Price:</strong> {totalPrice} NOK</p>
+          </div>
+        </div>
 
-
-      <div className="mt-4">
-        <label htmlFor="guests" className="block mb-1">Guests</label>
-        <input
-          type="number"
-          id="guests"
-          value={guests}
-          onChange={(e) => setGuests(Math.min(e.target.value, maxGuests))}
-          min="1"
-          max={maxGuests}
-          className="border-1 border-blackSecondary rounded p-2 w-2/4"
+        <div className="flex flex-col gap-4">
+        <button
+            onClick={() => setIsEditing(true)}
+            className="bg-buttonPrimary px-3 py-1 duration-150 cursor-pointer hover:bg-buttonSecondary w-52"
+            >
+            Edit Booking
+            </button>
+          <button
+            onClick={() => setIsDeleteModalOpen(true)}
+            className="bg-redPrimary px-3 py-1 duration-150 cursor-pointer hover:bg-redSecondary w-52"
+            >
+            Cancel Booking
+            </button>
+        </div>
+      </div>
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleCancelBooking}
+        message="Are you sure you want to cancel this booking?"
         />
-      </div>
+        <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+        <BookingForm
+            venueId={venue.id}
+            venueName={venue.name}
+            price={venue.price}
+            maxGuests={venue.maxGuests}
+            defaultGuests={guests}
+            defaultDateFrom={new Date(dateFrom)}
+            defaultDateTo={new Date(dateTo)}
+            onClose={() => setIsEditing(false)}
+        />
+        </Modal>
 
-      {dateFrom && dateTo && (
-        <p className="mt-2">
-            <strong>Total Price:</strong>{" "}
-            {price * Math.ceil((dateTo - dateFrom) / (1000 * 60 * 60 * 24))} NOK
-        </p>
-        )}
-
-      <button
-        onClick={handleBookingSubmit}
-        className="bg-buttonPrimary px-4 py-2 mt-4 rounded hover:bg-buttonSecondary transition"
-      >
-        Confirm Booking
-      </button>
     </div>
   );
 };

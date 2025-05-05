@@ -29,7 +29,7 @@ const BookingCalendar = ({ onDateChange }) => {
         minDate={today}
         maxDate={maxBookingDate}
         placeholderText="Select your stay dates"
-        className="p-2 border-1 border-blackSecondary rounded w-full max-w-xs cursor-pointer duration-150 hover:border-grayPrimary text-center"
+        className="p-2 border-1 border-blackSecondary rounded w-full cursor-pointer duration-150 hover:border-grayPrimary text-center text-xs"
         inline={false} // Popup calendar for mobile
       />
     </div>

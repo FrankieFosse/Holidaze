@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router";
+
 
 const BookingsByProfile = () => {
   const [bookings, setBookings] = useState([]);
@@ -11,7 +13,7 @@ const BookingsByProfile = () => {
 
       try {
         const response = await fetch(
-          `https://v2.api.noroff.dev/holidaze/profiles/${profileName}/bookings`,
+          `https://v2.api.noroff.dev/holidaze/profiles/${profileName}/bookings?_venue=true`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -36,22 +38,40 @@ const BookingsByProfile = () => {
     fetchBookings();
   }, []);
 
-  return (
-    <div className="mt-6">
-      {loadingBookings && <p>Loading bookings...</p>}
-      {bookingsError && <p className="text-red-500">Error: {bookingsError}</p>}
-      {!loadingBookings && bookings.length === 0 && <p>No bookings found.</p>}
 
+
+
+  return (
+    <div className="my-6">
+      {loadingBookings && <p>Loading bookings...</p>}
+      {bookingsError && <p className="text-redPrimary">Error: {bookingsError}</p>}
+      {!loadingBookings && bookings.length === 0 && <p>No bookings found.</p>}
+      
       <ul className="space-y-4 mt-4">
-        {bookings.map((booking) => (
-          <li key={booking.id} className="border border-gray-200 p-4 rounded shadow-sm">
-            <p><strong>Date From:</strong> {new Date(booking.dateFrom).toLocaleDateString()}</p>
-            <p><strong>Date To:</strong> {new Date(booking.dateTo).toLocaleDateString()}</p>
-            <p><strong>Guests:</strong> {booking.guests}</p>
-            <p className="text-sm text-gray-500">Booked on: {new Date(booking.created).toLocaleString()}</p>
-          </li>
-        ))}
-      </ul>
+        {bookings.map((booking) => {
+            const imageUrl = booking.venue.media?.[0]?.url;
+
+            return (
+            <Link
+                to={`/booking/${booking.id}`}
+                key={booking.id}
+                className="block border-1 border-blackSecondary mx-4 rounded hover:bg-blackSecondary hover:border-grayPrimary duration-150 bg-cover bg-center"
+                style={{
+                backgroundImage: imageUrl ? `url(${imageUrl})` : "none",
+                }}
+            >
+                <div className="backdrop-blur-xs bg-blackPrimary/75 p-4 rounded">
+                <h2 className="text-xl font-bold">{booking.venue.name}</h2>
+                <p><strong>Date From:</strong> {new Date(booking.dateFrom).toLocaleDateString()}</p>
+                <p><strong>Date To:</strong> {new Date(booking.dateTo).toLocaleDateString()}</p>
+                <p><strong>Guests:</strong> {booking.guests}</p>
+                <p className="text-sm text-grayPrimary">Booked on: {new Date(booking.created).toLocaleString()}</p>
+                </div>
+            </Link>
+            );
+        })}
+        </ul>
+
     </div>
   );
 };

@@ -6,6 +6,11 @@ import Description from "../components/Description";
 import { FaLongArrowAltRight, FaWifi, FaLongArrowAltLeft } from "react-icons/fa";
 import { MdLocalParking, MdFreeBreakfast, MdOutlinePets } from "react-icons/md";
 import MediaViewer from "../components/MediaViewer";  // Importing MediaViewer
+import BookingForm from "../components/BookingForm";
+import Return from "../components/Return";
+import DeleteModal from "../components/DeleteModal";
+import Modal from "../components/Modal";
+
 
 const SingleVenue = () => {
   const { id } = useParams();
@@ -16,6 +21,9 @@ const SingleVenue = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const navigate = useNavigate();
+  const [showBookingForm, setShowBookingForm] = useState(false);
+
+  
 
   // Assume current user is stored in localStorage
   const currentUser = localStorage.getItem("name"); // Adjust this to match your auth structure
@@ -103,33 +111,22 @@ const SingleVenue = () => {
         </div>
       </div>
 
-      <div className="fixed top-24 left-4 z-40 bg-blackPrimary/75 border-1 border-grayPrimary rounded-full px-4 py-2 cursor-pointer duration-150 hover:bg-blackPrimary/100">
-        <div
-        className="flex flex-col items-center justify-center"
-        onClick={() => navigate(-1)}
-        >
-            <FaLongArrowAltLeft />
-            <p className="text-xs">Go back</p>
-        </div>
-      </div>
+          <Return />
+
+
+
+
 
       <div className="border-1 border-blackSecondary mx-2 my-4">
         <div className="flex flex-row justify-evenly items-center my-4 mx-2 gap-4">
           <p className="text-sm">{venue.price} NOK / night</p>
           <button
             className="flex items-center w-max py-2 px-2 bg-buttonPrimary hover:bg-buttonSecondary text-md duration-150 cursor-pointer gap-2"
-            onClick={() => navigate(`/booking/${venue.id}`, {
-              state: {
-                venueId: venue.id,
-                venueName: venue.name,
-                price: venue.price,
-                maxGuests: venue.maxGuests,
-                description: venue.description,
-              }
-            })}
+            onClick={() => setShowBookingForm(true)}
           >
             Book now <FaLongArrowAltRight />
           </button>
+
         </div>
         <div className="flex flex-col justify-center items-center">
           <p>Max Guests</p>
@@ -168,6 +165,21 @@ const SingleVenue = () => {
             </div>
         </div>
         )}
+
+      {showBookingForm && (
+        <Modal isOpen={showBookingForm} onClose={() => setShowBookingForm(false)}>
+          <BookingForm
+            venueId={venue.id}
+            venueName={venue.name}
+            price={venue.price}
+            maxGuests={venue.maxGuests}
+            onClose={() => setShowBookingForm(false)}
+          />
+        </Modal>
+      )}
+
+
+
 
 
       {/* Display the MediaViewer Modal */}
@@ -211,27 +223,13 @@ const SingleVenue = () => {
         </div>
       </div>
 
-      {isDeleteModalOpen && (
-        <div className="fixed inset-0 z-50 bg-blackPrimary/25 backdrop-blur-xs flex items-center justify-center text-xs">
-          <div className="bg-blackSecondary rounded-xl p-6 w-full mx-4 text-center">
-            <p className="text-sm mb-6">Are you sure you want to delete this venue?</p>
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={() => setIsDeleteModalOpen(false)}
-                className="px-4 py-2 rounded duration-150 cursor-pointer hover:scale-105"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDelete}
-                className="px-4 py-2 bg-redPrimary rounded hover:bg-redSecondary duration-150 cursor-pointer"
-              >
-                Confirm Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDelete}
+        message="Are you sure you want to delete this venue?"
+      />
+
 
     </>
   );
