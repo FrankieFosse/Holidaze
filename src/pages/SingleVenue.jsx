@@ -116,7 +116,18 @@ const SingleVenue = () => {
       <div className="border-1 border-blackSecondary mx-2 my-4">
         <div className="flex flex-row justify-evenly items-center my-4 mx-2 gap-4">
           <p className="text-sm">{venue.price} NOK / night</p>
-          <button className="flex items-center w-max py-2 px-2 bg-buttonPrimary hover:bg-buttonSecondary text-md duration-150 cursor-pointer gap-2">
+          <button
+            className="flex items-center w-max py-2 px-2 bg-buttonPrimary hover:bg-buttonSecondary text-md duration-150 cursor-pointer gap-2"
+            onClick={() => navigate(`/booking/${venue.id}`, {
+              state: {
+                venueId: venue.id,
+                venueName: venue.name,
+                price: venue.price,
+                maxGuests: venue.maxGuests,
+                description: venue.description,
+              }
+            })}
+          >
             Book now <FaLongArrowAltRight />
           </button>
         </div>
