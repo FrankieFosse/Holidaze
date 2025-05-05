@@ -23,7 +23,7 @@ const MediaViewer = ({ mediaItems, currentIndex, onClose, onNavigate }) => {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-white text-2xl font-bold bg-redPrimary/75 p-2 rounded-full duration-150 cursor-pointer hover:bg-redPrimary/100"
+          className="absolute top-4 right-4 text-white text-2xl font-bold bg-redPrimary/75 p-1 rounded-full duration-150 cursor-pointer hover:bg-redPrimary/100"
         >
           <IoClose />
         </button>
@@ -33,14 +33,14 @@ const MediaViewer = ({ mediaItems, currentIndex, onClose, onNavigate }) => {
           <>
             <button
               onClick={() => handleNavigate(-1)}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-2xl p-2 rounded-full bg-blackSecondary/25 duration-150 hover:bg-blackSecondary/75 cursor-pointer"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-2xl p-1 rounded-full bg-blackSecondary/25 duration-150 hover:bg-blackSecondary/75 cursor-pointer"
             >
               <FaChevronLeft className="pr-0.5"/>
             </button>
 
             <button
               onClick={() => handleNavigate(1)}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-2xl p-2 rounded-full bg-blackSecondary/25 duration-150 hover:bg-blackSecondary/75 cursor-pointer"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-2xl p-1 rounded-full bg-blackSecondary/25 duration-150 hover:bg-blackSecondary/75 cursor-pointer"
             >
               <FaChevronRight className="pl-0.5"/>
             </button>

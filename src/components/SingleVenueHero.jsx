@@ -89,7 +89,7 @@ const SingleVenueHero = ({ media, expanded }) => {
             <FaChevronRight className="pl-0.5" />
           </button>
 
-          <div className="absolute bottom-6 w-full flex justify-center gap-2 z-30">
+          <div className="absolute bottom-3 w-full flex justify-center gap-2 z-30">
             {validMedia.map((_, index) => (
               <div
                 key={index}

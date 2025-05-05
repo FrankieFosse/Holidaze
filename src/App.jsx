@@ -9,6 +9,7 @@ import Layout from './components/Layout';
 import Create from './pages/Create';
 import SingleVenue from './pages/SingleVenue';
 import Edit from './pages/Edit';
+import Preview from './pages/Preview';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
         <Route path="/create" element={<Create />} />
         <Route path="/venues/:id" element={<SingleVenue />} />
         <Route path="/venues/edit/:id" element={<Edit />} />
+        <Route path="/preview" element={<Preview />} />
         </Route>
       </Routes>
     </Router>
