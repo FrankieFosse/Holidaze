@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import ProfileEditor from "../components/ProfileEditor";
 import VenuesByProfile from "../components/VenuesByProfile";
+import BookingsByProfile from "../components/BookingsByProfile";
+
 
 const Profile = () => {
   const [isEditorVisible, setIsEditorVisible] = useState(false);
@@ -53,6 +55,9 @@ useEffect(() => {
   fetchBookings();
 }, []);
 
+// Add this inside your component, before return
+const [activeTab, setActiveTab] = useState("venues");
+
 
   return (
     <div>
@@ -97,29 +102,25 @@ useEffect(() => {
         <ProfileEditor onCancel={toggleEditorVisibility} />
       </div>
 
-      {/* Venues Section */}
+      {/* Tab Controls */}
       <div className="mt-10">
-        <h2 className="text-lg font-semibold">Venues</h2>
-        <VenuesByProfile />
-      </div>
+        <div className="flex justify-center gap-4 border-b border-blackSecondary mb-4">
+          <button
+            onClick={() => setActiveTab("venues")}
+            className={`px-4 py-2 border-b-1 border-blackPrimary cursor-pointer duration-150 hover:border-b-1 hover:border-grayPrimary font-semibold ${activeTab === "venues" ? "border-b-1 border-whitePrimary" : "text-grayPrimary"}`}
+          >
+            Venues
+          </button>
+          <button
+            onClick={() => setActiveTab("bookings")}
+            className={`px-4 py-2 border-b-1 border-blackPrimary cursor-pointer duration-150 hover:border-b-1 hover:border-grayPrimary font-semibold ${activeTab === "bookings" ? "border-b-1 border-whitePrimary" : "text-grayPrimary"}`}
+          >
+            Bookings
+          </button>
+        </div>
 
-      <div className="mt-10">
-        <h2 className="text-lg font-semibold">All Bookings</h2>
-        {loadingBookings && <p>Loading bookings...</p>}
-        {bookingsError && <p className="text-red-500">Error: {bookingsError}</p>}
-
-        {!loadingBookings && bookings.length === 0 && <p>No bookings found.</p>}
-
-        <ul className="space-y-4 mt-4">
-          {bookings.map((booking) => (
-            <li key={booking.id} className="border border-gray-200 p-4 rounded shadow-sm">
-              <p><strong>Date From:</strong> {new Date(booking.dateFrom).toLocaleDateString()}</p>
-              <p><strong>Date To:</strong> {new Date(booking.dateTo).toLocaleDateString()}</p>
-              <p><strong>Guests:</strong> {booking.guests}</p>
-              <p className="text-sm text-gray-500">Booked on: {new Date(booking.created).toLocaleString()}</p>
-            </li>
-          ))}
-        </ul>
+        {/* Conditional Rendering */}
+        {activeTab === "venues" ? <VenuesByProfile /> : <BookingsByProfile />}
       </div>
 
     </div>
