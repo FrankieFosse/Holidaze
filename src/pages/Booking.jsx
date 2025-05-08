@@ -108,7 +108,7 @@ const Booking = () => {
       </div>
 
       <div className="venue-details mb-4 absolute w-full top-16 z-10 flex flex-col justify-center items-center">
-        <h1 className="text-lg font-semibold mb-2">{venue?.name}</h1>
+        <h1 className="text-lg font-semibold mb-2 w-3/5">{venue?.name}</h1>
         <button
           onClick={handleViewVenue}
           className="bg-buttonPrimary px-3 py-1 text-sm flex gap-2 items-center justify-center duration-150 hover:bg-buttonSecondary cursor-pointer"
