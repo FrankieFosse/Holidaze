@@ -24,10 +24,11 @@ const SingleVenue = () => {
   const navigate = useNavigate();
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [bookings, setBookings] = useState([]);
-  const [userBooking, setUserBooking] = useState(null); // To store the user's booking if it exists
-  
+  const [userBooking, setUserBooking] = useState(null);
+  const [isAddingNewBooking, setIsAddingNewBooking] = useState(false); // New state for distinguishing the "Add Another Booking"
+
   // Assume current user is stored in localStorage
-  const currentUser = localStorage.getItem("name"); // Adjust this to match your auth structure
+  const currentUser = localStorage.getItem("name");
   const token = localStorage.getItem("token");
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -56,12 +57,12 @@ const SingleVenue = () => {
   };
 
   const handleImageClick = (index) => {
-    setSelectedImageIndex(index);  // Set the clicked image index
+    setSelectedImageIndex(index);
     setIsModalOpen(true);
   };
 
   const handleNavigate = (newIndex) => {
-    setSelectedImageIndex(newIndex);  // Update the image index
+    setSelectedImageIndex(newIndex);
   };
 
   // Fallback image handler
@@ -101,19 +102,15 @@ const SingleVenue = () => {
     <>
       <SingleVenueHero media={venue.media} expanded={expanded} />
 
-      <div className="absolute z-30 text-white p-4 bottom-4 w-full overflow-hidden flex flex-row justify-between items-center gap-4">
-        <div className="text-left w-3/5">
-          <h2
-            className={`font-bold break-words overflow-hidden text-ellipsis ${
-              venue.name.length > 100 ? "text-sm" : "text-xl"
-            }`}
-          >
+      <div className="absolute z-30 text-white p-4 bottom-4 w-full overflow-hidden flex flex-row justify-between items-center gap-4 pointer-events-none">
+        <div className="text-left w-3/5 pointer-events-auto">
+          <h2 className={`font-bold break-words overflow-hidden text-ellipsis ${venue.name.length > 100 ? "text-sm" : "text-xl"}`}>
             {venue.name}
           </h2>
 
           <Description text={venue.description} onExpandToggle={handleExpandToggle} />
         </div>
-        <div>
+        <div className="pointer-events-auto">
           <Rating venue={venue} />
         </div>
       </div>
@@ -123,26 +120,47 @@ const SingleVenue = () => {
       <div className="border-1 border-blackSecondary mx-2 my-4">
         <div className="flex flex-row justify-evenly items-center my-4 mx-2 gap-4">
           <p className="text-sm">{venue.price} NOK / night</p>
-          <button
-            className={`flex items-center w-max py-2 px-2 text-md duration-150 cursor-pointer gap-2 ${currentUser === venue.owner.name ? "bg-blackSecondary text-grayPrimary cursor-default" : "bg-buttonPrimary hover:bg-buttonSecondary"}`}
-            onClick={() => {
-              if (currentUser === venue.owner.name) {
-                return; // Do nothing if the current user is the owner
-              }
-              if (userBooking) {
-                // If the user has a booking, open EditBooking
-                setShowBookingForm(true);
-              } else {
-                // If the user doesn't have a booking, open BookingForm
-                setShowBookingForm(true);
-              }
-            }}
-            disabled={currentUser === venue.owner.name} // Disable button if the user is the owner
-          >
-            {userBooking ? "Edit Booking" : "Book Now"} <FaLongArrowAltRight />
-          </button>
-
+          <div className="flex items-center gap-2">
+            {userBooking ? (
+              // If the user has a booking, display two buttons
+              <>
+                <div className="flex flex-col gap-4">
+                  <button
+                    className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 text-sm duration-150 cursor-pointer"
+                    onClick={() => {
+                      setIsAddingNewBooking(false);  // Set to edit booking
+                      setShowBookingForm(true);
+                    }}
+                  >
+                    Edit booking
+                  </button>
+                  <button
+                    className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 text-xs duration-150 cursor-pointer"
+                    onClick={() => {
+                      setIsAddingNewBooking(true);  // Set to create a new booking
+                      setShowBookingForm(true);
+                    }}
+                  >
+                    Add another booking
+                  </button>
+                </div>
+              </>
+            ) : (
+              // If no booking exists, display the "Book Now" button
+              <button
+                className="bg-buttonPrimary hover:bg-buttonSecondary py-2 px-4 text-white"
+                onClick={() => {
+                  setIsAddingNewBooking(true);  // Set to create a new booking
+                  setShowBookingForm(true);
+                }}
+              >
+                Book Now
+              </button>
+            )}
+          </div>
         </div>
+
+        {/* Display other venue details like max guests, amenities, etc. */}
         <div className="flex flex-col justify-center items-center">
           <p>Max Guests</p>
           <div className="border-1 border-grayPrimary rounded-full w-12 h-12 p-2 flex items-center justify-center">{venue.maxGuests}</div>
@@ -161,7 +179,7 @@ const SingleVenue = () => {
         <p className="text-sm font-thin opacity-50">Created {venue.created.slice(0, 10).split('-').reverse().join('.')}</p>
       </div>
 
-      {/* Media Section: Displaying all images only if media exists */}
+      {/* Media Section */}
       {venue.media && venue.media.length > 0 && (
         <div className="border-1 border-blackSecondary mx-2 my-4 flex justify-center items-center flex-col">
           <h2>Media</h2>
@@ -182,18 +200,15 @@ const SingleVenue = () => {
 
       {showBookingForm && (
         <Modal isOpen={showBookingForm} onClose={() => setShowBookingForm(false)}>
-          {userBooking ? (
-            <EditBooking booking={userBooking} venue={venue} onClose={() => setShowBookingForm(false)} />
-          ) : (
-            <BookingForm
-              venueId={venue.id}
-              venueName={venue.name}
-              price={venue.price}
-              maxGuests={venue.maxGuests}
-              onClose={() => setShowBookingForm(false)}
-              excludedBookings={bookings}
-            />
-          )}
+          <BookingForm
+            venueId={venue.id}
+            venueName={venue.name}
+            price={venue.price}
+            maxGuests={venue.maxGuests}
+            isAddingNewBooking={isAddingNewBooking}  // Pass the flag to BookingForm
+            onClose={() => setShowBookingForm(false)}
+            excludedBookings={bookings}
+          />
         </Modal>
       )}
 
