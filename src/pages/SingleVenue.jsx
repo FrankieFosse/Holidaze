@@ -128,11 +128,10 @@ const SingleVenue = () => {
                   <button
                     className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 text-sm duration-150 cursor-pointer"
                     onClick={() => {
-                      setIsAddingNewBooking(false);  // Set to edit booking
-                      setShowBookingForm(true);
+                      navigate(`/booking/${userBooking.id}`);
                     }}
                   >
-                    Edit booking
+                    View booking
                   </button>
                   <button
                     className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 text-xs duration-150 cursor-pointer"

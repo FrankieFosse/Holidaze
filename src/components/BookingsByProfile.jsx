@@ -61,7 +61,9 @@ const BookingsByProfile = () => {
                 }}
             >
                 <div className="backdrop-blur-xs bg-blackPrimary/75 p-4 rounded">
-                <h2 className="text-xl font-bold">{booking.venue.name}</h2>
+                <p className={`font-bold break-words ${booking.venue.name.length > 8 ? "text-sm" : "text-md"}`}>
+            {booking.venue.name.length > 20 ? `${booking.venue.name.slice(0, 20)}...` : booking.venue.name}
+                </p>
                 <p><strong>Date From:</strong> {new Date(booking.dateFrom).toLocaleDateString()}</p>
                 <p><strong>Date To:</strong> {new Date(booking.dateTo).toLocaleDateString()}</p>
                 <p><strong>Guests:</strong> {booking.guests}</p>

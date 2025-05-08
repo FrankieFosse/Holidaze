@@ -175,65 +175,57 @@ const BookingCalendar = ({
         {Array(startOfMonth(currentMonth).getDay()).fill(null).map((_, i) => (
           <div key={`empty-${i}`} />
         ))}
-        {days.map((day) => {
-          const booked = isBooked(day); // Define first
-          const bookedByCurrentUser = isBookedByCurrentUser(day); // Check if booked by current user
-          const bookingForDay = bookedByCurrentUser
-            ? bookedIntervals.find(
-                (interval) =>
-                    isWithinInterval(day, interval) && interval.userEmail === currentUserEmail
-                )
-            : null;
-          const isPast = isBefore(day, today);
-          const isAfterTwoYears = isAfter(day, twoYearsLater);
-          const disabled = booked || isPast || isAfterTwoYears || isSameDay(day, twoYearsLater);
-          const selected = isSelected(day);
-          const isToday = isSameDay(day, new Date());
-          const highlighted = isHighlighted(day);
+{days.map((day) => {
+  const booked = isBooked(day);
+  const bookedByCurrentUser = isBookedByCurrentUser(day);
+  const bookingForDay = bookedByCurrentUser
+    ? bookedIntervals.find(
+        (interval) =>
+          isWithinInterval(day, interval) &&
+          interval.userEmail === currentUserEmail
+      )
+    : null;
 
-          let classes = "w-full aspect-square rounded-md border text-center transition duration-150 flex justify-center items-center ";
+  const isPast = isBefore(day, today);
+  const isAfterTwoYears = isAfter(day, twoYearsLater);
+  const isOwnBookingDay = bookedByCurrentUser && bookingForDay;
+  const disabled = isOwnBookingDay ? false : (booked || isPast || isAfterTwoYears || isSameDay(day, twoYearsLater));
+  const selected = isSelected(day);
+  const isToday = isSameDay(day, new Date());
+  const highlighted = isHighlighted(day);
 
-          if (isPast || isAfterTwoYears || isSameDay(day, twoYearsLater)) {
-            classes += "text-blackSecondary"; // Apply same class as past dates
-          } else if (bookedByCurrentUser) {
-            classes += "bg-buttonSecondary text-blackPrimary "; // Allow click on booked dates
-          } else if (booked) {
-            classes += "bg-redPrimary border-redSecondary ";
-          } else if (selected) {
-            classes += "bg-buttonPrimary border-whitePrimary ";
-          } else if (highlighted) {
-            classes += "bg-buttonPrimary border-whitePrimary ";
-          } else if (isToday) {
-            classes += "border-blue-300 ";
-          } else {
-            classes += "text-whiteSecondary hover:text-whitePrimary hover:bg-blackSecondary hover:border-grayPrimary border-blackSecondary ";
-          }
+  let classes = "w-full aspect-square rounded-md border text-center transition duration-150 flex justify-center items-center ";
 
-          return bookedByCurrentUser && bookingForDay ? (
-            <button
-              key={day.toISOString()}
-              onClick={() => {
-                navigate(`/booking/${bookingForDay.id}`);
-                // Delay reload slightly to ensure navigation occurs first
-                setTimeout(() => location.reload(), 100);
-              }}
-              className={classes + "cursor-pointer"}
-            >
-              {format(day, "d")}
-            </button>
-          ) : (
-            <button
-              key={day.toISOString()}
-              onClick={() => handleDateClick(day)}
-              disabled={disabled}
-              className={classes}
-            >
-              {format(day, "d")}
-            </button>
-          );
-          
-          
-        })}
+  if (isPast || isAfterTwoYears || isSameDay(day, twoYearsLater)) {
+    classes += "text-blackSecondary";
+  } else if (bookedByCurrentUser) {
+    classes += "bg-buttonSecondary text-blackPrimary";
+  } else if (booked) {
+    classes += "bg-redPrimary border-redSecondary";
+  } else if (selected || highlighted) {
+    classes += "bg-buttonPrimary border-whitePrimary";
+  } else if (isToday) {
+    classes += "border-buttonPrimary";
+  } else {
+    classes += "text-whiteSecondary hover:text-whitePrimary hover:bg-blackSecondary hover:border-grayPrimary border-blackSecondary";
+  }
+
+  return (
+    <button
+      key={day.toISOString()}
+      onClick={() =>
+        isOwnBookingDay
+          ? navigate(`/booking/${bookingForDay.id}`)
+          : handleDateClick(day)
+      }
+      disabled={disabled}
+      className={classes + (isOwnBookingDay ? " cursor-pointer" : "")}
+    >
+      {format(day, "d")}
+    </button>
+  );
+})}
+
       </div>
     </div>
   );
