@@ -7,6 +7,8 @@ import StatusMessage from "../components/StatusMessage"; // ✅ Import the compo
 import DeleteModal from "../components/DeleteModal";
 import BookingForm from "../components/BookingForm";
 import Modal from "../components/Modal";
+import EditBooking from "../components/EditBooking"; // ✅ Add this import
+
 
 
 const Booking = () => {
@@ -29,7 +31,7 @@ const Booking = () => {
         setStatusMessage("Loading booking...");
         setStatusType("loading");
 
-        const response = await fetch(`https://v2.api.noroff.dev/holidaze/bookings/${id}?_venue=true`, {
+        const response = await fetch(`https://v2.api.noroff.dev/holidaze/bookings/${id}?_venue=true&_venue.bookings=true`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -65,11 +67,11 @@ const Booking = () => {
     }
   };
 
-  const handleCancelBooking = async () => {
+  const handleDeleteBooking = async () => {
     setIsDeleteModalOpen(false); // Close the modal first
   
     try {
-      showTemporaryMessage("Cancelling booking...", "loading");
+      showTemporaryMessage("Deleting booking...", "loading");
   
       const response = await fetch(`https://v2.api.noroff.dev/holidaze/bookings/${id}`, {
         method: "DELETE",
@@ -79,12 +81,12 @@ const Booking = () => {
         },
       });
   
-      if (!response.ok) throw new Error("Failed to cancel booking");
+      if (!response.ok) throw new Error("Failed to delete booking");
   
-      showTemporaryMessage("Booking cancelled successfully.", "success");
+      showTemporaryMessage("Booking deleted successfully.", "success");
       setTimeout(() => navigate("/profile"), 1500);
     } catch (error) {
-      showTemporaryMessage("Error cancelling booking: " + error.message, "error");
+      showTemporaryMessage("Error deleting booking: " + error.message, "error");
     }
   };
   
@@ -139,28 +141,27 @@ const Booking = () => {
             onClick={() => setIsDeleteModalOpen(true)}
             className="bg-redPrimary px-3 py-1 duration-150 cursor-pointer hover:bg-redSecondary w-52"
             >
-            Cancel Booking
+            Delete Booking
             </button>
         </div>
       </div>
       <DeleteModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleCancelBooking}
-        message="Are you sure you want to cancel this booking?"
+        onConfirm={handleDeleteBooking}
+        message="Are you sure you want to delete this booking?"
         />
         <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
-        <BookingForm
-            venueId={venue.id}
-            venueName={venue.name}
-            price={venue.price}
-            maxGuests={venue.maxGuests}
-            defaultGuests={guests}
-            defaultDateFrom={new Date(dateFrom)}
-            defaultDateTo={new Date(dateTo)}
-            onClose={() => setIsEditing(false)}
+        <EditBooking
+            booking={bookingDetails}
+            venue={venue}
+            onClose={() => {
+            setIsEditing(false);
+            // Optionally, refetch bookingDetails if needed
+            }}
         />
         </Modal>
+
 
     </div>
   );

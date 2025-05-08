@@ -10,7 +10,8 @@ import BookingForm from "../components/BookingForm";
 import Return from "../components/Return";
 import DeleteModal from "../components/DeleteModal";
 import Modal from "../components/Modal";
-
+import BookingsOnVenue from "../components/BookingsOnVenue";
+import EditBooking from "../components/EditBooking";  // Import the EditBooking component
 
 const SingleVenue = () => {
   const { id } = useParams();
@@ -22,12 +23,11 @@ const SingleVenue = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const navigate = useNavigate();
   const [showBookingForm, setShowBookingForm] = useState(false);
-
+  const [bookings, setBookings] = useState([]);
+  const [userBooking, setUserBooking] = useState(null); // To store the user's booking if it exists
   
-
   // Assume current user is stored in localStorage
   const currentUser = localStorage.getItem("name"); // Adjust this to match your auth structure
-  const isOwner = venue && currentUser === venue.owner.name;
   const token = localStorage.getItem("token");
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -49,7 +49,7 @@ const SingleVenue = () => {
         console.error(err);
         // Optionally show error message in UI
       });
-  };  
+  };
 
   const handleExpandToggle = () => {
     setExpanded((prev) => !prev);
@@ -72,10 +72,17 @@ const SingleVenue = () => {
   useEffect(() => {
     const fetchVenue = async () => {
       try {
-        const response = await fetch(`https://v2.api.noroff.dev/holidaze/venues/${id}?_owner=true`);
+        const response = await fetch(`https://v2.api.noroff.dev/holidaze/venues/${id}?_owner=true&_bookings=true`);
         if (!response.ok) throw new Error("Failed to fetch venue");
         const json = await response.json();
         setVenue(json.data);
+        setBookings(json.data.bookings); // Save bookings here
+
+        // Check if the current user already has a booking for this venue
+        const userBooking = json.data.bookings.find(
+          (booking) => booking.customer.name === currentUser
+        );
+        setUserBooking(userBooking);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -96,13 +103,13 @@ const SingleVenue = () => {
 
       <div className="absolute z-30 text-white p-4 bottom-4 w-full overflow-hidden flex flex-row justify-between items-center gap-4">
         <div className="text-left w-3/5">
-        <h2
-          className={`font-bold break-words overflow-hidden text-ellipsis ${
-            venue.name.length > 100 ? "text-sm" : "text-xl"
-          }`}
-        >
-          {venue.name}
-        </h2>
+          <h2
+            className={`font-bold break-words overflow-hidden text-ellipsis ${
+              venue.name.length > 100 ? "text-sm" : "text-xl"
+            }`}
+          >
+            {venue.name}
+          </h2>
 
           <Description text={venue.description} onExpandToggle={handleExpandToggle} />
         </div>
@@ -111,20 +118,28 @@ const SingleVenue = () => {
         </div>
       </div>
 
-          <Return />
-
-
-
-
+      <Return />
 
       <div className="border-1 border-blackSecondary mx-2 my-4">
         <div className="flex flex-row justify-evenly items-center my-4 mx-2 gap-4">
           <p className="text-sm">{venue.price} NOK / night</p>
           <button
-            className="flex items-center w-max py-2 px-2 bg-buttonPrimary hover:bg-buttonSecondary text-md duration-150 cursor-pointer gap-2"
-            onClick={() => setShowBookingForm(true)}
+            className={`flex items-center w-max py-2 px-2 text-md duration-150 cursor-pointer gap-2 ${currentUser === venue.owner.name ? "bg-blackSecondary text-grayPrimary cursor-default" : "bg-buttonPrimary hover:bg-buttonSecondary"}`}
+            onClick={() => {
+              if (currentUser === venue.owner.name) {
+                return; // Do nothing if the current user is the owner
+              }
+              if (userBooking) {
+                // If the user has a booking, open EditBooking
+                setShowBookingForm(true);
+              } else {
+                // If the user doesn't have a booking, open BookingForm
+                setShowBookingForm(true);
+              }
+            }}
+            disabled={currentUser === venue.owner.name} // Disable button if the user is the owner
           >
-            Book now <FaLongArrowAltRight />
+            {userBooking ? "Edit Booking" : "Book Now"} <FaLongArrowAltRight />
           </button>
 
         </div>
@@ -136,8 +151,7 @@ const SingleVenue = () => {
           {[{ condition: venue.meta.wifi, icon: <FaWifi className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "WiFi included" },
             { condition: venue.meta.parking, icon: <MdLocalParking className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Parking included" },
             { condition: venue.meta.pets, icon: <MdFreeBreakfast className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Breakfast included" },
-            { condition: venue.meta.breakfast, icon: <MdOutlinePets className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Pets allowed" }]
-            .map(({ condition, icon, label }, index) => condition && (
+            { condition: venue.meta.breakfast, icon: <MdOutlinePets className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Pets allowed" }].map(({ condition, icon, label }, index) => condition && (
               <div key={index} className="flex flex-col items-center gap-2">
                 {icon}
                 <p className="text-xs font-thin">{label}</p>
@@ -147,40 +161,41 @@ const SingleVenue = () => {
         <p className="text-sm font-thin opacity-50">Created {venue.created.slice(0, 10).split('-').reverse().join('.')}</p>
       </div>
 
-        {/* Media Section: Displaying all images only if media exists */}
-        {venue.media && venue.media.length > 0 && (
+      {/* Media Section: Displaying all images only if media exists */}
+      {venue.media && venue.media.length > 0 && (
         <div className="border-1 border-blackSecondary mx-2 my-4 flex justify-center items-center flex-col">
-            <h2>Media</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 justify-center items-center self-center">
+          <h2>Media</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 justify-center items-center self-center">
             {venue.media.map((mediaItem, index) => (
-                <div key={index} className="overflow-hidden cursor-pointer" onClick={() => handleImageClick(index)}>
+              <div key={index} className="overflow-hidden cursor-pointer" onClick={() => handleImageClick(index)}>
                 <img
-                    src={mediaItem.url}
-                    alt={`Media ${index + 1}`}
-                    className="w-64 h-32 object-cover rounded-md"
-                    onError={handleImageError}
+                  src={mediaItem.url}
+                  alt={`Media ${index + 1}`}
+                  className="w-64 h-32 object-cover rounded-md"
+                  onError={handleImageError}
                 />
-                </div>
+              </div>
             ))}
-            </div>
+          </div>
         </div>
-        )}
+      )}
 
       {showBookingForm && (
         <Modal isOpen={showBookingForm} onClose={() => setShowBookingForm(false)}>
-          <BookingForm
-            venueId={venue.id}
-            venueName={venue.name}
-            price={venue.price}
-            maxGuests={venue.maxGuests}
-            onClose={() => setShowBookingForm(false)}
-          />
+          {userBooking ? (
+            <EditBooking booking={userBooking} venue={venue} onClose={() => setShowBookingForm(false)} />
+          ) : (
+            <BookingForm
+              venueId={venue.id}
+              venueName={venue.name}
+              price={venue.price}
+              maxGuests={venue.maxGuests}
+              onClose={() => setShowBookingForm(false)}
+              excludedBookings={bookings}
+            />
+          )}
         </Modal>
       )}
-
-
-
-
 
       {/* Display the MediaViewer Modal */}
       {isModalOpen && (
@@ -192,45 +207,12 @@ const SingleVenue = () => {
         />
       )}
 
-    {isOwner && (
-      <div className="border-1 border-blackSecondary mx-2 py-4 flex justify-center gap-4  text-sm">
-        <button
-          onClick={() => navigate(`/venues/edit/${venue.id}`)}
-          className="bg-buttonPrimary hover:bg-buttonSecondary px-4 py-2 cursor-pointer duration-150"
-        >
-          Edit Venue
-        </button>
-        <button
-          onClick={() => setIsDeleteModalOpen(true)}
-          className="bg-redPrimary hover:bg-redSecondary px-4 py-2 cursor-pointer duration-150"
-        >
-          Delete Venue
-        </button>
-
-      </div>
-    )}
-
-
-      <div className="border-1 border-blackSecondary mx-2 p-8 my-8">
-        <h2>Owner</h2>
-        <div className="flex flex-row items-center justify-between gap-4">
-          <img
-            src={venue.owner.avatar.url}
-            className="rounded-full border-1 border-grayPrimary max-h-24 min-h-24 max-w-24 min-w-24 object-cover"
-            onError={handleImageError} // Handle error for the owner's avatar image
-          />
-          <p>{venue.owner.name}</p>
-        </div>
-      </div>
-
       <DeleteModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDelete}
         message="Are you sure you want to delete this venue?"
       />
-
-
     </>
   );
 };
