@@ -13,6 +13,7 @@ const EditBooking = ({ booking, venue, onClose }) => {
   const [statusType, setStatusType] = useState(null);
   const [venueBookings, setVenueBookings] = useState([]); // Add state for venue bookings
   const [loadingBookings, setLoadingBookings] = useState(true); // Loading state for bookings
+  const [hasChanges, setHasChanges] = useState(false); // Track changes to the booking
 
   // Fetch bookings when the component mounts
   useEffect(() => {
@@ -32,6 +33,32 @@ const EditBooking = ({ booking, venue, onClose }) => {
     fetchBookings();
   }, [venue.id]);
 
+// Track changes to booking fields
+useEffect(() => {
+    // Ensure dateFrom and dateTo are valid Dates
+    const isValidDateFrom = dateFrom instanceof Date && !isNaN(dateFrom);
+    const isValidDateTo = dateTo instanceof Date && !isNaN(dateTo);
+  
+    // Check if both dates are selected and ensure dateFrom < dateTo
+    const dateChanged =
+      (isValidDateFrom && dateFrom.toDateString() !== new Date(booking.dateFrom).toDateString()) ||
+      (isValidDateTo && dateTo.toDateString() !== new Date(booking.dateTo).toDateString());
+    const guestChanged = guests !== booking.guests;
+  
+    setHasChanges(dateChanged || guestChanged);
+  }, [guests, dateFrom, dateTo, booking]);
+  
+  
+  // Button should be disabled if either date is missing or invalid
+  const isButtonDisabled = !(dateFrom && dateTo && dateFrom < dateTo && hasChanges);
+  
+  // Function to handle date selection change in BookingCalendar
+  const handleDateChange = ({ dateFrom, dateTo }) => {
+    // Check if the new date range has only one date selected, disable the button
+    setDateFrom(dateFrom);
+    setDateTo(dateTo);
+  };
+
   const handleEditSubmit = async () => {
     if (!dateFrom || !dateTo || guests < 1) {
       setStatusMessage("Please complete all booking details.");
@@ -41,6 +68,7 @@ const EditBooking = ({ booking, venue, onClose }) => {
 
     setStatusMessage("Updating booking...");
     setStatusType("loading");
+        location.reload();
 
     try {
       const updatedBooking = {
@@ -79,6 +107,12 @@ const EditBooking = ({ booking, venue, onClose }) => {
     }
   };
 
+  // Helper function to format date
+  const formatDate = (date) => {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return date ? new Date(date).toLocaleDateString(undefined, options) : '';
+  };
+
   if (loadingBookings) return <p>Loading bookings...</p>; // Handle loading state
 
   return (
@@ -91,18 +125,14 @@ const EditBooking = ({ booking, venue, onClose }) => {
 
       <div className="venue-details mb-1 font-thin text-sm">
         <p>{venue.price} NOK / night</p>
-        <p>Max guests: {venue.maxGuests}</p>
       </div>
 
       <BookingCalendar
-        excludedBookings={venueBookings.filter((b) => b.id !== booking.id)} // Exclude the current booking
-        onDateChange={({ dateFrom, dateTo }) => {
-          setDateFrom(dateFrom);
-          setDateTo(dateTo);
-        }}
-        defaultDateFrom={dateFrom}
-        defaultDateTo={dateTo}
-      />
+            excludedBookings={venueBookings.filter((b) => b.id !== booking.id)} // Exclude the current booking
+            onDateChange={handleDateChange} // Handle date range change
+            defaultDateFrom={dateFrom}
+            defaultDateTo={dateTo}
+            />
 
       <div className="mt-4 flex flex-row w-full justify-center items-center gap-2">
         <label htmlFor="guests" className="text-xs">Guests</label>
@@ -117,6 +147,17 @@ const EditBooking = ({ booking, venue, onClose }) => {
           max={venue.maxGuests}
           className="border-1 border-blackSecondary rounded px-1 w-1/4"
         />
+        <p>/ {venue.maxGuests}</p>
+      </div>
+
+      {/* Dynamically display "Date From" and "Date To" */}
+      <div className="mt-4 flex flex-col w-full items-center gap-2">
+        <p className="text-xs">
+          <strong>Date From:</strong> {formatDate(dateFrom)}
+        </p>
+        <p className="text-xs">
+          <strong>Date To:</strong> {formatDate(dateTo)}
+        </p>
       </div>
 
       {dateFrom && dateTo && (
@@ -135,11 +176,13 @@ const EditBooking = ({ booking, venue, onClose }) => {
           Cancel
         </button>
         <button
-          onClick={handleEditSubmit}
-          className="bg-buttonPrimary p-2 rounded hover:bg-buttonSecondary duration-150 cursor-pointer text-xs"
-        >
-          Save Changes
-        </button>
+            onClick={handleEditSubmit}
+            className={`bg-buttonPrimary p-2 rounded hover:bg-buttonSecondary duration-150 cursor-pointer text-xs ${isButtonDisabled ? "bg-grayPrimary hover:bg-grayPrimary cursor-not-allowed" : ""}`}
+            disabled={isButtonDisabled} // Disable if only one date selected or if no changes
+            >
+            Save Changes
+            </button>
+
       </div>
     </div>
   );

@@ -85,12 +85,6 @@ const SingleVenueHero = ({ media, expanded }) => {
       {validMedia.length > 1 && !hideControls && (
         <>
           <button
-            onClick={goToPrevious}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-blackPrimary/50 text-whitePrimary p-2 rounded-full z-50 hover:bg-blackPrimary/70 cursor-pointer"
-          >
-            <FaChevronLeft className="pr-0.5" />
-          </button>
-          <button
             onClick={goToNext}
             className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blackPrimary/50 text-whitePrimary p-2 rounded-full z-50 hover:bg-blackPrimary/70 cursor-pointer"
           >

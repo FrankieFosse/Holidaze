@@ -26,7 +26,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
 
 
       {/* Filter buttons (unchanged) */}
-      <div className="text-whitePrimary text-2xl flex flex-row items-center justify-center gap-4">
+      <div className="text-whitePrimary text-xl flex flex-row items-center justify-center gap-4">
         {/* Wifi */}
         <div className="relative group">
           <button

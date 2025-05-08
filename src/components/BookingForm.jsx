@@ -56,10 +56,25 @@ useEffect(() => {
 
 const handleBookingSubmit = async () => {
     if (!dateFrom || !dateTo || guests < 1) {
-      setStatusMessage("Please complete all booking details.");
-      setStatusType("error");
-      return;
-    }
+        setStatusMessage("Please select a date range.");
+        setStatusType("error");
+        setTimeout(() => {
+          setStatusMessage("");
+          setStatusType(null);
+        }, 3000);
+        return;
+      }
+      
+      if (dateFrom.toDateString() === dateTo.toDateString()) {
+        setStatusMessage("You must select at least two different dates.");
+        setStatusType("error");
+        setTimeout(() => {
+          setStatusMessage("");
+          setStatusType(null);
+        }, 3000);
+        return;
+      }
+      
   
     setStatusMessage("Processing booking...");
     setStatusType("loading");
@@ -129,7 +144,6 @@ const handleBookingSubmit = async () => {
 
       <div className="venue-details mb-1 font-thin text-sm">
         <p>{price} NOK / night</p>
-        <p>Max guests: {maxGuests}</p>
       </div>
 
       <BookingCalendar
@@ -154,6 +168,7 @@ const handleBookingSubmit = async () => {
           max={maxGuests}
           className="border-1 border-blackSecondary rounded px-1 w-1/4"
         />
+        <p>/ {maxGuests}</p>
       </div>
 
       {dateFrom && dateTo && (
