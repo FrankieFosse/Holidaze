@@ -1,5 +1,7 @@
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router";
+
 
 // Validate each image URL
 const validateImageUrl = (url) => {
@@ -11,9 +13,15 @@ const validateImageUrl = (url) => {
   });
 };
 
+
+
+
 const SingleVenueHero = ({ media, expanded }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [validMedia, setValidMedia] = useState([]);
+
+  const location = useLocation();
+  const hideControls = location.pathname.includes("booking");
 
   useEffect(() => {
     const loadValidMedia = async () => {
@@ -74,7 +82,7 @@ const SingleVenueHero = ({ media, expanded }) => {
         }}
       ></div>
 
-      {validMedia.length > 1 && (
+      {validMedia.length > 1 && !hideControls && (
         <>
           <button
             onClick={goToPrevious}
