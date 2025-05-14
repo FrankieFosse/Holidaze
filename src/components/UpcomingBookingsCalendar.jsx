@@ -49,13 +49,13 @@ const UpcomingBookingsCalendar = ({ bookings = [] }) => {
   const isLastDayOfBooking = (date, booking) => isSameDay(date, booking.end);
 
   return (
-    <div className="p-2 border border-blackSecondary rounded w-full max-w-md mx-auto min-h-60 max-h-60">
+    <div className="p-2 border border-blackSecondary rounded w-full max-w-md mx-auto min-h-80 max-h-80">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <button
           onClick={() => !isPrevDisabled && setCurrentMonth(addMonths(currentMonth, -1))}
           disabled={isPrevDisabled}
-          className={`text-xs p-1 border-1 border-blackSecondary duration-150 rounded ${isPrevDisabled ? "text-blackSecondary border-blackSecondary" : "hover:bg-blackSecondary hover:border-grayPrimary"}`}
+          className={`text-xs p-1 border-1 border-blackSecondary duration-150 rounded ${isPrevDisabled ? "text-blackSecondary border-blackSecondary cursor-default" : "cursor-pointer hover:bg-blackSecondary hover:border-grayPrimary"}`}
         >
           <FaChevronLeft />
         </button>
@@ -63,7 +63,7 @@ const UpcomingBookingsCalendar = ({ bookings = [] }) => {
         <button
           onClick={() => !isNextDisabled && setCurrentMonth(addMonths(currentMonth, 1))}
           disabled={isNextDisabled}
-          className={`text-xs p-1 border-1 border-blackSecondary duration-150 rounded ${isNextDisabled ? "text-blackSecondary border-blackSecondary" : "hover:bg-blackSecondary hover:border-grayPrimary"}`}
+          className={`text-xs p-1 border-1 border-blackSecondary duration-150 rounded ${isNextDisabled ? "text-blackSecondary border-blackSecondary cursor-default" : "cursor-pointer hover:bg-blackSecondary hover:border-grayPrimary"}`}
         >
           <FaChevronRight />
         </button>
@@ -83,42 +83,36 @@ const UpcomingBookingsCalendar = ({ bookings = [] }) => {
         ))}
 
         {days.map((day) => {
-          const booking = getBookingForDay(day);
-          const isPast = isBefore(day, today);
-          const isAfterTwoYears = isAfter(day, twoYearsLater);
-          const disabled = !booking || isPast || isAfterTwoYears;
+        const booking = getBookingForDay(day);
+        const isPast = isBefore(day, today);
+        const isAfterTwoYears = isAfter(day, twoYearsLater);
+        const disabled = !booking || isPast || isAfterTwoYears;
 
-          let classes =
-            "w-full aspect-square rounded-md text-center transition duration-150 flex justify-center items-center ";
+        let classes =
+            "w-full aspect-square rounded-md text-center transition duration-150 flex justify-center items-center border-1 border-blackSecondary ";
 
-          if (booking) {
-            // Check if it's the first or last day of the booking
-            if (isFirstDayOfBooking(day, booking)) {
-              classes += "border-l-3 border-red-500 "; // Add left border to the first day of booking
+            if (isPast || isAfterTwoYears) {
+                classes += "text-blackSecondary border-blackSecondary cursor-default";
+            } else if (booking) {
+                classes += "bg-buttonPrimary hover:bg-buttonSecondary";
+            } else {
+                classes += "text-whiteSecondary hover:text-whitePrimary hover:bg-blackSecondary hover:border-grayPrimary border-blackSecondary";
             }
-            if (isLastDayOfBooking(day, booking)) {
-              classes += "border-r-3 border-red-500 "; // Add right border to the last day of booking
-            }
-            classes += "bg-buttonSecondary text-blackPrimary";
-          } else if (isPast || isAfterTwoYears) {
-            classes += "text-blackSecondary";
-          } else {
-            classes += "text-whiteSecondary hover:text-whitePrimary hover:bg-blackSecondary hover:border-grayPrimary border-blackSecondary";
-          }
+            
 
-          return (
+        return (
             <button
-              key={day.toISOString()}
-              onClick={() => booking && navigate(`/booking/${booking.id}`)}
-              disabled={disabled}
-              className={classes + (booking ? " cursor-pointer" : "")}
+            key={day.toISOString()}
+            onClick={() => booking && navigate(`/booking/${booking.id}`)}
+            disabled={disabled}
+            className={classes + (booking ? " cursor-pointer" : "")}
             >
-              {format(day, "d")}
+            {format(day, "d")}
             </button>
-          );
+        );
         })}
+
       </div>
-      <BookingsByProfile />
     </div>
   );
 };

@@ -5,7 +5,7 @@ export default function StatusMessage({ message, type }) {
 
   const bgColorClass =
     type === "error"
-      ? "bg-redPrimary"
+      ? "bg-redSecondary"
       : type === "success"
       ? "bg-buttonPrimary"
       : "bg-buttonPrimary";

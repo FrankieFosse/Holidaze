@@ -1,5 +1,6 @@
 import UpcomingBookingsCalendar from "../components/UpcomingBookingsCalendar";
 import { useEffect, useState } from "react";
+import BookingsByProfile from "../components/BookingsByProfile";
 
 const UpcomingBookingsSection = () => {
   const [bookings, setBookings] = useState([]);
@@ -32,8 +33,9 @@ const UpcomingBookingsSection = () => {
 
   return (
     <div className="my-6">
-      <h2 className="text-xl font-bold mb-2">Upcoming Bookings Overview</h2>
+      <h2 className="text-xl font-bold mb-2 mt-16">Upcoming Bookings Overview</h2>
       {loading ? <p>Loading...</p> : <UpcomingBookingsCalendar bookings={bookings} />}
+      <BookingsByProfile />
     </div>
   );
 };

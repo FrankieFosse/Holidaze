@@ -243,7 +243,7 @@ const handleBookingSubmit = async () => {
       </div>
       <Modal isOpen={showConflictModal} onClose={() => setShowConflictModal(false)}>
         <div className="text-center text-white">
-            <p className="mb-4">
+            <p className="my-4">
             You already have a booking in your calendar that overlaps with these dates.
             Do you want to view this booking now?
             </p>

@@ -15,6 +15,15 @@ const EditBooking = ({ booking, venue, onClose }) => {
   const [loadingBookings, setLoadingBookings] = useState(true); // Loading state for bookings
   const [hasChanges, setHasChanges] = useState(false); // Track changes to the booking
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+
+
+
   // Fetch bookings when the component mounts
   useEffect(() => {
     const fetchBookings = async () => {
@@ -127,7 +136,7 @@ useEffect(() => {
         <p>{venue.price} NOK / night</p>
       </div>
 
-      <BookingCalendar
+      <BookingCalendar closeModal={closeModal}
             excludedBookings={venueBookings.filter((b) => b.id !== booking.id)} // Exclude the current booking
             onDateChange={handleDateChange} // Handle date range change
             defaultDateFrom={dateFrom}

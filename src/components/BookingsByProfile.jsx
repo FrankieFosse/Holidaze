@@ -27,7 +27,12 @@ const BookingsByProfile = () => {
         }
 
         const data = await response.json();
-        setBookings(data.data);
+        const today = new Date();
+        const futureBookings = data.data.filter(
+          (booking) => new Date(booking.dateTo) >= today
+        );
+        setBookings(futureBookings);
+
       } catch (error) {
         setBookingsError(error.message);
       } finally {

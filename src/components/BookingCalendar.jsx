@@ -86,7 +86,9 @@ const BookingCalendar = ({
     
     if (bookedByUser) {
       // Navigate to the booking details page
+      if (closeModal) closeModal();
       navigate(`/booking/${bookedByUser.id}`);
+      location.reload();
       return; // Prevent further actions
     }
 
@@ -207,19 +209,15 @@ const BookingCalendar = ({
   } else if (isToday) {
     classes += "border-buttonPrimary";
   } else {
-    classes += "text-whiteSecondary hover:text-whitePrimary hover:bg-blackSecondary hover:border-grayPrimary border-blackSecondary";
+    classes += "text-whiteSecondary hover:text-whitePrimary hover:bg-blackSecondary hover:border-grayPrimary border-blackSecondary cursor-pointer";
   }
 
   return (
     <button
       key={day.toISOString()}
-      onClick={() =>
-        isOwnBookingDay
-          ? navigate(`/booking/${bookingForDay.id}`)
-          : handleDateClick(day)
-      }
-      disabled={disabled}
-      className={classes + (isOwnBookingDay ? " cursor-pointer" : "")}
+      onClick={() => !isOwnBookingDay && handleDateClick(day)}
+      disabled={disabled || isOwnBookingDay}      
+      className={classes + (isOwnBookingDay ? " cursor-default" : "")}
     >
       {format(day, "d")}
     </button>
