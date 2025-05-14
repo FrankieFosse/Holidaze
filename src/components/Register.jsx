@@ -57,12 +57,12 @@ function Register({ onCancel }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-blackPrimary/90 w-3/4 max-w-md h-max py-8 px-8 flex justify-start items-center flex-col"
+      className="bg-blackPrimary/90 w-3/4 max-w-md h-max py-8 px-8 flex justify-start items-center flex-col text-xs rounded"
     >
       <input
         type="text"
         placeholder="Username"
-        className="bg-whitePrimary p-2 w-full my-4 outline-none text-blackPrimary"
+        className="bg-whitePrimary p-2 w-full my-2 outline-none text-blackPrimary rounded"
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
@@ -70,7 +70,7 @@ function Register({ onCancel }) {
       <input
         type="email"
         placeholder="E-mail"
-        className="bg-whitePrimary p-2 w-full my-4 outline-none text-blackPrimary"
+        className="bg-whitePrimary p-2 w-full my-2 outline-none text-blackPrimary rounded"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
@@ -78,7 +78,7 @@ function Register({ onCancel }) {
       <input
         type="password"
         placeholder="Password"
-        className="bg-whitePrimary p-2 w-full my-4 outline-none text-blackPrimary"
+        className="bg-whitePrimary p-2 w-full my-2 outline-none text-blackPrimary rounded"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
@@ -86,7 +86,7 @@ function Register({ onCancel }) {
       <input
         type="password"
         placeholder="Confirm Password"
-        className="bg-whitePrimary p-2 w-full my-4 outline-none text-blackPrimary"
+        className="bg-whitePrimary p-2 w-full my-2 outline-none text-blackPrimary rounded"
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
         required
@@ -97,7 +97,7 @@ function Register({ onCancel }) {
           <p>Do you want to be a venue manager?</p>
           <BsQuestionLg
             title="This gives you access to create your own venues"
-            className="bg-blackPrimary border-1 border-grayPrimary rounded-full h-6 w-6 p-1 cursor-help"
+            className="bg-blackPrimary border-1 border-grayPrimary rounded-full min-h-6 max-h-6 min-w-6 max-h-6 p-1 cursor-help"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -108,7 +108,7 @@ function Register({ onCancel }) {
             id="checkbox"
             name="venueManager"
             type="checkbox"
-            className="h-6 w-6 text-red-500"
+            className="h-6 w-6 text-redPrimary"
             value=""
             checked={venueManager}
             onChange={(e) => setVenueManager(e.target.checked)}
@@ -123,7 +123,7 @@ function Register({ onCancel }) {
       <div className="flex flex-col justify-between w-full">
         <button
           type="submit"
-          className="bg-buttonPrimary text-whitePrimary py-4 px-6 flex flex-row justify-center items-center gap-4 my-4 duration-150 cursor-pointer hover:bg-buttonSecondary"
+          className="bg-buttonPrimary text-whitePrimary py-2 px-3 flex flex-row justify-center items-center gap-4 my-4 duration-150 cursor-pointer hover:bg-buttonSecondary text-sm"
         >
           Register
           <FaLongArrowAltRight />

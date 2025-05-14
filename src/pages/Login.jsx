@@ -79,7 +79,7 @@ const Login = () => {
         muted
         playsInline
       >
-        <source src="/images/video.mp4" type="video/mp4" />
+        <source src="/images/holidaze.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
@@ -89,13 +89,13 @@ const Login = () => {
                 <Register onCancel={() => setShowRegister(false)} />
                 ) : (
           <form
-            className="bg-blackPrimary/90 w-3/4 max-w-md h-max py-8 px-8 flex justify-start items-center flex-col"
+            className="bg-blackPrimary/90 w-3/4 max-w-md h-max py-8 px-8 flex justify-start items-center flex-col rounded text-sm"
             onSubmit={handleLogin}
           >
             <input
               type="email"
               placeholder="E-mail"
-              className="bg-whitePrimary p-2 w-full mb-8 mt-8 outline-none text-blackPrimary"
+              className="bg-whitePrimary p-2 w-full mb-8 mt-8 outline-none text-blackPrimary rounded"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -103,15 +103,15 @@ const Login = () => {
             <input
               type="password"
               placeholder="Password"
-              className="bg-whitePrimary p-2 w-full outline-none text-blackPrimary"
+              className="bg-whitePrimary p-2 w-full outline-none text-blackPrimary rounded"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            {errorMsg && <p className="text-red-500 mt-4">{errorMsg}</p>}
+            {errorMsg && <p className="text-redPrimary mt-4">{errorMsg}</p>}
             <button
               type="submit"
-              className="bg-buttonPrimary text-whitePrimary py-4 px-6 flex flex-row justify-center items-center gap-4 mt-8 mb-8 duration-150 cursor-pointer hover:bg-buttonSecondary"
+              className="bg-buttonPrimary text-whitePrimary py-2 px-4 flex flex-row justify-center items-center gap-4 mt-8 mb-8 duration-150 cursor-pointer hover:bg-buttonSecondary rounded"
             >
               Log in
               <FaLongArrowAltRight />

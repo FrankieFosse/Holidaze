@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import BookingCalendar from "./BookingCalendar";
 import StatusMessage from "./StatusMessage";
+import Modal from "./Modal";
 
 const BookingForm = ({
     venueId,
@@ -22,12 +23,39 @@ const BookingForm = ({
   const [statusType, setStatusType] = useState(null);
   const navigate = useNavigate();
 
+  const [showConflictModal, setShowConflictModal] = useState(false);
+  const [conflictBookingId, setConflictBookingId] = useState(null);  
+
   const currentUser = JSON.parse(localStorage.getItem("user"))?.name;
 
 // Inside BookingForm component
 const [bookings, setBookings] = useState([]);
 
 const [userBookingId, setUserBookingId] = useState(null);
+
+const [userBookings, setUserBookings] = useState([]);
+
+useEffect(() => {
+  const fetchUserBookings = async () => {
+    const profileName = localStorage.getItem("name");
+    try {
+      const res = await fetch(`https://v2.api.noroff.dev/holidaze/profiles/${profileName}/bookings?_venue=true`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "X-Noroff-API-Key": `178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9`,
+        },
+      });
+      if (!res.ok) throw new Error("Failed to fetch user bookings");
+      const json = await res.json();
+      setUserBookings(json.data);
+    } catch (err) {
+      console.error("Error fetching user bookings:", err);
+    }
+  };
+
+  fetchUserBookings();
+}, []);
+
 
 useEffect(() => {
   const fetchBookings = async () => {
@@ -55,6 +83,27 @@ useEffect(() => {
 
 
 const handleBookingSubmit = async () => {
+    // Check for overlapping bookings
+    const overlappingBooking = userBookings.find(b => {
+        const existingFrom = new Date(b.dateFrom);
+        const existingTo = new Date(b.dateTo);
+        const selectedFrom = new Date(dateFrom);
+        const selectedTo = new Date(dateTo);
+        const sameBooking = bookingId && b.id === bookingId;
+        const differentVenue = b.venue.id !== venueId;
+      
+        return !sameBooking && differentVenue &&
+          selectedFrom < existingTo && selectedTo > existingFrom;
+      });
+      
+      if (overlappingBooking) {
+        setConflictBookingId(overlappingBooking.id);
+        setShowConflictModal(true);
+        return;
+      }
+      
+    
+
     if (!dateFrom || !dateTo || guests < 1) {
         setStatusMessage("Please select a date range.");
         setStatusType("error");
@@ -192,6 +241,28 @@ const handleBookingSubmit = async () => {
         Confirm Booking
       </button>
       </div>
+      <Modal isOpen={showConflictModal} onClose={() => setShowConflictModal(false)}>
+        <div className="text-center text-white">
+            <p className="my-4">
+            You already have a booking in your calendar that overlaps with these dates.
+            Do you want to view this booking now?
+            </p>
+            <div className="flex justify-center gap-4 mt-4">
+            <button
+                onClick={() => navigate(`/booking/${conflictBookingId}`)}
+                className="bg-buttonPrimary px-4 py-2 rounded hover:bg-buttonSecondary transition text-sm"
+            >
+                Yes
+            </button>
+            <button
+                onClick={() => setShowConflictModal(false)}
+                className="border border-grayPrimary px-4 py-2 rounded hover:bg-grayPrimary transition text-sm"
+            >
+                No
+            </button>
+            </div>
+        </div>
+        </Modal>
     </div>
   );
 };

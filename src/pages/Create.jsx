@@ -248,14 +248,14 @@ function Create({ handleVenueCreated }) {
           placeholder="Venue name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className={`p-2 text-blackPrimary bg-whitePrimary ${invalidFields.includes("name") ? "border-3 border-redPrimary" : ""}`}
+          className={`p-2 text-blackPrimary bg-whitePrimary rounded ${invalidFields.includes("name") ? "border-3 border-redPrimary" : ""}`}
         />
 
         <textarea
           placeholder="Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className={`p-2 min-h-16 text-blackPrimary bg-whitePrimary ${invalidFields.includes("description") ? "border-3 border-redPrimary" : ""}`}
+          className={`p-2 min-h-16 text-blackPrimary bg-whitePrimary rounded ${invalidFields.includes("description") ? "border-3 border-redPrimary" : ""}`}
         />
 
         <div className="flex flex-row items-center">
@@ -266,9 +266,9 @@ function Create({ handleVenueCreated }) {
             onChange={(e) => setPrice(e.target.value)}
             min="0"
             max="10000"
-            className={`p-2 h-8 w-full text-blackPrimary bg-whitePrimary ${invalidFields.includes("price") ? "border-3 border-redPrimary" : ""}`}
+            className={`p-2 h-8 w-full text-blackPrimary bg-whitePrimary rounded-l ${invalidFields.includes("price") ? "border-3 border-redPrimary" : ""}`}
           />
-          <p className="w-42 h-8 bg-whitePrimary text-grayPrimary cursor-default flex justify-center items-center px-4">
+          <p className="w-42 h-8 bg-whitePrimary text-grayPrimary cursor-default flex justify-center items-center px-4 rounded-r">
             NOK / night
           </p>
         </div>
@@ -280,7 +280,7 @@ function Create({ handleVenueCreated }) {
           onChange={(e) => setMaxGuests(e.target.value)}
           min="1"
           max="100"
-          className={`p-2 text-blackPrimary bg-whitePrimary ${invalidFields.includes("maxGuests") ? "border-3 border-redPrimary" : ""}`}
+          className={`p-2 text-blackPrimary bg-whitePrimary rounded ${invalidFields.includes("maxGuests") ? "border-3 border-redPrimary" : ""}`}
         />
 
         {/* Media section */}
@@ -302,14 +302,14 @@ function Create({ handleVenueCreated }) {
                     placeholder="Image URL"
                     value={item.url}
                     onChange={(e) => handleMediaChange(index, "url", e.target.value)}
-                    className="p-2 text-blackPrimary bg-whitePrimary flex w-full"
+                    className="p-2 text-blackPrimary bg-whitePrimary flex w-full rounded"
                   />
                   <input
                     type="text"
                     placeholder="Image Description"
                     value={item.alt}
                     onChange={(e) => handleMediaChange(index, "alt", e.target.value)}
-                    className="p-2 text-blackPrimary bg-whitePrimary flex w-full"
+                    className="p-2 text-blackPrimary bg-whitePrimary flex w-full rounded"
                   />
                   {media.length > 1 && (
                     <button
@@ -328,7 +328,7 @@ function Create({ handleVenueCreated }) {
             <button
               type="button"
               onClick={handleAddMedia}
-              className="flex items-center gap-2 text-buttonPrimary justify-center mb-4 cursor-pointer duration-150 hover:scale-x-105 border-1 border-blackSecondary w-max py-1 px-3 hover:border-grayPrimary hover:text-buttonSecondary"
+              className="flex items-center gap-2 text-buttonPrimary justify-center mb-4 cursor-pointer duration-150 hover:scale-x-105 border-1 border-blackSecondary w-max py-1 px-3 hover:border-grayPrimary hover:text-buttonSecondary rounded"
             >
               <FaPlus size={12} />
               Add another image
@@ -362,7 +362,7 @@ function Create({ handleVenueCreated }) {
                   window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
                 }, 150);
               }}
-              className="text-buttonPrimary border-1 border-blackSecondary py-2 px-4 hover:text-buttonSecondary w-max flex flex-row gap-2 cursor-pointer hover:border-grayPrimary hover:scale-x-105 duration-150"
+              className="text-buttonPrimary border-1 border-blackSecondary py-2 px-4 hover:text-buttonSecondary w-max flex flex-row gap-2 cursor-pointer hover:border-grayPrimary hover:scale-x-105 duration-150 rounded"
             >
               <FaLocationDot />
               Add location (Optional)
@@ -395,7 +395,7 @@ function Create({ handleVenueCreated }) {
                         placeholder={fieldPlaceholders[field] || field}
                         value={location[field]}
                         onChange={(e) => handleLocationChange(field, e.target.value)}
-                        className="p-2 text-blackPrimary bg-whitePrimary"
+                        className="p-2 text-blackPrimary bg-whitePrimary rounded"
                       />
                     ))}
                 </fieldset>
@@ -417,7 +417,7 @@ function Create({ handleVenueCreated }) {
           localStorage.setItem("draftVenue", JSON.stringify(validation.venueData));
           navigate("/preview", { state: validation.venueData });
         }}
-        className="bg-buttonSecondary text-white py-2 px-4 hover:bg-buttonPrimary"
+        className="bg-buttonSecondary text-white py-2 px-4 hover:bg-buttonPrimary cursor-pointer"
       >
         Preview Venue
       </button>
@@ -425,7 +425,7 @@ function Create({ handleVenueCreated }) {
 
           <button
             type="submit"
-            className="bg-buttonPrimary text-white py-2 px-4 hover:bg-buttonSecondary"
+            className="bg-buttonPrimary text-white py-2 px-4 hover:bg-buttonSecondary cursor-pointer"
           >
             Create Venue
           </button>
