@@ -1,41 +1,53 @@
 import { useState, useEffect } from "react";
 import { FaChevronRight, FaChevronLeft, FaLongArrowAltRight } from "react-icons/fa";
+import { Link } from "react-router";
 
-const slides = [
-  {
-    url: "https://res.cloudinary.com/dtljonz0f/image/upload/c_auto,ar_4:3,w_3840,g_auto/f_auto/q_auto/v1/shutterstock_2118458942_ss_non-editorial_jnjpwq?_a=BAVAZGDX0",
-    title: "Paris",
-    description:
-      "City of light, love, and art— iconic Eiffel Tower, charming cafés, rich history, timeless beauty.",
-  },
-  {
-    url: "https://images.ctfassets.net/7mmwp5vb96tc/bYlcFkhq0IMCnebQSU2q6/3a266befbde003aa455ef23e16286bbf/bergen-norway-hgr-143160_1920-photo_shutterstock.jpg?q=40&w=3840&fm=webp",
-    title: "Bergen",
-    description:
-      "Gateway to the fjords—colorful houses, mountains, and magical nature. Norway at its finest.",
-  },
-  {
-    url: "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/348000/348698-Madrid.jpg",
-    title: "Madrid",
-    description:
-      "Spain’s vibrant heart—art, culture, flamenco, and nightlife pulsing through historic streets.",
-  },
+
+const venueIds = [
+  "85e8e3b6-1038-4dfb-bebf-a31f4c9a6ac0",
+  "3f0f0154-632c-48dc-bb8c-771eff00e217",
+  "95d632f7-95e9-461c-af8f-03c2827e7050",
 ];
 
 function HeroSlideshow() {
+  const [slides, setSlides] = useState([]);
   const [current, setCurrent] = useState(0);
   const [touchStartX, setTouchStartX] = useState(null);
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (paused) return;
+    const fetchVenues = async () => {
+      try {
+        const results = await Promise.all(
+          venueIds.map((id) =>
+            fetch(`https://v2.api.noroff.dev/holidaze/venues/${id}`)
+              .then((res) => res.json())
+              .then((json) => json.data)
+          )
+        );
 
-    const interval = setInterval(() => {
-      nextSlide();
-    }, 5000);
+        const formattedSlides = results.map((venue) => ({
+          id: venue.id, // Add this line
+          url: venue.media?.[0]?.url || "/images/NoImagePlaceholder.jpg",
+          title: venue.name,
+          description: venue.description || "No description available.",
+        }));
+        
 
+        setSlides(formattedSlides);
+      } catch (err) {
+        console.error("Failed to fetch venue data:", err);
+      }
+    };
+
+    fetchVenues();
+  }, []);
+
+  useEffect(() => {
+    if (paused || slides.length === 0) return;
+    const interval = setInterval(() => nextSlide(), 5000);
     return () => clearInterval(interval);
-  }, [current, paused]);
+  }, [current, paused, slides]);
 
   const nextSlide = () => {
     setCurrent((prev) => (prev + 1) % slides.length);
@@ -57,6 +69,8 @@ function HeroSlideshow() {
     setTouchStartX(null);
   };
 
+  if (slides.length === 0) return <div>Loading...</div>;
+
   return (
     <div
       className="relative w-full h-screen overflow-hidden"
@@ -74,12 +88,11 @@ function HeroSlideshow() {
         />
       ))}
 
-      {/* Arrows */}
       <button
         onClick={prevSlide}
         className="absolute top-1/2 left-2 z-20 transform -translate-y-1/2 bg-blackPrimary/25 p-2 rounded-full duration-150 cursor-pointer hover:bg-blackPrimary/75"
       >
-        <FaChevronLeft size={20} className="pr-0.5"/>
+        <FaChevronLeft size={20} className="pr-0.5" />
       </button>
       <button
         onClick={nextSlide}
@@ -88,18 +101,19 @@ function HeroSlideshow() {
         <FaChevronRight size={20} className="pl-0.5" />
       </button>
 
-      {/* Overlay content block with pause on hover */}
       <div
-        className="absolute bottom-1/8 right-4 w-2/4 z-20 text-left"
+        className="absolute bottom-8 right-4 w-2/4 z-20 text-left"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
         <h1 className="text-xl font-bold">{slides[current].title}</h1>
         <p className="font-thin text-xs mt-2">{slides[current].description}</p>
-        <div className="flex items-center w-max py-2 px-4 bg-buttonPrimary hover:bg-buttonSecondary text-md mt-4 duration-150 cursor-pointer gap-4">
-          <p>View more</p>
-          <FaLongArrowAltRight />
-        </div>
+        <Link to={`/venues/${slides[current].id}`}>
+          <div className="flex items-center w-max py-2 px-4 bg-buttonPrimary hover:bg-buttonSecondary text-md mt-4 duration-150 cursor-pointer gap-4 rounded">
+            <p>View more</p>
+            <FaLongArrowAltRight />
+          </div>
+        </Link>
       </div>
     </div>
   );

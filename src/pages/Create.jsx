@@ -288,41 +288,54 @@ function Create({ handleVenueCreated }) {
           <h3 className="text-sm">Images</h3>
           <div className="flex flex-col gap-4 mb-4 items-center justify-center">
             <AnimatePresence>
-              {media.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex flex-col gap-2 items-center w-full border-1 border-blackSecondary rounded p-4 overflow-hidden"
+            {media.map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col gap-2 items-center w-full border-1 border-blackSecondary rounded p-4 overflow-hidden"
+            >
+              <input
+                type="url"
+                placeholder="Image URL"
+                value={item.url}
+                onChange={(e) => handleMediaChange(index, "url", e.target.value)}
+                className="p-2 text-blackPrimary bg-whitePrimary flex w-full rounded"
+              />
+
+              <input
+                type="text"
+                placeholder="Image Description"
+                value={item.alt}
+                onChange={(e) => handleMediaChange(index, "alt", e.target.value)}
+                className="p-2 text-blackPrimary bg-whitePrimary flex w-full rounded"
+              />
+
+              {/* Thumbnail preview if valid image URL */}
+              {item.url.trim() && (
+                <img
+                  src={item.url}
+                  alt={item.alt || "Venue image preview"}
+                  className="w-32 h-20 object-cover rounded border-1 border-grayPrimary"
+                  onError={(e) => (e.target.style.display = "none")}
+                />
+              )}
+
+              {media.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => handleRemoveMedia(index)}
+                  className="text-redPrimary flex flex-row gap-2 cursor-pointer duration-150 hover:scale-x-105 justify-center items-center border-1 border-blackSecondary w-max py-1 px-3 hover:border-grayPrimary hover:text-redSecondary rounded"
                 >
-                  <input
-                    type="url"
-                    placeholder="Image URL"
-                    value={item.url}
-                    onChange={(e) => handleMediaChange(index, "url", e.target.value)}
-                    className="p-2 text-blackPrimary bg-whitePrimary flex w-full rounded"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Image Description"
-                    value={item.alt}
-                    onChange={(e) => handleMediaChange(index, "alt", e.target.value)}
-                    className="p-2 text-blackPrimary bg-whitePrimary flex w-full rounded"
-                  />
-                  {media.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveMedia(index)}
-                      className="text-redPrimary flex flex-row gap-2 cursor-pointer duration-150 hover:scale-x-105 justify-center items-center border-1 border-blackSecondary w-max py-1 px-3 hover:border-grayPrimary hover:text-redSecondary"
-                    >
-                      <FaTrash size={12} />
-                      Remove image
-                    </button>
-                  )}
-                </motion.div>
-              ))}
+                  <FaTrash size={12} />
+                  Remove image
+                </button>
+              )}
+            </motion.div>
+          ))}
+
             </AnimatePresence>
 
             <button

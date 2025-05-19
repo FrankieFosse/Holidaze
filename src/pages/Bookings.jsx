@@ -32,8 +32,8 @@ const UpcomingBookingsSection = () => {
   }, []);
 
   return (
-    <div className="my-6">
-      <h2 className="text-xl font-bold mb-2 mt-16">Upcoming Bookings Overview</h2>
+    <div className="my-6 mx-2">
+      <h2 className="text-xl font-bold mb-2 mx-2 mt-16">Upcoming Bookings Overview</h2>
       {loading ? <p>Loading...</p> : <UpcomingBookingsCalendar bookings={bookings} />}
       <BookingsByProfile />
     </div>

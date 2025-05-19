@@ -111,12 +111,12 @@ const Booking = () => {
         <h1 className="text-lg font-semibold mb-2 w-3/5">{venue?.name}</h1>
         <button
           onClick={handleViewVenue}
-          className="bg-buttonPrimary px-3 py-1 text-sm flex gap-2 items-center justify-center duration-150 hover:bg-buttonSecondary cursor-pointer"
+          className="bg-buttonPrimary px-3 py-1 text-sm flex gap-2 items-center justify-center duration-150 hover:bg-buttonSecondary cursor-pointer rounded"
         >
           View Venue <FaLongArrowAltRight />
         </button>
 
-        <div className="border-y-1 border-grayPrimary p-4 my-8">
+        <div className="border-y-1 border-grayPrimary p-4 my-4">
           <p>{venue?.price} NOK / night</p>
           <p>Max Guests: {venue?.maxGuests}</p>
           <div className="booking-dates mb-4">
@@ -125,7 +125,7 @@ const Booking = () => {
           <div className="guests mb-4">
             <p><strong>Guests:</strong> {guests}</p>
           </div>
-          <div className="total-price mb-4">
+          <div className="total-price mb-2">
             <p><strong>Total Price:</strong> {totalPrice} NOK</p>
           </div>
         </div>
@@ -133,13 +133,13 @@ const Booking = () => {
         <div className="flex flex-col gap-4">
         <button
             onClick={() => setIsEditing(true)}
-            className="bg-buttonPrimary px-3 py-1 duration-150 cursor-pointer hover:bg-buttonSecondary w-52"
+            className="bg-buttonPrimary px-3 py-1 duration-150 cursor-pointer hover:bg-buttonSecondary w-52 rounded"
             >
             Edit Booking
             </button>
           <button
             onClick={() => setIsDeleteModalOpen(true)}
-            className="bg-redPrimary px-3 py-1 duration-150 cursor-pointer hover:bg-redSecondary w-52"
+            className="bg-redPrimary px-3 py-1 duration-150 cursor-pointer hover:bg-redSecondary w-52 rounded"
             >
             Delete Booking
             </button>
