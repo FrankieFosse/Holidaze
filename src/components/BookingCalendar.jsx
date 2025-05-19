@@ -143,7 +143,7 @@ const BookingCalendar = ({
   const navigate = useNavigate();
 
   return (
-    <div className="p-2 border border-blackSecondary rounded w-full max-w-md mx-auto min-h-60 max-h-60">
+    <div className="p-2 border border-blackSecondary rounded w-full max-w-md mx-auto min-h-60 max-h-96">
       {statusMessage && <StatusMessage message={statusMessage} type={statusType} />}
 
       {/* Header */}
