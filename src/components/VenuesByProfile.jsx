@@ -70,7 +70,8 @@ function VenuesByProfile() {
           />
       {venues.length > 0 ? (
         <div>
-          <ul>
+          <div>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl-grid-cols-5">
             {venues.map((venue) => (
               <li key={venue.id}>
                 {/* Render VenueCard with the venue data as props */}
@@ -78,6 +79,7 @@ function VenuesByProfile() {
               </li>
             ))}
           </ul>
+          </div>
 
           {/* Pagination Component */}
           <Pagination 

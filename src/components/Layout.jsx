@@ -46,7 +46,7 @@ const Layout = () => {
       
       
       )}
-      <main className="bg-blackPrimary">
+      <main className="w-full lg:pl-72">
         <Outlet />
       </main>
     </div>

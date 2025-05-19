@@ -54,13 +54,13 @@ const Description = ({ text, onExpandToggle }) => {
               : "50px",
         }}
       >
-        <p className="text-xs font-thin whitespace-pre-wrap">{text}</p>
+        <p className="text-xs md:text-lg font-thin whitespace-pre-wrap">{text}</p>
       </div>
 
       {text.length > 150 && (
         <button
           onClick={toggleExpanded}
-          className="mt-1 text-xs bg-buttonPrimary px-4 py-1 cursor-pointer duration-150 hover:bg-buttonSecondary focus:outline-none"
+          className="mt-1 text-xs md:text-lg bg-buttonPrimary px-4 py-1 cursor-pointer duration-150 hover:bg-buttonSecondary focus:outline-none rounded"
         >
           {expanded ? "Show less" : "Read more"}
         </button>

@@ -3,7 +3,7 @@ import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 
 function Pagination({ page, totalPages, setPage }) {
     return (
-      <div className="pagination-controls flex flex-row justify-evenly items-center mb-8">
+      <div className="pagination-controls flex flex-row justify-center items-center mb-8 gap-8">
         <button
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           disabled={page === 1}
