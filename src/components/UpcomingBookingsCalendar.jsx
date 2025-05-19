@@ -49,7 +49,7 @@ const UpcomingBookingsCalendar = ({ bookings = [] }) => {
   const isLastDayOfBooking = (date, booking) => isSameDay(date, booking.end);
 
   return (
-    <div className="p-2 border border-blackSecondary rounded w-full max-w-md mx-auto min-h-80 max-h-80">
+    <div className="p-2 border border-blackSecondary rounded w-full max-w-md mx-auto min-h-80 max-h-120 mb-4">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <button

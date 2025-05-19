@@ -17,12 +17,12 @@ const Booking = () => {
   const [bookingDetails, setBookingDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [statusMessage, setStatusMessage] = useState("");       // ✅ Message content
-  const [statusType, setStatusType] = useState("success");      // ✅ "success" | "error" | "loading"
+  const [statusMessage, setStatusMessage] = useState("");
+  const [statusType, setStatusType] = useState("success");
   const token = localStorage.getItem("token");
+  const currentUser = localStorage.getItem("name");   // <-- Get current logged in user
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
 
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const Booking = () => {
         setStatusMessage("Loading booking...");
         setStatusType("loading");
 
-        const response = await fetch(`https://v2.api.noroff.dev/holidaze/bookings/${id}?_venue=true&_venue.bookings=true`, {
+        const response = await fetch(`https://v2.api.noroff.dev/holidaze/bookings/${id}?_venue=true&_venue.bookings=true&_customer=true`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -98,16 +98,19 @@ const Booking = () => {
   const { venue, customer, dateFrom, dateTo, guests } = bookingDetails;
   const totalPrice = venue ? venue.price * Math.ceil((new Date(dateTo) - new Date(dateFrom)) / (1000 * 60 * 60 * 24)) : 0;
 
+  // Check if current user owns this booking
+  const isOwner = customer?.name === currentUser;
+
   return (
-    <div className="booking-details-container max-w-xl mx-auto">
+    <div>
       <Return />
-      <StatusMessage message={statusMessage} type={statusType} /> {/* ✅ Show feedback */}
+      <StatusMessage message={statusMessage} type={statusType} />
 
       <div className="brightness-50 blur-xs">
         <SingleVenueHero media={venue.media} />
       </div>
 
-      <div className="venue-details mb-4 absolute w-full top-16 z-10 flex flex-col justify-center items-center">
+      <div className="venue-details mb-4 absolute w-full top-16 lg:right-0 lg:pl-72 z-10 flex flex-col justify-center items-center">
         <h1 className="text-lg font-semibold mb-2 w-3/5">{venue?.name}</h1>
         <button
           onClick={handleViewVenue}
@@ -130,39 +133,42 @@ const Booking = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
-        <button
-            onClick={() => setIsEditing(true)}
-            className="bg-buttonPrimary px-3 py-1 duration-150 cursor-pointer hover:bg-buttonSecondary w-52 rounded"
+        {/* Conditionally show Edit/Delete buttons only if user owns the booking */}
+        {isOwner && (
+          <div className="flex flex-col gap-4">
+            <button
+              onClick={() => setIsEditing(true)}
+              className="bg-buttonPrimary px-3 py-1 duration-150 cursor-pointer hover:bg-buttonSecondary w-52 rounded"
             >
-            Edit Booking
+              Edit Booking
             </button>
-          <button
-            onClick={() => setIsDeleteModalOpen(true)}
-            className="bg-redPrimary px-3 py-1 duration-150 cursor-pointer hover:bg-redSecondary w-52 rounded"
+            <button
+              onClick={() => setIsDeleteModalOpen(true)}
+              className="bg-redPrimary px-3 py-1 duration-150 cursor-pointer hover:bg-redSecondary w-52 rounded"
             >
-            Delete Booking
+              Delete Booking
             </button>
-        </div>
+          </div>
+        )}
       </div>
+
       <DeleteModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDeleteBooking}
         message="Are you sure you want to delete this booking?"
-        />
-        <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+      />
+
+      <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
         <EditBooking
-            booking={bookingDetails}
-            venue={venue}
-            onClose={() => {
+          booking={bookingDetails}
+          venue={venue}
+          onClose={() => {
             setIsEditing(false);
             // Optionally, refetch bookingDetails if needed
-            }}
+          }}
         />
-        </Modal>
-
-
+      </Modal>
     </div>
   );
 };

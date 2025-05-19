@@ -130,7 +130,7 @@ const Browse = () => {
           placeholder="Search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="bg-whitePrimary text-blackPrimary w-3/5 p-1 outline-none h-8 rounded-r"
+          className="bg-whitePrimary text-blackPrimary w-3/5 lg:w-1/5 p-1 outline-none h-8 rounded-r"
         />
       </div>
 
@@ -148,7 +148,7 @@ const Browse = () => {
       <Pagination page={page} totalPages={totalPages} setPage={setPage} />
 
       {/* Venue list */}
-      <ul>
+      <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {filteredVenues
           .slice((page - 1) * pageSize, page * pageSize) // Slice based on the current page
           .map((venue, index) => (

@@ -70,7 +70,8 @@ const [activeTab, setActiveTab] = useState("venues");
       </div>
 
       {/* Profile Details */}
-      <div className="relative z-10 mt-20 mx-4 h-64 bg-blackPrimary/25 border border-blackSecondary p-4 flex flex-row">
+      <div className="w-full flex justify-center items-center">
+      <div className="relative z-10 mt-20 mx-4 h-64 w-full md:w-2/3 xl:w-1/3 bg-blackPrimary/25 border border-blackSecondary p-4 flex flex-row">
         <div className="w-2/4 flex justify-center items-center">
           <img
             src={localStorage.getItem("avatar.url")}
@@ -92,6 +93,7 @@ const [activeTab, setActiveTab] = useState("venues");
             Edit Profile
           </button>
         </div>
+      </div>
       </div>
 
       {/* Profile Editor */}

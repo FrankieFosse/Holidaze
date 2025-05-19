@@ -15,6 +15,7 @@ const VenueCard = ({ venue }) => {
   const navigate = useNavigate();
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Spinner state
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth); // Track window width
 
   useEffect(() => {
     const loadImage = async () => {
@@ -29,6 +30,13 @@ const VenueCard = ({ venue }) => {
     loadImage();
   }, [venue]);
 
+  // Track window resize to update windowWidth state
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const handleClick = () => {
     navigate(`/venues/${venue.id}`);
   };
@@ -36,7 +44,7 @@ const VenueCard = ({ venue }) => {
   return (
     <div
       onClick={handleClick}
-      className="relative bg-cover bg-center max-w-screen min-h-96 max-h-96 flex flex-col justify-end items-center m-4 duration-150 cursor-pointer hover:scale-102"
+      className="relative bg-cover bg-center max-w-full min-h-80 max-h-96 flex flex-col justify-end items-center m-4 duration-150 cursor-pointer hover:scale-102"
       style={{
         backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
       }}
@@ -50,20 +58,23 @@ const VenueCard = ({ venue }) => {
 
       {/* Card content */}
       {!isLoading && (
-        <div className="bg-blackPrimary/90 text-whitePrimary max-h-24 w-full overflow-hidden px-4 py-4 flex flex-row items-center gap-4 z-10">
-          <div className="w-2/3 max-h-16 text-left">
-          <p className={`font-bold break-words ${venue.name.length > 8 ? "text-sm" : "text-md"}`}>
-            {venue.name.length > 20 ? `${venue.name.slice(0, 20)}...` : venue.name}
-          </p>
+        <div className="bg-blackPrimary/90 max-h-42 w-full overflow-hidden px-2 md:px-4 py-2 flex flex-row items-center z-10">
+          <div className="w-2/3 min-h-18 max-h-18 text-left flex flex-col justify-center">
+            <p className={`font-bold break-words ${venue.name.length > 8 ? "text-sm" : "text-md"}`}>
+              {venue.name.length > 20 ? `${venue.name.slice(0, 20)}...` : venue.name}
+            </p>
             <p className="font-thin text-xs break-words text-ellipsis overflow-hidden">
               {venue.description.length > 30
                 ? `${venue.description.slice(0, 30)}...`
                 : venue.description}
             </p>
           </div>
-          <div>
-            <p className="text-sm text-right">{venue.price} NOK / night</p>
-          </div>
+          {/* Conditionally render price if window width >= 300px */}
+          {windowWidth >= 300 && (
+            <div>
+              <p className="text-sm text-right">{venue.price} NOK / night</p>
+            </div>
+          )}
         </div>
       )}
     </div>

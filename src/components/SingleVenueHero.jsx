@@ -86,7 +86,7 @@ const SingleVenueHero = ({ media, expanded }) => {
         <>
           <button
             onClick={goToNext}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blackPrimary/50 text-whitePrimary p-2 rounded-full z-50 hover:bg-blackPrimary/70 cursor-pointer"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blackPrimary/50 text-whitePrimary p-2 rounded-full z-50 hover:bg-blackPrimary/70 cursor-pointer duration-150 text-md lg:text-3xl"
           >
             <FaChevronRight className="pl-0.5" />
           </button>

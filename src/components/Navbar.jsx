@@ -62,7 +62,7 @@ function Navbar() {
       {/* Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-2 right-5 z-50 text-whitePrimary cursor-pointer"
+        className="fixed top-2 right-5 z-50 lg:hidden cursor-pointer"
       >
         {isOpen ? <IoClose size={24} /> : <PiList size={24} />}
       </button>
@@ -75,7 +75,7 @@ function Navbar() {
       {/* Navbar Content */}
       <div
         ref={navRef}
-        className={`fixed top-10 z-90 w-full h-full bg-blackPrimary/90 backdrop-blur-xs text-whitePrimary overflow-hidden text-sm transition-all duration-500 ease-in-out ${
+        className={`fixed top-10 z-90 w-full h-full bg-blackPrimary/90 backdrop-blur-xs overflow-hidden text-sm transition-all duration-500 ease-in-out ${
           isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >

@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, Link } from "react-router";
 import { useState, useEffect } from "react";
 import SingleVenueHero from "../components/SingleVenueHero";
 import Rating from "../components/Rating";
@@ -12,6 +12,10 @@ import DeleteModal from "../components/DeleteModal";
 import Modal from "../components/Modal";
 import BookingsOnVenue from "../components/BookingsOnVenue";
 import EditBooking from "../components/EditBooking";  // Import the EditBooking component
+import BookingCalendar from "../components/BookingCalendar";
+import { format } from "date-fns";
+
+
 
 const SingleVenue = () => {
   const { id } = useParams();
@@ -51,6 +55,8 @@ const SingleVenue = () => {
         // Optionally show error message in UI
       });
   };
+
+
 
   const handleExpandToggle = () => {
     setExpanded((prev) => !prev);
@@ -100,14 +106,15 @@ const SingleVenue = () => {
 
   const isOwner = venue.owner.name === currentUser;
 
+  const hasLocationValues = venue.location && Object.values(venue.location).some(value => value);
 
   return (
     <>
       <SingleVenueHero media={venue.media} expanded={expanded} />
 
-      <div className="absolute z-30 text-white p-4 bottom-4 w-full overflow-hidden flex flex-row justify-between items-center gap-4 pointer-events-none">
+      <div className="absolute z-30 p-4 bottom-4 lg:bottom-16 lg:p-16 w-full overflow-hidden flex flex-row justify-between items-center gap-4 pointer-events-none">
         <div className="text-left w-3/5 pointer-events-auto">
-          <h2 className={`font-bold break-words overflow-hidden text-ellipsis ${venue.name.length > 100 ? "text-sm" : "text-xl"}`}>
+          <h2 className={`font-bold break-words overflow-hidden text-ellipsis ${venue.name.length > 100 ? "text-sm lg:text-xl" : "text-xl lg:text-3xl"}`}>
             {venue.name}
           </h2>
 
@@ -120,21 +127,23 @@ const SingleVenue = () => {
 
       <Return />
 
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:text-lg lg:text-xl xl:text-2xl">
+
       <div className="border-1 border-blackSecondary mx-2 my-4">
         <div className="flex flex-row justify-evenly items-center my-4 mx-2 gap-4">
-          <p className="text-sm">{venue.price} NOK / night</p>
+          <p className="">{venue.price} NOK / night</p>
           <div className="flex items-center gap-2">
           {userBooking ? (
           <div className="flex flex-col gap-4">
             <button
-              className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 h-8 text-sm duration-150 cursor-pointer rounded"
+              className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 min-h-8 max-h-16 duration-150 cursor-pointer rounded"
               onClick={() => navigate(`/booking/${userBooking.id}`)}
             >
               View booking
             </button>
             {!isOwner && (
               <button
-                className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 h-8 text-xs duration-150 cursor-pointer rounded"
+                className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 min-h-8 max-h-16 duration-150 cursor-pointer rounded"
                 onClick={() => {
                   setIsAddingNewBooking(true);
                   setShowBookingForm(true);
@@ -146,7 +155,7 @@ const SingleVenue = () => {
           </div>
         ) : (
           <button
-            className={`rounded py-2 px-4 text-white ${isOwner ? "bg-grayPrimary cursor-not-allowed" : "bg-buttonPrimary hover:bg-buttonSecondary"}`}
+            className={`rounded py-2 px-4 ${isOwner ? "bg-grayPrimary cursor-default" : "bg-buttonPrimary hover:bg-buttonSecondary cursor-pointer"}`}
             disabled={isOwner}
             onClick={() => {
               if (!isOwner) {
@@ -165,7 +174,7 @@ const SingleVenue = () => {
         {/* Display other venue details like max guests, amenities, etc. */}
         <div className="flex flex-col justify-center items-center">
           <p>Max Guests</p>
-          <div className="border-1 border-grayPrimary rounded-full w-12 h-12 p-2 flex items-center justify-center">{venue.maxGuests}</div>
+          <div className="border-1 border-grayPrimary rounded-full min-w-16 min-h-16 p-2 flex items-center justify-center">{venue.maxGuests}</div>
         </div>
         <div className="flex flex-row justify-evenly my-4 gap-4 scale-80">
           {[{ condition: venue.meta.wifi, icon: <FaWifi className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "WiFi included" },
@@ -174,31 +183,98 @@ const SingleVenue = () => {
             { condition: venue.meta.breakfast, icon: <MdOutlinePets className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Pets allowed" }].map(({ condition, icon, label }, index) => condition && (
               <div key={index} className="flex flex-col items-center gap-2">
                 {icon}
-                <p className="text-xs font-thin">{label}</p>
+                <p className="text-xs md:text-lg font-thin">{label}</p>
               </div>
             ))}
         </div>
-        <p className="text-xs font-thin opacity-50">Created {venue.created.slice(0, 10).split('-').reverse().join('.')}</p>
+        <p className="text-xs md:text-sm font-thin opacity-50">Created {venue.created.slice(0, 10).split('-').reverse().join('.')}</p>
       </div>
 
-      {/* Media Section */}
-      {venue.media && venue.media.length > 0 && (
-        <div className="border-1 border-blackSecondary mx-2 my-4 flex justify-center items-center flex-col">
-          <h2>Media</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 justify-center items-center self-center">
-            {venue.media.map((mediaItem, index) => (
-              <div key={index} className="overflow-hidden cursor-pointer" onClick={() => handleImageClick(index)}>
-                <img
-                  src={mediaItem.url}
-                  alt={`Media ${index + 1}`}
-                  className="w-64 h-32 object-cover rounded-md"
-                  onError={handleImageError}
-                />
-              </div>
-            ))}
+      {/* Owner Section */}
+      <div className="border-1 border-blackSecondary mx-2 my-4 p-4 flex-col justify-center items-center">
+        <h2 className="font-bold mb-2">Venue Owner</h2>
+        <div className="justify-center items-center flex flex-col">
+        <p className="font-semibold">{venue.owner.name}</p>
+        <img src={venue.owner.avatar.url} className="min-h-16 max-h-16 min-w-16 max-w-16 rounded-full" />
+        </div>
+      </div>
+
+      {hasLocationValues && (
+        <div className="border-1 border-blackSecondary mx-2 my-4 p-4">
+          <h2 className="font-bold mb-2">Location Details</h2>
+          <div className="text-whiteSecondary">
+            {venue.location.address && <p><strong>Address:</strong> {venue.location.address}</p>}
+            {venue.location.city && <p><strong>City:</strong> {venue.location.city}</p>}
+            {venue.location.zip && <p><strong>ZIP:</strong> {venue.location.zip}</p>}
+            {venue.location.country && <p><strong>Country:</strong> {venue.location.country}</p>}
+            {venue.location.continent && <p><strong>Continent:</strong> {venue.location.continent}</p>}
           </div>
         </div>
       )}
+
+
+
+
+      {/* Booked Dates Overview */}
+      {isOwner && bookings.length > 0 && (
+        <div className="border-1 border-blackSecondary mx-2 my-4 p-4 col-span-1 md:col-span-3 justify-center items-center flex flex-col">
+          <h2 className="font-bold mb-4">Booked Dates</h2>
+          <ul className="list-none pl-5 space-y-2">
+            {bookings
+              .sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom))
+              .map((booking) => (
+                <li key={booking.id}>
+                  <Link
+                    to={`/booking/${booking.id}`}
+                    className="font-semibold bg-buttonPrimary hover:bg-buttonSecondary duration-150 px-6 py-1 rounded flex justify-center items-center w-max"
+                  >
+                    {format(new Date(booking.dateFrom), "dd.MM.yyyy")} → {format(new Date(booking.dateTo), "dd.MM.yyyy")}<br></br>({booking.guests} guest{booking.guests > 1 ? "s" : ""})
+                  </Link>
+                </li>
+              ))}
+          </ul>
+        </div>
+      )}
+
+
+
+
+    </div>
+
+  {/* Media Section */}
+  {venue.media && venue.media.length > 0 && (
+    <div className="border-1 border-blackSecondary mx-2 my-4 flex justify-center items-center flex-col h-max">
+      <h2>Media</h2>
+      <div
+        className={`grid gap-4 p-4 place-items-center ${
+          venue.media.length === 1
+            ? 'grid-cols-1'
+            : venue.media.length === 2
+            ? 'grid-cols-2'
+            : venue.media.length === 3
+            ? 'grid-cols-3'
+            : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+        }`}
+      >
+        {venue.media.map((mediaItem, index) => (
+          <div
+            key={index}
+            className="overflow-hidden cursor-pointer"
+            onClick={() => handleImageClick(index)}
+          >
+            <img
+              src={mediaItem.url}
+              alt={`Media ${index + 1}`}
+              className="w-64 h-32 object-cover rounded-md"
+              onError={handleImageError}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
+
 
       {showBookingForm && (
         <Modal isOpen={showBookingForm} onClose={() => setShowBookingForm(false)}>
