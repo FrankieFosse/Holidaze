@@ -98,6 +98,9 @@ const SingleVenue = () => {
   if (error) return <p>Error: {error}</p>;
   if (!venue) return <p>No venue found</p>;
 
+  const isOwner = venue.owner.name === currentUser;
+
+
   return (
     <>
       <SingleVenueHero media={venue.media} expanded={expanded} />
@@ -121,41 +124,41 @@ const SingleVenue = () => {
         <div className="flex flex-row justify-evenly items-center my-4 mx-2 gap-4">
           <p className="text-sm">{venue.price} NOK / night</p>
           <div className="flex items-center gap-2">
-            {userBooking ? (
-              // If the user has a booking, display two buttons
-              <>
-                <div className="flex flex-col gap-4">
-                  <button
-                    className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 text-sm duration-150 cursor-pointer"
-                    onClick={() => {
-                      navigate(`/booking/${userBooking.id}`);
-                    }}
-                  >
-                    View booking
-                  </button>
-                  <button
-                    className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 text-xs duration-150 cursor-pointer"
-                    onClick={() => {
-                      setIsAddingNewBooking(true);  // Set to create a new booking
-                      setShowBookingForm(true);
-                    }}
-                  >
-                    Add another booking
-                  </button>
-                </div>
-              </>
-            ) : (
-              // If no booking exists, display the "Book Now" button
+          {userBooking ? (
+          <div className="flex flex-col gap-4">
+            <button
+              className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 h-8 text-sm duration-150 cursor-pointer rounded"
+              onClick={() => navigate(`/booking/${userBooking.id}`)}
+            >
+              View booking
+            </button>
+            {!isOwner && (
               <button
-                className="bg-buttonPrimary hover:bg-buttonSecondary py-2 px-4 text-white"
+                className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 h-8 text-xs duration-150 cursor-pointer rounded"
                 onClick={() => {
-                  setIsAddingNewBooking(true);  // Set to create a new booking
+                  setIsAddingNewBooking(true);
                   setShowBookingForm(true);
                 }}
               >
-                Book Now
+                Add another booking
               </button>
             )}
+          </div>
+        ) : (
+          <button
+            className={`rounded py-2 px-4 text-white ${isOwner ? "bg-grayPrimary cursor-not-allowed" : "bg-buttonPrimary hover:bg-buttonSecondary"}`}
+            disabled={isOwner}
+            onClick={() => {
+              if (!isOwner) {
+                setIsAddingNewBooking(true);
+                setShowBookingForm(true);
+              }
+            }}
+          >
+            Book Now
+          </button>
+        )}
+
           </div>
         </div>
 
@@ -175,7 +178,7 @@ const SingleVenue = () => {
               </div>
             ))}
         </div>
-        <p className="text-sm font-thin opacity-50">Created {venue.created.slice(0, 10).split('-').reverse().join('.')}</p>
+        <p className="text-xs font-thin opacity-50">Created {venue.created.slice(0, 10).split('-').reverse().join('.')}</p>
       </div>
 
       {/* Media Section */}
@@ -227,6 +230,24 @@ const SingleVenue = () => {
         onConfirm={handleDelete}
         message="Are you sure you want to delete this venue?"
       />
+
+    {isOwner && (
+      <div className="flex justify-center gap-4 my-6">
+        <button
+          onClick={() => navigate(`/venues/edit/${venue.id}`)}
+          className="bg-buttonPrimary hover:bg-buttonSecondary px-4 py-2 w-20 rounded cursor-pointer duration-150"
+        >
+          Edit
+        </button>
+        <button
+          onClick={() => setIsDeleteModalOpen(true)}
+          className="bg-redPrimary hover:bg-redSecondary px-4 py-2 w-20 rounded cursor-pointer duration-150"
+        >
+          Delete
+        </button>
+      </div>
+    )}
+
     </>
   );
 };

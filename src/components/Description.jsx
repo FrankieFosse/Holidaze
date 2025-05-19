@@ -31,7 +31,7 @@ const Description = ({ text, onExpandToggle }) => {
     if (contentRef.current) {
       contentRef.current.style.maxHeight =
         expanded && isLongText
-          ? "150px"
+          ? "300px"
           : expanded
           ? `${contentRef.current.scrollHeight}px`
           : "50px";
@@ -48,7 +48,7 @@ const Description = ({ text, onExpandToggle }) => {
         style={{
           maxHeight:
             expanded && isLongText
-              ? "150px"
+              ? "300px"
               : expanded
               ? `${contentRef.current?.scrollHeight}px`
               : "50px",
