@@ -61,7 +61,7 @@ const [activeTab, setActiveTab] = useState("venues");
 
   return (
     <div>
-      <div className="absolute top-0 left-0 w-full z-0">
+      <div className="absolute top-0 left-0 w-full z-0 lg:pl-72">
         <img
           src={localStorage.getItem("banner.url")}
           alt={localStorage.getItem("banner.alt") || "Banner"}

@@ -143,7 +143,7 @@ const BookingCalendar = ({
   const navigate = useNavigate();
 
   return (
-    <div className="p-2 border border-blackSecondary rounded w-full max-w-md mx-auto min-h-60 max-h-96">
+    <div className="p-2 w-full max-w-xs mx-auto min-h-60 2xl:min-h-116 max-h-auto bg-blackSecondary/25">
       {statusMessage && <StatusMessage message={statusMessage} type={statusType} />}
 
       {/* Header */}
@@ -151,7 +151,7 @@ const BookingCalendar = ({
         <button
           onClick={() => !isPrevDisabled && setCurrentMonth(addMonths(currentMonth, -1))}
           disabled={isPrevDisabled}
-          className={`text-xs p-1 border-1 border-blackSecondary duration-150 rounded ${isPrevDisabled ? "text-blackSecondary border-blackSecondary" : "hover:bg-blackSecondary hover:border-grayPrimary"}`}
+          className={`text-xs p-1 border-1 border-blackSecondary duration-150 rounded ${isPrevDisabled ? "text-blackSecondary border-blackSecondary" : "cursor-pointer hover:bg-blackSecondary hover:border-grayPrimary"}`}
         >
           <FaChevronLeft />
         </button>
@@ -159,21 +159,21 @@ const BookingCalendar = ({
         <button
           onClick={() => !isNextDisabled && setCurrentMonth(addMonths(currentMonth, 1))}
           disabled={isNextDisabled}
-          className={`text-xs p-1 border-1 border-blackSecondary duration-150 rounded ${isNextDisabled ? "text-blackSecondary border-blackSecondary" : "hover:bg-blackSecondary hover:border-grayPrimary"}`}
+          className={`text-xs p-1 border-1 border-blackSecondary duration-150 rounded ${isNextDisabled ? "text-blackSecondary border-blackSecondary" : "cursor-pointer hover:bg-blackSecondary hover:border-grayPrimary"}`}
         >
           <FaChevronRight />
         </button>
       </div>
 
       {/* Weekday Headers */}
-      <div className="grid grid-cols-7 gap-1 text-xs text-center font-medium mb-1">
+      <div className="grid grid-cols-7 gap-1 text-xs text-center font-medium mb-1 sm:mx-8 lg:mx-0">
         {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
           <div key={d}>{d}</div>
         ))}
       </div>
 
       {/* Calendar Days */}
-      <div className="grid grid-cols-7 gap-1 text-sm">
+      <div className="grid grid-cols-7 gap-1 text-sm sm:mx-8 lg:mx-0">
         {Array(startOfMonth(currentMonth).getDay()).fill(null).map((_, i) => (
           <div key={`empty-${i}`} />
         ))}

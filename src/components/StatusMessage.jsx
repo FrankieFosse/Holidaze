@@ -8,7 +8,7 @@ export default function StatusMessage({ message, type }) {
       ? "bg-redSecondary"
       : type === "success"
       ? "bg-buttonPrimary"
-      : "bg-buttonPrimary";
+      : "bg-buttonSecondary";
 
 
   return (
@@ -19,12 +19,14 @@ export default function StatusMessage({ message, type }) {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.8 }}  // Fade out and shrink
         transition={{ duration: 0.3 }}
-        className={`fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 px-6 py-3 w-4/5 rounded ${bgColorClass} border-1 border-blackPrimary text-whitePrimary text-sm flex items-center justify-center gap-4`}
+        className={`fixed top-1/3 lg:pl-72 left-0 z-90 px-6 py-3 w-full flex items-center justify-center`}
       >
         {type === "loading" && (
-          <div className="border-4 border-white border-t-transparent rounded-full w-6 h-6 animate-spin" />
+          <div className="border-4 border-white border-t-transparent rounded-full w-6 h-6 animate-spin mr-4" />
         )}
-        <span>{message}</span>
+        <span
+          className={`${bgColorClass} px-6 py-3 rounded text-sm lg:text-xl`}
+        >{message}</span>
       </motion.div>
     </AnimatePresence>
   );

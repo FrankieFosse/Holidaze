@@ -15,6 +15,7 @@ function DesktopNavbar() {
     const token = localStorage.getItem("token");
     const email = localStorage.getItem("email");
     const venueManager = localStorage.getItem("venueManager");
+
     setIsLoggedIn(!!(token && email));
     setIsVenueManager(venueManager === "true");
   }, [location]);
@@ -25,12 +26,17 @@ function DesktopNavbar() {
     navigate("/", { state: { message: "You are now logged out" } });
   };
 
+  const userName = localStorage.getItem("name");
+  const avatarUrl = localStorage.getItem("avatar.url");
+
   return (
-    <nav className="hidden lg:flex lg:flex-col justify-between lg:fixed lg:top-0 lg:left-0 lg:h-full lg:w-72 bg-blackPrimary/80 text-sm z-40 p-4 gap-4 overflow-y-auto border-r border-grayPrimary">
-        <div className="flex flex-col gap-8 justify-center items-center">
+    <nav className="hidden lg:flex lg:flex-col justify-between lg:fixed lg:top-0 lg:left-0 lg:h-full lg:w-72 bg-blackPrimary/80 text-sm z-40 py-2 gap-4 overflow-y-auto border-r border-grayPrimary">
+        <div className="flex flex-col gap-2 2xl:gap-8 justify-center items-center">
+            <div className="bg-blackSecondary w-full flex justify-center">
         <Link to="/">
-                <img src="/images/Holidaze Logo v1.png" className="top-1 relative max-w-24 min-w-24 max-h-24 min-h-24 overflow-hidden hover:scale-105 duration-150"></img>
+                <img src="/images/Holidaze Logo v1.png" className="top-0 relative max-w-24 min-w-24 max-h-24 min-h-24 overflow-hidden hover:scale-105 duration-150"></img>
             </Link>
+            </div>
       {isVenueManager && (
         <Link
           to="/create"
@@ -52,7 +58,7 @@ function DesktopNavbar() {
         <MdExplore size={20} /> Browse
       </Link>
     </div>
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-2 2xl:gap-8">
       {isLoggedIn && (
         <>
           <Link
@@ -84,6 +90,14 @@ function DesktopNavbar() {
         >
           <FiLogIn size={20} /> Log in
         </Link>
+      )}
+      {isLoggedIn && (
+        <div className="flex flex-row justify-evenly items-center bg-blackSecondary py-4">
+        <img src={avatarUrl} 
+             className="min-w-16 max-w-16 min-h-16 max-h-16 rounded-full"
+        />
+        <p>{userName}</p>
+        </div>
       )}
       </div>
     </nav>

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { FaLongArrowAltRight, FaLongArrowAltLeft, FaWifi } from "react-icons/fa";
 import { MdLocalParking, MdFreeBreakfast, MdOutlinePets } from "react-icons/md";
+import Return from "../components/Return";
 
 const Preview = () => {
   const location = useLocation();
@@ -108,20 +109,12 @@ const Preview = () => {
         </div>
       </div>
 
-      <div className="fixed top-24 left-4 z-40 bg-blackPrimary/75 border-1 border-grayPrimary rounded-full px-4 py-2 cursor-pointer duration-150 hover:bg-blackPrimary/100">
-              <div
-              className="flex flex-col items-center justify-center"
-              onClick={() => navigate(-1)}
-              >
-                  <FaLongArrowAltLeft />
-                  <p className="text-xs">Go back</p>
-              </div>
-            </div>
+      <Return />
 
       <div className="border-1 border-blackSecondary mx-2 my-4">
               <div className="flex flex-row justify-evenly items-center my-4 mx-2 gap-4">
                 <p className="text-sm">{venue.price} NOK / night</p>
-                <button className="flex items-center w-max py-2 px-2 bg-buttonPrimary hover:bg-buttonSecondary text-md duration-150 cursor-pointer gap-2">
+                <button className="flex items-center w-max py-2 px-2 bg-buttonPrimary hover:bg-buttonSecondary text-md duration-150 cursor-pointer gap-2 rounded">
                   Book now <FaLongArrowAltRight />
                 </button>
               </div>
@@ -177,7 +170,7 @@ const Preview = () => {
         <div className="flex justify-center items-center my-8">
         <button
             onClick={handleCreateVenue}
-            className="bg-buttonPrimary hover:bg-buttonSecondary text-white py-2 px-4 rounded"
+            className="bg-buttonPrimary hover:bg-buttonSecondary py-2 px-4 rounded duration-150 cursor-pointer"
         >
             Create Venue
         </button>

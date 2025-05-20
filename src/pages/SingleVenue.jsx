@@ -14,6 +14,8 @@ import BookingsOnVenue from "../components/BookingsOnVenue";
 import EditBooking from "../components/EditBooking";  // Import the EditBooking component
 import BookingCalendar from "../components/BookingCalendar";
 import { format } from "date-fns";
+import StatusMessage from "../components/StatusMessage";
+
 
 
 
@@ -35,6 +37,9 @@ const SingleVenue = () => {
   const currentUser = localStorage.getItem("name");
   const token = localStorage.getItem("token");
 
+  const [statusMessage, setStatusMessage] = useState(null);
+  const [statusType, setStatusType] = useState(null);
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleDelete = () => {
@@ -48,14 +53,29 @@ const SingleVenue = () => {
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to delete venue");
-        navigate("/profile", { state: { message: "Venue deleted successfully" } });
+        setStatusMessage("Venue deleted successfully");
+        setStatusType("success");
+        setTimeout(() => {
+          navigate("/profile");
+        }, 1500); // Delay to let user see the message
       })
       .catch((err) => {
         console.error(err);
-        // Optionally show error message in UI
+        setStatusMessage("Failed to delete venue");
+        setStatusType("error");
       });
   };
-
+  
+  useEffect(() => {
+    if (statusMessage) {
+      const timer = setTimeout(() => {
+        setStatusMessage(null);
+        setStatusType(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [statusMessage]);
+  
 
 
   const handleExpandToggle = () => {
@@ -110,9 +130,10 @@ const SingleVenue = () => {
 
   return (
     <>
+    <StatusMessage message={statusMessage} type={statusType} />
       <SingleVenueHero media={venue.media} expanded={expanded} />
 
-      <div className="absolute z-30 p-4 bottom-4 lg:bottom-16 lg:p-16 w-full overflow-hidden flex flex-row justify-between items-center gap-4 pointer-events-none">
+      <div className="absolute left-0 z-30 p-4 bottom-4 lg:bottom-16 lg:p-16 w-full lg:pl-80 overflow-hidden flex flex-row justify-between items-center gap-4 pointer-events-none">
         <div className="text-left w-3/5 pointer-events-auto">
           <h2 className={`font-bold break-words overflow-hidden text-ellipsis ${venue.name.length > 100 ? "text-sm lg:text-xl" : "text-xl lg:text-3xl"}`}>
             {venue.name}

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { FaChevronRight, FaChevronLeft, FaLongArrowAltRight } from "react-icons/fa";
 import { Link } from "react-router";
 
-
 const venueIds = [
   "85e8e3b6-1038-4dfb-bebf-a31f4c9a6ac0",
   "3f0f0154-632c-48dc-bb8c-771eff00e217",
@@ -27,12 +26,11 @@ function HeroSlideshow() {
         );
 
         const formattedSlides = results.map((venue) => ({
-          id: venue.id, // Add this line
+          id: venue.id,
           url: venue.media?.[0]?.url || "/images/NoImagePlaceholder.jpg",
           title: venue.name,
           description: venue.description || "No description available.",
         }));
-        
 
         setSlides(formattedSlides);
       } catch (err) {
@@ -77,6 +75,15 @@ function HeroSlideshow() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Overlay moved here */}
+      <div
+        className="absolute top-0 left-0 w-full h-full z-20 pointer-events-none"
+        style={{
+          backgroundImage:
+            "linear-gradient(to bottom, transparent 50%, #0e0e0e 100%)",
+        }}
+      ></div>
+
       {slides.map((slide, index) => (
         <img
           key={index}
@@ -88,28 +95,30 @@ function HeroSlideshow() {
         />
       ))}
 
+      {/* Navigation buttons */}
       <button
         onClick={prevSlide}
-        className="absolute top-1/2 left-2 z-20 transform -translate-y-1/2 bg-blackPrimary/25 p-2 rounded-full duration-150 cursor-pointer hover:bg-blackPrimary/75"
+        className="absolute top-1/2 left-2 z-30 transform -translate-y-1/2 bg-blackPrimary/25 p-2 rounded-full duration-150 cursor-pointer hover:bg-blackPrimary/75"
       >
         <FaChevronLeft size={20} className="pr-0.5" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute top-1/2 right-2 z-20 transform -translate-y-1/2 bg-blackPrimary/25 p-2 rounded-full duration-150 cursor-pointer hover:bg-blackPrimary/75"
+        className="absolute top-1/2 right-2 z-30 transform -translate-y-1/2 bg-blackPrimary/25 p-2 rounded-full duration-150 cursor-pointer hover:bg-blackPrimary/75"
       >
         <FaChevronRight size={20} className="pl-0.5" />
       </button>
 
+      {/* Slide info */}
       <div
-        className="absolute bottom-8 right-4 w-2/4 z-20 text-left"
+        className="absolute bottom-8 right-4 w-2/4 lg:w-1/3 z-30 text-left"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
-        <h1 className="text-xl font-bold">{slides[current].title}</h1>
-        <p className="font-thin text-xs mt-2">{slides[current].description}</p>
+        <h1 className="text-xl font-bold lg:text-3xl">{slides[current].title}</h1>
+        <p className="font-thin text-xs mt-2 lg:text-lg">{slides[current].description}</p>
         <Link to={`/venues/${slides[current].id}`}>
-          <div className="flex items-center w-max py-2 px-4 bg-buttonPrimary hover:bg-buttonSecondary text-md mt-4 duration-150 cursor-pointer gap-4 rounded">
+          <div className="flex items-center w-max py-2 px-4 bg-buttonPrimary hover:bg-buttonSecondary text-md mt-4 duration-150 cursor-pointer gap-4 rounded lg:text-2xl">
             <p>View more</p>
             <FaLongArrowAltRight />
           </div>

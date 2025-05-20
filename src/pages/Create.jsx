@@ -238,7 +238,7 @@ function Create({ handleVenueCreated }) {
   };
 
   return (
-    <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-8 text-xs">
+    <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-8 text-xs 2xl:text-lg">
       <StatusMessage message={statusMessage} type={statusType} />
       <h1 className="text-xl mb-4">Create New Venue</h1>
 
@@ -266,9 +266,9 @@ function Create({ handleVenueCreated }) {
             onChange={(e) => setPrice(e.target.value)}
             min="0"
             max="10000"
-            className={`p-2 h-8 w-full text-blackPrimary bg-whitePrimary rounded-l ${invalidFields.includes("price") ? "border-3 border-redPrimary" : ""}`}
+            className={`p-2 min-h-8 w-full text-blackPrimary bg-whitePrimary rounded-l ${invalidFields.includes("price") ? "border-3 border-redPrimary" : ""}`}
           />
-          <p className="w-42 h-8 bg-whitePrimary text-grayPrimary cursor-default flex justify-center items-center px-4 rounded-r">
+          <p className="w-42 min-h-8 bg-whitePrimary text-grayPrimary cursor-default flex justify-center items-center py-2 px-4 rounded-r">
             NOK / night
           </p>
         </div>
@@ -419,7 +419,7 @@ function Create({ handleVenueCreated }) {
 
         {error && <p className="text-redPrimary">{error}</p>}
 
-        <div className="flex gap-4">
+        <div className="flex justify-evenly w-full gap-4">
 
         <button
         type="button"
@@ -430,7 +430,7 @@ function Create({ handleVenueCreated }) {
           localStorage.setItem("draftVenue", JSON.stringify(validation.venueData));
           navigate("/preview", { state: validation.venueData });
         }}
-        className="bg-buttonSecondary text-white py-2 px-4 hover:bg-buttonPrimary cursor-pointer"
+        className="bg-buttonPrimary text-white py-2 px-4 hover:bg-buttonSecondary cursor-pointer duration-150 rounded"
       >
         Preview Venue
       </button>
@@ -438,7 +438,7 @@ function Create({ handleVenueCreated }) {
 
           <button
             type="submit"
-            className="bg-buttonPrimary text-white py-2 px-4 hover:bg-buttonSecondary cursor-pointer"
+            className="bg-buttonPrimary text-white py-2 px-4 hover:bg-buttonSecondary cursor-pointer duration-150 rounded"
           >
             Create Venue
           </button>

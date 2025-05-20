@@ -66,7 +66,18 @@ const BookingsByProfile = () => {
       {bookingsError && <p className="text-redPrimary">Error: {bookingsError}</p>}
       {!loadingBookings && bookings.length === 0 && <p>No bookings found.</p>}
 
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl-grid-cols-5">
+      <ul
+        className={`grid gap-4 mx-4 justify-center place-items-center ${
+          currentBookings.length === 1
+            ? "grid-cols-1"
+            : currentBookings.length === 2
+            ? "grid-cols-2"
+            : currentBookings.length === 3
+            ? "grid-cols-3"
+            : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+        }`}
+      >
+
         {currentBookings.map((booking) => {
           const imageUrl = booking.venue.media?.[0]?.url;
 
@@ -74,7 +85,7 @@ const BookingsByProfile = () => {
             <Link
               to={`/booking/${booking.id}`}
               key={booking.id}
-              className="block border-1 border-blackSecondary mx-4 mb-4 rounded hover:bg-blackSecondary hover:border-grayPrimary duration-150 bg-cover bg-center"
+              className="block border-1 border-blackSecondary mx-4 mb-4 rounded hover:bg-blackSecondary hover:border-grayPrimary duration-150 bg-cover bg-center w-full"
               style={{
                 backgroundImage: imageUrl ? `url(${imageUrl})` : "none",
               }}
