@@ -2,6 +2,8 @@ import { BsQuestionLg } from "react-icons/bs";
 import { useState, useEffect } from "react";
 import clsx from "clsx"; // Optional: for cleaner class toggling
 import StatusMessage from "./StatusMessage";
+import Tooltip from "./Tooltip";
+
 
 function ProfileEditor({ onCancel }) {
   const [bio, setBio] = useState("");
@@ -12,6 +14,9 @@ function ProfileEditor({ onCancel }) {
   const [venueManager, setVenueManager] = useState(false);
   const [pendingVenueManager, setPendingVenueManager] = useState(false);
   const [error, setError] = useState("");
+  const [isAvatarValid, setIsAvatarValid] = useState(false);
+  const [isBannerValid, setIsBannerValid] = useState(false);
+
 
   const [loading, setLoading] = useState(false);
 
@@ -25,6 +30,23 @@ function ProfileEditor({ onCancel }) {
       setTimeout(() => setStatusMessage(""), 2000);
     }
   }
+
+  useEffect(() => {
+    if (isValidUrl(avatarUrl)) {
+      isImageLoadable(avatarUrl).then(setIsAvatarValid);
+    } else {
+      setIsAvatarValid(false);
+    }
+  }, [avatarUrl]);
+  
+  useEffect(() => {
+    if (isValidUrl(bannerUrl)) {
+      isImageLoadable(bannerUrl).then(setIsBannerValid);
+    } else {
+      setIsBannerValid(false);
+    }
+  }, [bannerUrl]);
+  
 
   const defaultBanners = [
     {
@@ -54,7 +76,9 @@ function ProfileEditor({ onCancel }) {
   ];
 
   useEffect(() => {
-    setBio(localStorage.getItem("bio") || "");
+    const storedBio = localStorage.getItem("bio");
+    setBio(!storedBio || storedBio === "null" ? "" : storedBio);
+
     setAvatarUrl(localStorage.getItem("avatar.url") || "");
     setAvatarAlt(localStorage.getItem("avatar.alt") || "");
     setBannerUrl(localStorage.getItem("banner.url") || "");
@@ -63,9 +87,27 @@ function ProfileEditor({ onCancel }) {
     setVenueManager(isManager);
     setPendingVenueManager(isManager);
   }, []);
+  
 
   async function updateProfile(event) {
     event.preventDefault();
+
+    if (bannerUrl) {
+      const validImage = await isImageLoadable(bannerUrl);
+      if (!validImage) {
+        setError("Banner URL must point to a valid image.");
+        return;
+      }
+    }
+
+    if (avatarUrl) {
+      const validAvatar = await isImageLoadable(avatarUrl);
+      if (!validAvatar) {
+        setError("Avatar URL must point to a valid image.");
+        return;
+      }
+    }    
+     
 
     if (bio.length > 160) {
       setError("Bio must be 160 characters or less.");
@@ -74,6 +116,7 @@ function ProfileEditor({ onCancel }) {
 
     setLoading(true);
     setError("");
+    showStatusMessage("Updating profile...", "loading");    
 
     try {
       const name = localStorage.getItem("name");
@@ -119,6 +162,9 @@ function ProfileEditor({ onCancel }) {
       // Scroll to top
       window.scrollTo({ top: 0, behavior: "smooth" });
 
+      setLoading(false);
+      setStatusMessage("Saving changes...");
+
       // Optional: Refresh after a delay
       setTimeout(() => {
         location.reload();
@@ -128,8 +174,30 @@ function ProfileEditor({ onCancel }) {
       console.error(error.message);
       setError(error.message);
       setLoading(false);
+      setStatusMessage("");
     }
   }
+
+  function isValidUrl(string) {
+    try {
+      new URL(string);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+  
+
+  function isImageLoadable(url) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(true); // Loads successfully
+      img.onerror = () => resolve(false); // Fails to load
+      img.src = url;
+    });
+  }
+  
+  
 
   // New function to handle default banner click and update alt text
   function handleBannerClick(url, alt) {
@@ -141,83 +209,90 @@ function ProfileEditor({ onCancel }) {
     <div className="bg-blackSecondary text-whitePrimary w-full p-4 mt-5">
       <StatusMessage message={statusMessage} type={statusType} />
 
-      {loading && (
-        <div className="flex items-center justify-center gap-3 bg-buttonPrimary py-2 px-4 rounded mt-2 text-sm">
-          <div className="border-2 border-white border-t-transparent rounded-full w-5 h-5 animate-spin" />
-          Updating profile...
-        </div>
-      )}
-
-      {error && (
-        <div className="text-red-500 bg-red-100 px-4 py-2 mt-2 text-sm rounded">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={updateProfile} className="flex flex-col gap-4 items-center text-xs">
-        <div className="w-full flex flex-col gap-1">
+      <form onSubmit={updateProfile} className="flex flex-col 2xl:grid grid-cols-4 2xl:gap-8 gap-4 justify-center items-center 2xl:items-start text-xs lg:text-lg 2xl:px-12">
+        <div className="w-full flex flex-col justify-center items-center gap-1 col-span-4">
           <label htmlFor="bio">Bio (max 160 characters)</label>
           <textarea
             id="bio"
-            className="bg-whitePrimary text-blackPrimary w-full min-h-16 p-2 outline-none"
+            className="bg-whitePrimary text-blackPrimary w-full md:w-3/4 lg:w-2/4 2xl:w-full min-h-16 p-2 outline-none rounded"
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             maxLength={160}
+            placeholder="Bio"
           />
         </div>
 
-        <div className="w-full flex flex-col gap-1">
+        <div className="w-full flex flex-col items-center gap-1">
           <label htmlFor="avatarUrl">Avatar URL</label>
           <input
             id="avatarUrl"
             type="text"
-            className="bg-whitePrimary text-blackPrimary w-full p-2 outline-none"
+            className="bg-whitePrimary text-blackPrimary w-full md:w-3/4 lg:w-2/4 2xl:w-full p-2 outline-none rounded"
             value={avatarUrl}
             onChange={(e) => setAvatarUrl(e.target.value)}
           />
+          {isAvatarValid && (
+            <img
+              src={avatarUrl}
+              alt={avatarAlt || "Avatar preview"}
+              className="mt-2 rounded-full h-24 w-24 object-cover border-2 border-grayPrimary"
+            />
+          )}
+
         </div>
 
-        <div className="w-full flex flex-col gap-1">
+        <div className="w-full flex flex-col items-center gap-1">
           <label htmlFor="avatarAlt">Avatar Description</label>
           <input
             id="avatarAlt"
             type="text"
-            className="bg-whitePrimary text-blackPrimary w-full p-2 outline-none"
+            className="bg-whitePrimary text-blackPrimary w-full md:w-3/4 lg:w-2/4 2xl:w-full p-2 outline-none rounded"
             value={avatarAlt}
             onChange={(e) => setAvatarAlt(e.target.value)}
           />
         </div>
 
-        <div className="w-full flex flex-col gap-1 mt-4">
+        <div className="w-full flex flex-col items-center gap-1 mt-4 2xl:mt-0">
           <label htmlFor="bannerUrl">Banner URL</label>
           <input
             id="bannerUrl"
             type="text"
-            className="bg-whitePrimary text-blackPrimary w-full p-2 outline-none"
+            className={clsx(
+              "bg-whitePrimary text-blackPrimary w-full md:w-3/4 lg:w-2/4 2xl:w-full p-2 outline-none rounded",
+              bannerUrl && !isValidUrl(bannerUrl) && "border border-redSecondary"
+            )}
             value={bannerUrl}
             onChange={(e) => setBannerUrl(e.target.value)}
           />
+          {isBannerValid && (
+            <img
+              src={bannerUrl}
+              alt={bannerAlt || "Banner preview"}
+              className="mt-2 rounded-lg w-full md:w-3/4 lg:w-2/4 2xl:w-full max-h-40 object-cover border-2 border-grayPrimary"
+            />
+          )}
         </div>
 
-        <div className="w-full flex flex-col gap-1">
+        <div className="w-full flex flex-col items-center gap-1">
           <label htmlFor="bannerAlt">Banner Description</label>
           <input
             id="bannerAlt"
             type="text"
-            className="bg-whitePrimary text-blackPrimary w-full p-2 outline-none"
+            className="bg-whitePrimary text-blackPrimary w-full p-2 outline-none rounded md:w-3/4 lg:w-2/4 2xl:w-full"
             value={bannerAlt}
             onChange={(e) => setBannerAlt(e.target.value)}
           />
         </div>
 
         {!venueManager && (
-          <div className="w-full border border-grayPrimary p-4 flex flex-col items-center">
+          <div className="w-full md:w-3/4 lg:w-2/4 2xl:w-full border border-grayPrimary/50 p-4 flex flex-col items-center 2xl:col-span-4">
             <div className="flex flex-row items-center gap-4">
               <p className="text-sm font-thin">Do you want to be a venue manager?</p>
-              <BsQuestionLg
-                title="This gives you access to create your own venues"
-                className="bg-blackPrimary border border-grayPrimary rounded-full h-6 w-6 p-1 cursor-help"
-              />
+              <Tooltip text="This gives you access to create your own venues">
+                <div className="bg-blackPrimary border border-grayPrimary rounded-full h-6 w-6 p-1 cursor-help flex items-center justify-center">
+                  <BsQuestionLg />
+                </div>
+              </Tooltip>
             </div>
             <div className="flex items-center gap-2 mt-2">
               <label htmlFor="checkbox">Yes</label>
@@ -232,17 +307,18 @@ function ProfileEditor({ onCancel }) {
           </div>
         )}
 
+
         {/* Default Banners */}
-        <div className="w-full">
-          <h3 className="text-xs mb-2">Default Banners</h3>
-          <div className="grid grid-cols-3 gap-2">
+        <div className="w-full md:w-3/4 lg:w-2/4 2xl:w-full flex flex-col justify-center items-center col-span-4">
+          <h3 className="mb-2 text-grayPrimary">Default Banners</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 2xl:grid-cols-3 gap-2 lg:gap-4">
             {defaultBanners.map((banner, idx) => (
               <img
                 key={idx}
                 src={banner.url}
                 alt={banner.alt}
                 className={clsx(
-                  "cursor-pointer rounded-lg border-2 duration-150 h-12 object-cover",
+                  "cursor-pointer rounded-lg border-2 duration-150 min-h-16 lg:min-h-36 object-cover",
                   bannerUrl === banner.url
                     ? "border-buttonPrimary scale-105"
                     : "border-transparent hover:border-grayPrimary"
@@ -253,21 +329,21 @@ function ProfileEditor({ onCancel }) {
           </div>
         </div>
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {error && <p className="text-redSecondary bg-blackPrimary px-6 py-2 rounded text-sm">{error}</p>}
 
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between w-full md:w-3/4 lg:w-2/4 col-span-4">
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 cursor-pointer duration-150 hover:scale-105"
+            className="px-4 py-2 cursor-pointer duration-150 hover:scale-105 border-1 border-blackPrimary rounded"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="bg-buttonPrimary text-white px-4 py-2 hover:bg-buttonSecondary duration-150 cursor-pointer"
+            className="bg-buttonPrimary text-white px-4 py-2 hover:bg-buttonSecondary duration-150 cursor-pointer rounded"
           >
-            Confirm
+            Save changes
           </button>
         </div>
       </form>

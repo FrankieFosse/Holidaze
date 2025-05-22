@@ -35,12 +35,14 @@ const Layout = () => {
     <div>
       <Header />
       {message && (
+        <div className="lg:pl-72 max-w-full">
         <div
-        className={`bg-buttonPrimary text-whitePrimary text-center py-2 absolute top-10 z-50 w-full 
+        className={`bg-green-500 text-whitePrimary text-center py-2 absolute top-10 z-50 w-full 
           transition-opacity transition-transform duration-500 ease-in-out 
           ${showMessage ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}
       >
         {message}
+      </div>
       </div>
       
       

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import VenueCard from './VenueCard'; // Import VenueCard component
-import Pagination from './Pagination'; // Import Pagination component
+import VenueCard from './VenueCard';
+import Pagination from './Pagination';
+import LoadingSpinner from './LoadingSpinner'; // <-- Import it here
 
 async function fetchVenuesByProfile(name, token, page = 1, limit = 10) {
   try {
@@ -14,74 +15,67 @@ async function fetchVenuesByProfile(name, token, page = 1, limit = 10) {
     });
 
     const data = await response.json();
-    return data; // Return the entire data object, including the meta and data arrays
+    return data;
   } catch (error) {
     console.error(error.message);
-    return null; // Return null if an error occurs
+    return null;
   }
 }
 
 function VenuesByProfile() {
-  const [venues, setVenues] = useState([]); // State to store venues
-  const [loading, setLoading] = useState(true); // Loading state to manage fetching process
-  const [error, setError] = useState(null); // Error state to handle errors
-  const [page, setPage] = useState(1); // State to track the current page
-  const [totalPages, setTotalPages] = useState(1); // State to track the total number of pages
-  const [limit] = useState(10); // Set limit per page
+  const [venues, setVenues] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [limit] = useState(10);
 
   useEffect(() => {
     const name = localStorage.getItem("name");
     const token = localStorage.getItem("token");
 
-    // Fetch venues when page changes
     if (name && token) {
-      setLoading(true); // Set loading to true when the fetch starts
+      setLoading(true);
       fetchVenuesByProfile(name, token, page, limit)
         .then((data) => {
           if (data && data.data) {
-            setVenues(data.data); // Set the fetched venues
-            setTotalPages(data.meta.pageCount); // Set the total pages from the API response
+            setVenues(data.data);
+            setTotalPages(data.meta.pageCount);
           } else {
             setError("Failed to fetch venues.");
           }
         })
         .catch((err) => setError(err.message))
-        .finally(() => setLoading(false)); // Set loading to false after fetch is complete
+        .finally(() => setLoading(false));
     }
-  }, [page, limit]); // Re-fetch venues when the page changes
+  }, [page, limit]);
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading text while fetching
+    return <LoadingSpinner />; // <-- Updated line
   }
 
   if (error) {
-    return <div>Error: {error}</div>; // Display error message if fetch fails
+    return <div>Error: {error}</div>;
   }
 
   return (
     <div>
-      {/* Pagination Component */}
-      <Pagination 
-            page={page} 
-            totalPages={totalPages} 
-            setPage={setPage} 
-            isFirstPage={page === 1}
-            isLastPage={page === totalPages}
-          />
       {venues.length > 0 ? (
         <div>
-          <div>
+          <Pagination 
+        page={page} 
+        totalPages={totalPages} 
+        setPage={setPage} 
+        isFirstPage={page === 1}
+        isLastPage={page === totalPages}
+      />
           <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl-grid-cols-5">
             {venues.map((venue) => (
               <li key={venue.id}>
-                {/* Render VenueCard with the venue data as props */}
                 <VenueCard venue={venue} />
               </li>
             ))}
           </ul>
-          </div>
-
-          {/* Pagination Component */}
           <Pagination 
             page={page} 
             totalPages={totalPages} 
@@ -91,7 +85,7 @@ function VenuesByProfile() {
           />
         </div>
       ) : (
-        <p>No venues found.</p>
+        <p className="my-6">No venues found.</p>
       )}
     </div>
   );

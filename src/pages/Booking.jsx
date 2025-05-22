@@ -101,6 +101,8 @@ const Booking = () => {
   // Check if current user owns this booking
   const isOwner = customer?.name === currentUser;
 
+  console.log(bookingDetails)
+
   return (
     <div>
       <Return />
@@ -110,8 +112,8 @@ const Booking = () => {
         <SingleVenueHero media={venue.media} />
       </div>
 
-      <div className="venue-details mb-4 absolute w-full top-16 lg:right-0 lg:pl-72 z-10 flex flex-col justify-center items-center">
-        <h1 className="text-lg font-semibold mb-2 w-3/5">{venue?.name}</h1>
+      <div className="venue-details mb-4 absolute w-full top-16 lg:right-0 lg:pl-72 z-10 flex flex-col justify-center items-center 2xl:text-xl">
+        <h1 className="text-lg 2xl:text-2xl font-semibold mb-2 w-3/5">{venue?.name}</h1>
         <button
           onClick={handleViewVenue}
           className="bg-buttonPrimary px-3 py-1 text-sm flex gap-2 items-center justify-center duration-150 hover:bg-buttonSecondary cursor-pointer rounded"
@@ -131,6 +133,10 @@ const Booking = () => {
           <div className="total-price mb-2">
             <p><strong>Total Price:</strong> {totalPrice} NOK</p>
           </div>
+        </div>
+
+        <div>
+          <p>Booked by {bookingDetails.customer.name}</p>
         </div>
 
         {/* Conditionally show Edit/Delete buttons only if user owns the booking */}

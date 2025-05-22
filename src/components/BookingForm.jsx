@@ -79,7 +79,11 @@ useEffect(() => {
   fetchBookings();
 }, [venueId, currentUser]);
 
-  
+    // Helper function to format date
+    const formatDate = (date) => {
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return date ? new Date(date).toLocaleDateString(undefined, options) : '';
+    };
 
 
 const handleBookingSubmit = async () => {
@@ -198,10 +202,15 @@ const handleBookingSubmit = async () => {
       <BookingCalendar
         excludedBookings={bookings}
         onDateChange={({ dateFrom, dateTo }) => {
-            setDateFrom(dateFrom);
-            setDateTo(dateTo);
+          setDateFrom(dateFrom);
+          setDateTo(dateTo);
         }}
-        />
+        userBookings={userBookings}           // <-- Add this
+        currentVenueId={venueId}              // <-- Add this
+        defaultDateFrom={defaultDateFrom}     // (optional, keep as is)
+        defaultDateTo={defaultDateTo}         // (optional, keep as is)
+      />
+
 
 
       <div className="mt-4 flex flex-row w-full justify-center items-center gap-2">
@@ -218,6 +227,16 @@ const handleBookingSubmit = async () => {
           className="border-1 border-blackSecondary rounded px-1 w-1/4"
         />
         <p>/ {maxGuests}</p>
+      </div>
+
+      {/* Dynamically display "Date From" and "Date To" */}
+      <div className="mt-2 flex flex-col sm:flex-row w-full items-center gap-2 justify-evenly">
+        <p className="text-xs">
+          <strong>Date From:</strong> {formatDate(dateFrom)}
+        </p>
+        <p className="text-xs">
+          <strong>Date To:</strong> {formatDate(dateTo)}
+        </p>
       </div>
 
       {dateFrom && dateTo && (

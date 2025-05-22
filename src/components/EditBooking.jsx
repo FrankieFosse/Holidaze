@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import BookingCalendar from "./BookingCalendar";
 import StatusMessage from "./StatusMessage";
+import Modal from "./Modal";
 
 const EditBooking = ({ booking, venue, onClose }) => {
   const navigate = useNavigate();
@@ -21,7 +22,26 @@ const EditBooking = ({ booking, venue, onClose }) => {
     setIsModalOpen(false);
   };
 
-
+  useEffect(() => {
+    const fetchUserBookings = async () => {
+      const profileName = localStorage.getItem("name");
+      try {
+        const res = await fetch(`https://v2.api.noroff.dev/holidaze/profiles/${profileName}/bookings?_venue=true`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "X-Noroff-API-Key": `178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9`,
+          },
+        });
+        if (!res.ok) throw new Error("Failed to fetch user bookings");
+        const json = await res.json();
+        setUserBookings(json.data);
+      } catch (err) {
+        console.error("Error fetching user bookings:", err);
+      }
+    };
+  
+    fetchUserBookings();
+  }, []);
 
 
   // Fetch bookings when the component mounts
@@ -68,17 +88,42 @@ useEffect(() => {
     setDateTo(dateTo);
   };
 
+  const [userBookings, setUserBookings] = useState([]);
+  const [showConflictModal, setShowConflictModal] = useState(false);
+  const [conflictBookingId, setConflictBookingId] = useState(null);
+
+  
+
+
   const handleEditSubmit = async () => {
     if (!dateFrom || !dateTo || guests < 1) {
       setStatusMessage("Please complete all booking details.");
       setStatusType("error");
       return;
     }
-
+  
+    // Check for overlapping bookings at a different venue
+    const overlappingBooking = userBookings.find(b => {
+      const existingFrom = new Date(b.dateFrom);
+      const existingTo = new Date(b.dateTo);
+      const selectedFrom = new Date(dateFrom);
+      const selectedTo = new Date(dateTo);
+      const isSameBooking = b.id === booking.id;
+      const isSameVenue = b.venue.id === venue.id;
+  
+      return !isSameBooking && !isSameVenue &&
+        selectedFrom < existingTo && selectedTo > existingFrom;
+    });
+  
+    if (overlappingBooking) {
+      setConflictBookingId(overlappingBooking.id);
+      setShowConflictModal(true);
+      return;
+    }
+  
     setStatusMessage("Updating booking...");
     setStatusType("loading");
-        location.reload();
-
+  
     try {
       const updatedBooking = {
         dateFrom: dateFrom.toISOString(),
@@ -86,23 +131,24 @@ useEffect(() => {
         guests,
         venueId: venue.id,
       };
-
+  
       const res = await fetch(`https://v2.api.noroff.dev/holidaze/bookings/${booking.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
+          "X-Noroff-API-Key": `178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9`,
         },
         body: JSON.stringify(updatedBooking),
       });
-
+  
       if (!res.ok) throw new Error("Failed to update booking.");
       const data = await res.json();
-
+  
       setStatusMessage("Booking updated!");
       setStatusType("success");
-
+      location.reload();
+  
       setTimeout(() => {
         onClose();
         navigate(`/booking/${data.data.id}`, {
@@ -115,6 +161,7 @@ useEffect(() => {
       setStatusType("error");
     }
   };
+  
 
   // Helper function to format date
   const formatDate = (date) => {
@@ -124,26 +171,33 @@ useEffect(() => {
 
   if (loadingBookings) return <p>Loading bookings...</p>; // Handle loading state
 
+
+  
+
   return (
-    <div className="booking-container p-0 relative">
+    <div className="booking-container relative 2xl:text-xl text-xs lg:text-lg">
       <StatusMessage message={statusMessage} type={statusType} />
 
-      <h1 className="text-xs mb-4">
+      <h1 className="mb-4">
         Edit your booking at<br /> <b>{venue.name}</b>
       </h1>
 
-      <div className="venue-details mb-1 font-thin text-sm">
+      <div className="venue-details mb-1 font-thin text-xs">
         <p>{venue.price} NOK / night</p>
       </div>
 
-      <BookingCalendar closeModal={closeModal}
-            excludedBookings={venueBookings.filter((b) => b.id !== booking.id)} // Exclude the current booking
-            onDateChange={handleDateChange} // Handle date range change
-            defaultDateFrom={dateFrom}
-            defaultDateTo={dateTo}
-            />
+      <BookingCalendar
+        closeModal={closeModal}
+        excludedBookings={venueBookings.filter((b) => b.id !== booking.id)} // current venue bookings
+        onDateChange={handleDateChange}
+        defaultDateFrom={dateFrom}
+        defaultDateTo={dateTo}
+        userBookings={userBookings} // pass user bookings here
+        currentVenueId={venue.id}   // also pass current venue id
+      />
 
-      <div className="mt-4 flex flex-row w-full justify-center items-center gap-2">
+
+      <div className="mt-2 flex flex-row w-full justify-center items-center gap-2">
         <label htmlFor="guests" className="text-xs">Guests</label>
         <input
           type="number"
@@ -160,7 +214,7 @@ useEffect(() => {
       </div>
 
       {/* Dynamically display "Date From" and "Date To" */}
-      <div className="mt-4 flex flex-col w-full items-center gap-2">
+      <div className="mt-2 flex flex-col sm:flex-row w-full items-center gap-2 justify-evenly">
         <p className="text-xs">
           <strong>Date From:</strong> {formatDate(dateFrom)}
         </p>
@@ -193,6 +247,33 @@ useEffect(() => {
             </button>
 
       </div>
+
+      <Modal isOpen={showConflictModal} onClose={() => setShowConflictModal(false)}>
+        <div className="text-center text-white">
+          <p className="my-4">
+            You already have another booking that overlaps with these dates.
+            Do you want to view that booking?
+          </p>
+          <div className="flex justify-center gap-4 mt-4">
+            <button
+              onClick={() => {
+                setShowConflictModal(false);
+                navigate(`/booking/${conflictBookingId}`);
+              }}
+              className="bg-buttonPrimary px-4 py-2 rounded hover:bg-buttonSecondary transition text-sm"
+            >
+              Yes
+            </button>
+            <button
+              onClick={() => setShowConflictModal(false)}
+              className="border border-grayPrimary px-4 py-2 rounded hover:bg-grayPrimary transition text-sm"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </Modal>
+
     </div>
   );
 };

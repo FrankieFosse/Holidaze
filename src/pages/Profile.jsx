@@ -61,7 +61,7 @@ const [activeTab, setActiveTab] = useState("venues");
 
   return (
     <div>
-      <div className="absolute top-0 left-0 w-full z-0">
+      <div className="absolute top-0 left-0 w-full z-0 lg:pl-72">
         <img
           src={localStorage.getItem("banner.url")}
           alt={localStorage.getItem("banner.alt") || "Banner"}
@@ -71,7 +71,7 @@ const [activeTab, setActiveTab] = useState("venues");
 
       {/* Profile Details */}
       <div className="w-full flex justify-center items-center">
-      <div className="relative z-10 mt-20 mx-4 h-64 w-full md:w-2/3 xl:w-1/3 bg-blackPrimary/25 border border-blackSecondary p-4 flex flex-row">
+      <div className="relative z-10 mt-20 mx-4 h-64 w-full md:w-2/3 xl:w-2/4 bg-blackPrimary/25 border border-blackSecondary p-4 flex flex-row">
         <div className="w-2/4 flex justify-center items-center">
           <img
             src={localStorage.getItem("avatar.url")}
@@ -80,10 +80,12 @@ const [activeTab, setActiveTab] = useState("venues");
           />
         </div>
         <div className="w-2/4 flex flex-col justify-between items-center">
-          <div className="text-center pt-8">
-            <h1 className="text-xl font-bold">{localStorage.getItem("name")}</h1>
+        <div className="text-center pt-8">
+          <h1 className="text-xl font-bold">{localStorage.getItem("name")}</h1>
+          {localStorage.getItem("bio") && localStorage.getItem("bio") !== "null" && (
             <p className="font-thin text-xs">{localStorage.getItem("bio")}</p>
-          </div>
+          )}
+        </div>
           <button
             onClick={toggleEditorVisibility}
             className={`mt-4 flex flex-row justify-center border border-blackPrimary items-center gap-2 px-4 py-1 text-white rounded duration-150 cursor-pointer 

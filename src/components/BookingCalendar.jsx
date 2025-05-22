@@ -3,15 +3,23 @@ import { addMonths, eachDayOfInterval, endOfMonth, format, isAfter, isBefore, is
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import StatusMessage from "./StatusMessage";
 import { useNavigate, Link } from "react-router"; // Importing useNavigate
+import Tooltip from "./Tooltip"
 
 const BookingCalendar = ({
   onDateChange,
   excludedBookings = [],
   defaultDateFrom,
   defaultDateTo,
+  userBookings = [],
+  currentVenueId,
 }) => {
+
   const today = new Date();
   const twoYearsLater = addMonths(today, 24); // Calculate the date two years from today
+
+  const isBookedByUserOtherVenue = (date) =>
+    userOtherVenueBookings.some(interval => isWithinInterval(date, interval));
+  
 
   const [currentMonth, setCurrentMonth] = useState(today);
   const [selectedRange, setSelectedRange] = useState({ start: null, end: null });
@@ -21,13 +29,23 @@ const BookingCalendar = ({
 
   const currentUserEmail = localStorage.getItem("email");
 
-  // Convert bookings to date intervals (excluding current booking)
-  const bookedIntervals = excludedBookings.map((b) => ({
+  // Bookings for current venue (excludedBookings) as before
+const bookedIntervals = excludedBookings.map((b) => ({
+  start: new Date(b.dateFrom),
+  end: new Date(b.dateTo),
+  userEmail: b.customer?.email,
+  id: b.id,
+}));
+
+// Bookings by user on other venues
+const userOtherVenueBookings = userBookings
+  .filter(b => b.venue.id !== currentVenueId)  // exclude current venue
+  .map(b => ({
     start: new Date(b.dateFrom),
     end: new Date(b.dateTo),
-    userEmail: b.customer?.email,
-    id: b.id, // Add booking id
+    id: b.id,
   }));
+
 
   // Disable navigation to months beyond two years from today
   const isPrevDisabled =
@@ -103,7 +121,7 @@ const BookingCalendar = ({
       setTimeout(() => {
         setStatusMessage("");
         setStatusType(null);
-      }, 3000);
+      }, 2500);
     } else if (isAfter(date, selectedRange.start)) {
       const daysInRange = eachDayOfInterval({
         start: selectedRange.start,
@@ -119,7 +137,7 @@ const BookingCalendar = ({
         setTimeout(() => {
           setStatusMessage("");
           setStatusType(null);
-        }, 3000);
+        }, 2500);
       } else if (daysInRange.length < 2) {
         // Technically not needed anymore, but safe fallback
         setStatusMessage("Please select at least 2 days.");
@@ -127,7 +145,7 @@ const BookingCalendar = ({
         setTimeout(() => {
           setStatusMessage("");
           setStatusType(null);
-        }, 3000);
+        }, 2500);
       } else {
         setSelectedRange({ start: selectedRange.start, end: date });
         onDateChange({ dateFrom: selectedRange.start, dateTo: date }); // Both dates selected, send both
@@ -143,7 +161,7 @@ const BookingCalendar = ({
   const navigate = useNavigate();
 
   return (
-    <div className="p-2 border border-blackSecondary rounded w-full max-w-md mx-auto min-h-60 max-h-96">
+    <div className="p-2 w-full max-w-xs mx-auto min-h-60 max-h-auto bg-blackSecondary/25">
       {statusMessage && <StatusMessage message={statusMessage} type={statusType} />}
 
       {/* Header */}
@@ -151,7 +169,7 @@ const BookingCalendar = ({
         <button
           onClick={() => !isPrevDisabled && setCurrentMonth(addMonths(currentMonth, -1))}
           disabled={isPrevDisabled}
-          className={`text-xs p-1 border-1 border-blackSecondary duration-150 rounded ${isPrevDisabled ? "text-blackSecondary border-blackSecondary" : "hover:bg-blackSecondary hover:border-grayPrimary"}`}
+          className={`text-xs p-1 border-1 border-blackSecondary duration-150 rounded ${isPrevDisabled ? "text-blackSecondary border-blackSecondary" : "cursor-pointer hover:bg-blackSecondary hover:border-grayPrimary"}`}
         >
           <FaChevronLeft />
         </button>
@@ -159,21 +177,21 @@ const BookingCalendar = ({
         <button
           onClick={() => !isNextDisabled && setCurrentMonth(addMonths(currentMonth, 1))}
           disabled={isNextDisabled}
-          className={`text-xs p-1 border-1 border-blackSecondary duration-150 rounded ${isNextDisabled ? "text-blackSecondary border-blackSecondary" : "hover:bg-blackSecondary hover:border-grayPrimary"}`}
+          className={`text-xs p-1 border-1 border-blackSecondary duration-150 rounded ${isNextDisabled ? "text-blackSecondary border-blackSecondary" : "cursor-pointer hover:bg-blackSecondary hover:border-grayPrimary"}`}
         >
           <FaChevronRight />
         </button>
       </div>
 
       {/* Weekday Headers */}
-      <div className="grid grid-cols-7 gap-1 text-xs text-center font-medium mb-1">
+      <div className="grid grid-cols-7 gap-1 text-xs text-center font-medium mb-1 sm:mx-8 lg:mx-0">
         {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
           <div key={d}>{d}</div>
         ))}
       </div>
 
       {/* Calendar Days */}
-      <div className="grid grid-cols-7 gap-1 text-sm">
+      <div className="grid grid-cols-7 gap-1 text-sm sm:mx-8 lg:mx-0">
         {Array(startOfMonth(currentMonth).getDay()).fill(null).map((_, i) => (
           <div key={`empty-${i}`} />
         ))}
@@ -188,22 +206,29 @@ const BookingCalendar = ({
       )
     : null;
 
+  const bookedByOtherVenue = isBookedByUserOtherVenue(day);
+
   const isPast = isBefore(day, today);
   const isAfterTwoYears = isAfter(day, twoYearsLater);
   const isOwnBookingDay = bookedByCurrentUser && bookingForDay;
-  const disabled = isOwnBookingDay ? false : (booked || isPast || isAfterTwoYears || isSameDay(day, twoYearsLater));
+  const disabled = isOwnBookingDay || bookedByOtherVenue || booked || isPast || isAfterTwoYears || isSameDay(day, twoYearsLater);
   const selected = isSelected(day);
   const isToday = isSameDay(day, new Date());
   const highlighted = isHighlighted(day);
 
-  let classes = "w-full aspect-square rounded-md border text-center transition duration-150 flex justify-center items-center ";
 
-  if (isPast || isAfterTwoYears || isSameDay(day, twoYearsLater)) {
+
+  let classes = "w-full aspect-square rounded-md border text-center transition duration-150 flex justify-center items-center ";
+  
+  // Apply yellow background for other venue bookings
+  if (bookedByOtherVenue) {
+    classes += "bg-buttonPrimary/50 text-blackPrimary"; // yellow background, readable text
+  } else if (isPast || isAfterTwoYears || isSameDay(day, twoYearsLater)) {
     classes += "text-blackSecondary";
   } else if (bookedByCurrentUser) {
     classes += "bg-buttonSecondary text-blackPrimary";
   } else if (booked) {
-    classes += "bg-redPrimary border-redSecondary";
+    classes += "bg-redPrimary border-redSecondary text-blackPrimary";
   } else if (selected || highlighted) {
     classes += "bg-buttonPrimary border-whitePrimary";
   } else if (isToday) {
@@ -212,16 +237,29 @@ const BookingCalendar = ({
     classes += "text-whiteSecondary hover:text-whitePrimary hover:bg-blackSecondary hover:border-grayPrimary border-blackSecondary cursor-pointer";
   }
 
-  return (
-    <button
-      key={day.toISOString()}
-      onClick={() => !isOwnBookingDay && handleDateClick(day)}
-      disabled={disabled || isOwnBookingDay}      
-      className={classes + (isOwnBookingDay ? " cursor-default" : "")}
-    >
-      {format(day, "d")}
-    </button>
-  );
+  const tooltipText =
+  bookedByOtherVenue
+    ? "Booked by you on another venue"
+    : bookedByCurrentUser
+    ? "Booked by you"
+    : booked
+    ? "Booked by another user"
+    : "";
+
+  
+
+    return (
+      <Tooltip key={day.toISOString()} text={tooltipText}>
+        <button
+          onClick={() => !isOwnBookingDay && !bookedByOtherVenue && handleDateClick(day)}
+          disabled={disabled || isOwnBookingDay}      
+          className={classes + (isOwnBookingDay ? " cursor-default" : "")}
+        >
+          {format(day, "d")}
+        </button>
+      </Tooltip>
+    );
+    
 })}
 
       </div>

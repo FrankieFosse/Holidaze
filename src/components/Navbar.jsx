@@ -6,13 +6,18 @@ import { FiLogIn } from "react-icons/fi";
 import { PiList } from "react-icons/pi";
 import { IoClose } from "react-icons/io5";
 import { FaCirclePlus } from "react-icons/fa6";
+import StatusMessage from "./StatusMessage"; // Make sure the import path is correct
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isVenueManager, setIsVenueManager] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState("success");
+
   const navRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Check login status
   useEffect(() => {
@@ -22,6 +27,20 @@ function Navbar() {
     setIsLoggedIn(!!(token && email));
     setIsVenueManager(venueManager === "true");
   }, [location]);
+
+  // Close navbar on screen resize when it hits lg breakpoint
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsOpen(false);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
 
   // Close navbar on route change
   useEffect(() => {
@@ -47,18 +66,26 @@ function Navbar() {
     };
   }, [isOpen]);
 
-  const navigate = useNavigate();
-
   const handleLogout = () => {
     localStorage.clear();
     setIsLoggedIn(false);
     setIsOpen(false);
-    navigate("/", { state: { message: "You are now logged out" } });
+
+    // Show message
+    setMessage("You are now logged out");
+    setMessageType("success");
+
+    // Optionally hide message after 3 seconds
+    setTimeout(() => setMessage(null), 3000);
+
+    navigate("/");
   };
-  
 
   return (
     <>
+      {/* Status Message */}
+      <StatusMessage message={message} type={messageType} />
+
       {/* Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -75,19 +102,19 @@ function Navbar() {
       {/* Navbar Content */}
       <div
         ref={navRef}
-        className={`fixed top-10 z-90 w-full h-full bg-blackPrimary/90 backdrop-blur-xs overflow-hidden text-sm transition-all duration-500 ease-in-out ${
+        className={`fixed top-10 z-90 w-full h-max bg-blackPrimary/90 backdrop-blur-xs overflow-hidden text-sm transition-all duration-500 ease-in-out ${
           isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="flex flex-col gap-4 p-4">
-            {isVenueManager && (
+        <div className="flex flex-col gap-4 p-4 sm:grid grid-cols-3">
+          {isVenueManager && (
             <Link
-                to="/create"
-                className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-whitePrimary rounded"
+              to="/create"
+              className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-whitePrimary rounded"
             >
-                <FaCirclePlus size={20} /> Create venue
+              <FaCirclePlus size={20} /> Create venue
             </Link>
-            )}
+          )}
           <Link
             to="/"
             className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-whitePrimary rounded"
@@ -120,11 +147,8 @@ function Navbar() {
 
           {isLoggedIn ? (
             <button
-                onClick={() => {
-                    handleLogout();
-                    setIsOpen(false);
-                }}              
-                className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-whitePrimary cursor-pointer rounded"
+              onClick={handleLogout}
+              className="p-2 h-10 border-blackSecondary bg-buttonPrimary/50 border-1 flex flex-row items-center gap-4 duration-150 hover:bg-buttonPrimary hover:border-whitePrimary cursor-pointer rounded"
             >
               <FiLogIn size={20} /> Log out
             </button>

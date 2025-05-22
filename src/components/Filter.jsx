@@ -1,5 +1,7 @@
 import { FaWifi } from "react-icons/fa";
 import { MdLocalParking, MdFreeBreakfast, MdOutlinePets } from "react-icons/md";
+import Tooltip from "../components/Tooltip";
+
 
 function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
 
@@ -28,7 +30,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
       {/* Filter buttons (unchanged) */}
       <div className="text-whitePrimary text-xl flex flex-row items-center justify-center gap-4">
         {/* Wifi */}
-        <div className="relative group">
+        <Tooltip text="Wifi included">
           <button
             aria-label="Wifi included"
             onClick={() => toggleFilter("wifi")}
@@ -40,13 +42,11 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
           >
             <FaWifi />
           </button>
-          <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-whitePrimary bg-buttonPrimary rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-[500ms] pointer-events-none">
-            Wifi included
-          </span>
-        </div>
+        </Tooltip>
+
 
         {/* Parking */}
-        <div className="relative group">
+        <Tooltip text="Parking included">
           <button
             aria-label="Parking included"
             onClick={() => toggleFilter("parking")}
@@ -58,13 +58,11 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
           >
             <MdLocalParking />
           </button>
-          <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-whitePrimary bg-buttonPrimary rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-[500ms] pointer-events-none">
-            Parking included
-          </span>
-        </div>
+        </Tooltip>
+
 
         {/* Breakfast */}
-        <div className="relative group">
+        <Tooltip text="Breakfast included">
           <button
             aria-label="Breakfast included"
             onClick={() => toggleFilter("breakfast")}
@@ -76,13 +74,10 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
           >
             <MdFreeBreakfast />
           </button>
-          <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-whitePrimary bg-buttonPrimary rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-[500ms] pointer-events-none">
-            Breakfast included
-          </span>
-        </div>
+        </Tooltip>
 
         {/* Pets */}
-        <div className="relative group">
+        <Tooltip text="Pets allowed">
           <button
             aria-label="Pets allowed"
             onClick={() => toggleFilter("pets")}
@@ -94,10 +89,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
           >
             <MdOutlinePets />
           </button>
-          <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-whitePrimary bg-buttonPrimary rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-[500ms] pointer-events-none">
-            Pets allowed
-          </span>
-        </div>
+        </Tooltip>
       </div>
       </div>
       </>

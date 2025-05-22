@@ -4,6 +4,7 @@ import { FaPlus, FaTrash } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaLocationDot } from "react-icons/fa6";
 import StatusMessage from "../components/StatusMessage";
+import Return from "../components/Return";
 
 function Edit({ handleVenueUpdated }) {
   const { id } = useParams(); // Assuming you're using React Router params
@@ -225,6 +226,7 @@ function Edit({ handleVenueUpdated }) {
 
   return (
     <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-8 text-xs">
+      <Return />
       <StatusMessage message={statusMessage} type={statusType} />
       <h1 className="text-xl mb-4">Edit Venue</h1>
 
@@ -234,14 +236,14 @@ function Edit({ handleVenueUpdated }) {
           placeholder="Venue name"
           value={venue.name}
           onChange={(e) => setVenue({ ...venue, name: e.target.value })}
-          className={`p-2 text-blackPrimary bg-whitePrimary ${invalidFields.includes("name") ? "border-3 border-redPrimary" : ""}`}
+          className={`p-2 rounded text-blackPrimary bg-whitePrimary ${invalidFields.includes("name") ? "border-3 border-redPrimary" : ""}`}
         />
 
         <textarea
           placeholder="Description"
           value={venue.description}
           onChange={(e) => setVenue({ ...venue, description: e.target.value })}
-          className={`p-2 min-h-16 text-blackPrimary bg-whitePrimary ${invalidFields.includes("description") ? "border-3 border-redPrimary" : ""}`}
+          className={`p-2 min-h-16 rounded text-blackPrimary bg-whitePrimary ${invalidFields.includes("description") ? "border-3 border-redPrimary" : ""}`}
         />
 
         <div className="flex flex-row items-center">
@@ -252,9 +254,9 @@ function Edit({ handleVenueUpdated }) {
             onChange={(e) => setVenue({ ...venue, price: Number(e.target.value) })}
             min="0"
             max="10000"
-            className={`p-2 h-8 w-full text-blackPrimary bg-whitePrimary ${invalidFields.includes("price") ? "border-3 border-redPrimary" : ""}`}
+            className={`p-2 h-8 w-full rounded-l text-blackPrimary bg-whitePrimary ${invalidFields.includes("price") ? "border-3 border-redPrimary" : ""}`}
           />
-          <p className="w-42 h-8 bg-whitePrimary text-grayPrimary cursor-default flex justify-center items-center px-4">
+          <p className="w-42 h-8 bg-whitePrimary rounded-r text-grayPrimary cursor-default flex justify-center items-center px-4">
             NOK / night
           </p>
         </div>
@@ -266,8 +268,24 @@ function Edit({ handleVenueUpdated }) {
           onChange={(e) => setVenue({ ...venue, maxGuests: Number(e.target.value) })}
           min="1"
           max="100"
-          className={`p-2 text-blackPrimary bg-whitePrimary ${invalidFields.includes("maxGuests") ? "border-3 border-redPrimary" : ""}`}
+          className={`p-2 rounded text-blackPrimary bg-whitePrimary ${invalidFields.includes("maxGuests") ? "border-3 border-redPrimary" : ""}`}
         />
+
+      <input
+        type="number"
+        placeholder="Rating (0 to 5)"
+        value={venue.rating}
+        onChange={(e) =>
+          setVenue({ ...venue, rating: Number(e.target.value) })
+        }
+        min="0"
+        max="5"
+        step="0.1"
+        className={`p-2 rounded text-blackPrimary bg-whitePrimary ${
+          invalidFields.includes("rating") ? "border-3 border-redPrimary" : ""
+        }`}
+      />
+
 
         {/* Media section */}
         <div className="border-y-1 py-4 border-blackSecondary">
@@ -288,20 +306,31 @@ function Edit({ handleVenueUpdated }) {
                     placeholder="Image URL"
                     value={item.url}
                     onChange={(e) => handleMediaChange(index, "url", e.target.value)}
-                    className="p-2 text-blackPrimary bg-whitePrimary flex w-full"
+                    className="p-2 text-blackPrimary bg-whitePrimary flex w-full rounded"
                   />
                   <input
                     type="text"
                     placeholder="Image Description"
                     value={item.alt}
                     onChange={(e) => handleMediaChange(index, "alt", e.target.value)}
-                    className="p-2 text-blackPrimary bg-whitePrimary flex w-full"
+                    className="p-2 text-blackPrimary bg-whitePrimary flex w-full rounded"
                   />
+
+              {/* Thumbnail preview if valid image URL */}
+              {item.url.trim() && (
+                              <img
+                                src={item.url}
+                                alt={item.alt || "Venue image preview"}
+                                className="w-32 h-20 object-cover rounded border-1 border-grayPrimary"
+                                onError={(e) => (e.target.style.display = "none")}
+                              />
+                      )}
+
                   {media.length > 1 && (
                     <button
                       type="button"
                       onClick={() => handleRemoveMedia(index)}
-                      className="text-redPrimary flex flex-row gap-2 cursor-pointer duration-150 hover:scale-x-105 justify-center items-center border-1 border-blackSecondary w-max py-1 px-3 hover:border-grayPrimary hover:text-redSecondary"
+                      className="text-redPrimary rounded flex flex-row gap-2 cursor-pointer duration-150 hover:scale-x-105 justify-center items-center border-1 border-blackSecondary w-max py-1 px-3 hover:border-grayPrimary hover:text-redSecondary"
                     >
                       <FaTrash size={12} />
                       Remove image
@@ -314,7 +343,7 @@ function Edit({ handleVenueUpdated }) {
             <button
             type="button"
             onClick={handleAddMedia}
-            className="flex items-center gap-2 text-buttonPrimary justify-center mb-4 cursor-pointer duration-150 hover:scale-x-105 border-1 border-blackSecondary w-max py-1 px-3 hover:border-grayPrimary hover:text-buttonSecondary"
+            className="flex items-center rounded gap-2 text-buttonPrimary justify-center mb-4 cursor-pointer duration-150 hover:scale-x-105 border-1 border-blackSecondary w-max py-1 px-3 hover:border-grayPrimary hover:text-buttonSecondary"
             >
             <FaPlus size={12} />
             {media.length === 0 ? "Add image" : "Add another image"}
@@ -349,7 +378,7 @@ function Edit({ handleVenueUpdated }) {
                 window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
               }, 150);
             }}
-            className="text-buttonPrimary border-1 border-blackSecondary py-2 px-4 hover:text-buttonSecondary w-max flex flex-row gap-2 cursor-pointer hover:border-grayPrimary hover:scale-x-105 duration-150"
+            className="text-buttonPrimary border-1 border-blackSecondary py-2 px-4 hover:text-buttonSecondary w-max flex flex-row gap-2 cursor-pointer hover:border-grayPrimary hover:scale-x-105 duration-150 rounded"
           >
             <FaLocationDot />
             Add location (Optional)
@@ -384,7 +413,7 @@ function Edit({ handleVenueUpdated }) {
                 placeholder={fieldPlaceholders[field] || field}
                 value={location[field]}
                 onChange={(e) => handleLocationChange(field, e.target.value)}
-                className="p-2 text-blackPrimary bg-whitePrimary"
+                className="p-2 text-blackPrimary bg-whitePrimary rounded"
               />
             ))}
         </fieldset>
@@ -404,7 +433,7 @@ function Edit({ handleVenueUpdated }) {
                     placeholder={fieldPlaceholders[field] || field}
                     value={location[field]}
                     onChange={(e) => handleLocationChange(field, e.target.value)}
-                    className="p-2 text-blackPrimary bg-whitePrimary"
+                    className="p-2 text-blackPrimary bg-whitePrimary rounded"
                     />
                 ))}
             </fieldset>
@@ -418,7 +447,7 @@ function Edit({ handleVenueUpdated }) {
           type="submit"
           className="bg-buttonPrimary text-white py-2 px-4 hover:bg-buttonSecondary"
         >
-          Update Venue
+          Save changes
         </button>
       </form>
     </div>

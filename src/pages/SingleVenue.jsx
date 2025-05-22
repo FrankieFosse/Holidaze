@@ -14,6 +14,8 @@ import BookingsOnVenue from "../components/BookingsOnVenue";
 import EditBooking from "../components/EditBooking";  // Import the EditBooking component
 import BookingCalendar from "../components/BookingCalendar";
 import { format } from "date-fns";
+import StatusMessage from "../components/StatusMessage";
+
 
 
 
@@ -35,6 +37,9 @@ const SingleVenue = () => {
   const currentUser = localStorage.getItem("name");
   const token = localStorage.getItem("token");
 
+  const [statusMessage, setStatusMessage] = useState(null);
+  const [statusType, setStatusType] = useState(null);
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleDelete = () => {
@@ -48,14 +53,29 @@ const SingleVenue = () => {
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to delete venue");
-        navigate("/profile", { state: { message: "Venue deleted successfully" } });
+        setStatusMessage("Venue deleted successfully");
+        setStatusType("success");
+        setTimeout(() => {
+          navigate("/profile");
+        }, 1500); // Delay to let user see the message
       })
       .catch((err) => {
         console.error(err);
-        // Optionally show error message in UI
+        setStatusMessage("Failed to delete venue");
+        setStatusType("error");
       });
   };
-
+  
+  useEffect(() => {
+    if (statusMessage) {
+      const timer = setTimeout(() => {
+        setStatusMessage(null);
+        setStatusType(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [statusMessage]);
+  
 
 
   const handleExpandToggle = () => {
@@ -110,9 +130,10 @@ const SingleVenue = () => {
 
   return (
     <>
+    <StatusMessage message={statusMessage} type={statusType} />
       <SingleVenueHero media={venue.media} expanded={expanded} />
 
-      <div className="absolute z-30 p-4 bottom-4 lg:bottom-16 lg:p-16 w-full overflow-hidden flex flex-row justify-between items-center gap-4 pointer-events-none">
+      <div className="absolute left-0 z-30 p-4 bottom-4 lg:bottom-16 lg:p-16 w-full lg:pl-80 overflow-hidden flex flex-row justify-between items-center gap-4 pointer-events-none">
         <div className="text-left w-3/5 pointer-events-auto">
           <h2 className={`font-bold break-words overflow-hidden text-ellipsis ${venue.name.length > 100 ? "text-sm lg:text-xl" : "text-xl lg:text-3xl"}`}>
             {venue.name}
@@ -136,14 +157,14 @@ const SingleVenue = () => {
           {userBooking ? (
           <div className="flex flex-col gap-4">
             <button
-              className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 min-h-8 max-h-16 duration-150 cursor-pointer rounded"
+              className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 min-h-8 max-h-16 duration-150 cursor-pointer rounded lg:text-lg"
               onClick={() => navigate(`/booking/${userBooking.id}`)}
             >
               View booking
             </button>
             {!isOwner && (
               <button
-                className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 min-h-8 max-h-16 duration-150 cursor-pointer rounded"
+                className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 min-h-8 max-h-16 duration-150 cursor-pointer rounded lg:text-lg"
                 onClick={() => {
                   setIsAddingNewBooking(true);
                   setShowBookingForm(true);
@@ -158,11 +179,15 @@ const SingleVenue = () => {
             className={`rounded py-2 px-4 ${isOwner ? "bg-grayPrimary cursor-default" : "bg-buttonPrimary hover:bg-buttonSecondary cursor-pointer"}`}
             disabled={isOwner}
             onClick={() => {
+              if (!token || !currentUser) {
+                navigate("/login");
+                return;
+              }
               if (!isOwner) {
                 setIsAddingNewBooking(true);
                 setShowBookingForm(true);
               }
-            }}
+            }}            
           >
             Book Now
           </button>
@@ -217,9 +242,19 @@ const SingleVenue = () => {
 
       {/* Booked Dates Overview */}
       {isOwner && bookings.length > 0 && (
-        <div className="border-1 border-blackSecondary mx-2 my-4 p-4 col-span-1 md:col-span-3 justify-center items-center flex flex-col">
+        <div className="border-1 border-blackSecondary mx-2 my-4 p-4 col-span-1 md:col-span-3 justify-center items-center flex flex-col lg:text-lg">
           <h2 className="font-bold mb-4">Booked Dates</h2>
-          <ul className="list-none pl-5 space-y-2">
+          <ul
+            className={`list-none pl-5 flex flex-col lg:grid ${
+              bookings.length === 1
+                ? "grid-cols-1"
+                : bookings.length === 2
+                ? "grid-cols-2"
+                : bookings.length === 3
+                ? "grid-cols-3"
+                : "grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+            } gap-2`}
+          >
             {bookings
               .sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom))
               .map((booking) => (
@@ -228,7 +263,10 @@ const SingleVenue = () => {
                     to={`/booking/${booking.id}`}
                     className="font-semibold bg-buttonPrimary hover:bg-buttonSecondary duration-150 px-6 py-1 rounded flex justify-center items-center w-max"
                   >
-                    {format(new Date(booking.dateFrom), "dd.MM.yyyy")} → {format(new Date(booking.dateTo), "dd.MM.yyyy")}<br></br>({booking.guests} guest{booking.guests > 1 ? "s" : ""})
+                    {format(new Date(booking.dateFrom), "dd.MM.yyyy")} →{" "}
+                    {format(new Date(booking.dateTo), "dd.MM.yyyy")}
+                    <br />
+                    ({booking.guests} guest{booking.guests > 1 ? "s" : ""})
                   </Link>
                 </li>
               ))}
