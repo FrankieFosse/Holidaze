@@ -49,7 +49,7 @@ const UpcomingBookingsCalendar = ({ bookings = [] }) => {
   const isLastDayOfBooking = (date, booking) => isSameDay(date, booking.end);
 
   return (
-    <div className="p-2 border border-blackSecondary rounded w-full max-w-md mx-auto min-h-80 max-h-120 mb-4">
+    <div className="p-2 border border-grayPrimary bg-blackSecondary/25 rounded w-full max-w-md mx-auto min-h-80 max-h-120 mb-4">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <button
@@ -94,9 +94,9 @@ const UpcomingBookingsCalendar = ({ bookings = [] }) => {
             if (isPast || isAfterTwoYears) {
                 classes += "text-blackSecondary border-blackSecondary cursor-default";
             } else if (booking) {
-                classes += "bg-buttonPrimary hover:bg-buttonSecondary";
+                classes += "bg-buttonPrimary/50 border-buttonSecondary hover:bg-buttonSecondary";
             } else {
-                classes += "text-whiteSecondary hover:text-whitePrimary hover:bg-blackSecondary hover:border-grayPrimary border-blackSecondary";
+                classes += "text-whiteSecondary border-blackSecondary";
             }
             
 

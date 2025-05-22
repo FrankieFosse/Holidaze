@@ -157,14 +157,14 @@ const SingleVenue = () => {
           {userBooking ? (
           <div className="flex flex-col gap-4">
             <button
-              className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 min-h-8 max-h-16 duration-150 cursor-pointer rounded"
+              className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 min-h-8 max-h-16 duration-150 cursor-pointer rounded lg:text-lg"
               onClick={() => navigate(`/booking/${userBooking.id}`)}
             >
               View booking
             </button>
             {!isOwner && (
               <button
-                className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 min-h-8 max-h-16 duration-150 cursor-pointer rounded"
+                className="bg-buttonPrimary hover:bg-buttonSecondary py-1 px-2 min-h-8 max-h-16 duration-150 cursor-pointer rounded lg:text-lg"
                 onClick={() => {
                   setIsAddingNewBooking(true);
                   setShowBookingForm(true);
@@ -179,11 +179,15 @@ const SingleVenue = () => {
             className={`rounded py-2 px-4 ${isOwner ? "bg-grayPrimary cursor-default" : "bg-buttonPrimary hover:bg-buttonSecondary cursor-pointer"}`}
             disabled={isOwner}
             onClick={() => {
+              if (!token || !currentUser) {
+                navigate("/login");
+                return;
+              }
               if (!isOwner) {
                 setIsAddingNewBooking(true);
                 setShowBookingForm(true);
               }
-            }}
+            }}            
           >
             Book Now
           </button>
@@ -238,9 +242,19 @@ const SingleVenue = () => {
 
       {/* Booked Dates Overview */}
       {isOwner && bookings.length > 0 && (
-        <div className="border-1 border-blackSecondary mx-2 my-4 p-4 col-span-1 md:col-span-3 justify-center items-center flex flex-col">
+        <div className="border-1 border-blackSecondary mx-2 my-4 p-4 col-span-1 md:col-span-3 justify-center items-center flex flex-col lg:text-lg">
           <h2 className="font-bold mb-4">Booked Dates</h2>
-          <ul className="list-none pl-5 space-y-2">
+          <ul
+            className={`list-none pl-5 flex flex-col lg:grid ${
+              bookings.length === 1
+                ? "grid-cols-1"
+                : bookings.length === 2
+                ? "grid-cols-2"
+                : bookings.length === 3
+                ? "grid-cols-3"
+                : "grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+            } gap-2`}
+          >
             {bookings
               .sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom))
               .map((booking) => (
@@ -249,7 +263,10 @@ const SingleVenue = () => {
                     to={`/booking/${booking.id}`}
                     className="font-semibold bg-buttonPrimary hover:bg-buttonSecondary duration-150 px-6 py-1 rounded flex justify-center items-center w-max"
                   >
-                    {format(new Date(booking.dateFrom), "dd.MM.yyyy")} → {format(new Date(booking.dateTo), "dd.MM.yyyy")}<br></br>({booking.guests} guest{booking.guests > 1 ? "s" : ""})
+                    {format(new Date(booking.dateFrom), "dd.MM.yyyy")} →{" "}
+                    {format(new Date(booking.dateTo), "dd.MM.yyyy")}
+                    <br />
+                    ({booking.guests} guest{booking.guests > 1 ? "s" : ""})
                   </Link>
                 </li>
               ))}

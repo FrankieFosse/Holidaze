@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import Pagination from "./Pagination";
+import LoadingSpinner from "./LoadingSpinner";
+
 
 const BookingsByProfile = () => {
   const [bookings, setBookings] = useState([]);
@@ -62,21 +64,16 @@ const BookingsByProfile = () => {
         <Pagination page={page} totalPages={totalPages} setPage={setPage} />
       )}
 
-      {loadingBookings && <p>Loading bookings...</p>}
+      {loadingBookings && <LoadingSpinner />}
       {bookingsError && <p className="text-redPrimary">Error: {bookingsError}</p>}
       {!loadingBookings && bookings.length === 0 && <p>No bookings found.</p>}
 
       <ul
-        className={`grid gap-4 mx-4 justify-center place-items-center ${
-          currentBookings.length === 1
-            ? "grid-cols-1"
-            : currentBookings.length === 2
-            ? "grid-cols-2"
-            : currentBookings.length === 3
-            ? "grid-cols-3"
-            : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-        }`}
+        className={`grid gap-4 mx-4 place-items-center ${
+          currentBookings.length < 4 ? "justify-center" : ""
+        } grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`}
       >
+
 
         {currentBookings.map((booking) => {
           const imageUrl = booking.venue.media?.[0]?.url;

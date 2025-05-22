@@ -92,6 +92,8 @@ useEffect(() => {
   const [showConflictModal, setShowConflictModal] = useState(false);
   const [conflictBookingId, setConflictBookingId] = useState(null);
 
+  
+
 
   const handleEditSubmit = async () => {
     if (!dateFrom || !dateTo || guests < 1) {
@@ -173,7 +175,7 @@ useEffect(() => {
   
 
   return (
-    <div className="booking-container relative 2xl:text-lg text-xs">
+    <div className="booking-container relative 2xl:text-xl text-xs lg:text-lg">
       <StatusMessage message={statusMessage} type={statusType} />
 
       <h1 className="mb-4">
@@ -184,12 +186,16 @@ useEffect(() => {
         <p>{venue.price} NOK / night</p>
       </div>
 
-      <BookingCalendar closeModal={closeModal}
-            excludedBookings={venueBookings.filter((b) => b.id !== booking.id)} // Exclude the current booking
-            onDateChange={handleDateChange} // Handle date range change
-            defaultDateFrom={dateFrom}
-            defaultDateTo={dateTo}
-            />
+      <BookingCalendar
+        closeModal={closeModal}
+        excludedBookings={venueBookings.filter((b) => b.id !== booking.id)} // current venue bookings
+        onDateChange={handleDateChange}
+        defaultDateFrom={dateFrom}
+        defaultDateTo={dateTo}
+        userBookings={userBookings} // pass user bookings here
+        currentVenueId={venue.id}   // also pass current venue id
+      />
+
 
       <div className="mt-2 flex flex-row w-full justify-center items-center gap-2">
         <label htmlFor="guests" className="text-xs">Guests</label>

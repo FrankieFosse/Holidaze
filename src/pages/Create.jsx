@@ -117,6 +117,7 @@ function Create({ handleVenueCreated }) {
     if (validMedia.length === 0) {
       showStatusMessage("You must provide at least one image with a description.", "error");
       return { isValid: false };
+      
     }
   
     const hasInvalidAlt = media.some((item) => item.url.trim() && !item.alt.trim());
