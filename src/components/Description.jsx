@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from "react";
 
 const Description = ({ text, onExpandToggle }) => {
   const [expanded, setExpanded] = useState(false);
-  const [showScroll, setShowScroll] = useState(false); // New state to control scrollbar delay
+  const [showScroll, setShowScroll] = useState(false);
   const contentRef = useRef(null);
   const isLongText = text.length > 200;
+  const [isXL, setIsXL] = useState(false);
 
   const toggleExpanded = () => {
     setExpanded((prev) => !prev);
@@ -12,15 +13,24 @@ const Description = ({ text, onExpandToggle }) => {
   };
 
   useEffect(() => {
+    // Listen for window resize to detect XL breakpoint (≥1280px)
+    const checkScreenSize = () => {
+      setIsXL(window.innerWidth >= 1280);
+    };
+
+    checkScreenSize(); // Initial check
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  useEffect(() => {
     let timeoutId;
 
     if (expanded && isLongText) {
-      // Delay scroll activation by 1s
       timeoutId = setTimeout(() => {
         setShowScroll(true);
       }, 1000);
     } else {
-      // Remove scroll immediately when collapsed
       setShowScroll(false);
     }
 
@@ -31,12 +41,14 @@ const Description = ({ text, onExpandToggle }) => {
     if (contentRef.current) {
       contentRef.current.style.maxHeight =
         expanded && isLongText
-          ? "300px"
+          ? isXL
+            ? "600px"
+            : "350px"
           : expanded
           ? `${contentRef.current.scrollHeight}px`
           : "50px";
     }
-  }, [expanded, isLongText]);
+  }, [expanded, isLongText, isXL]);
 
   return (
     <div className="overflow-hidden transition-all duration-1000 ease-in-out">
@@ -48,7 +60,9 @@ const Description = ({ text, onExpandToggle }) => {
         style={{
           maxHeight:
             expanded && isLongText
-              ? "300px"
+              ? isXL
+                ? "600px"
+                : "350px"
               : expanded
               ? `${contentRef.current?.scrollHeight}px`
               : "50px",
