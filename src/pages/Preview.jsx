@@ -12,6 +12,11 @@ const Preview = () => {
   const navigate = useNavigate();
   const venue = location.state;
 
+  const hasLocationValues = venue.location && Object.values(venue.location).some(value => value);
+
+  const owner = localStorage.getItem("name");
+  const avatar = localStorage.getItem("avatar.url")
+
     const [statusMessage, setStatusMessage] = useState("");
     const [statusType, setStatusType] = useState("error");
 
@@ -34,7 +39,6 @@ const Preview = () => {
 
   const handleCreateVenue = async () => {
     const token = localStorage.getItem("token");
-    const owner = localStorage.getItem("name");
   
     if (!token || !owner) {
       alert("You must be logged in to create a venue.");
@@ -92,16 +96,15 @@ const Preview = () => {
     return null;
   }
 
+  console.log(venue)
+
   return (
     <>
       <SingleVenueHero media={venue.media} expanded={expanded} />
-      <div className="absolute z-30 text-white p-4 bottom-4 w-full overflow-hidden flex flex-row justify-between items-center gap-4">
-        <div className="text-left w-3/5">
-          <h2
-            className={`font-bold break-words overflow-hidden text-ellipsis ${
-              venue.name.length > 100 ? "text-sm" : "text-xl"
-            }`}
-          >
+
+      <div className="absolute left-0 z-30 p-4 bottom-4 lg:bottom-16 lg:p-16 w-full lg:pl-80 overflow-hidden flex flex-row justify-between items-center gap-4 pointer-events-none">
+        <div className="text-left w-3/5 pointer-events-auto">
+          <h2 className={`font-bold break-words overflow-hidden text-ellipsis ${venue.name.length > 100 ? "text-sm lg:text-xl" : "text-xl lg:text-3xl"}`}>
             {venue.name}
           </h2>
 
@@ -111,63 +114,95 @@ const Preview = () => {
 
       <Return />
 
-      <div className="border-1 border-blackSecondary mx-2 my-4">
-              <div className="flex flex-row justify-evenly items-center my-4 mx-2 gap-4">
-                <p className="text-sm">{venue.price} NOK / night</p>
-                <button className="flex items-center w-max py-2 px-2 bg-buttonPrimary hover:bg-buttonSecondary text-md duration-150 cursor-pointer gap-2 rounded">
-                  Book now <FaLongArrowAltRight />
-                </button>
-              </div>
-              <div className="flex flex-col justify-center items-center">
-                <p>Max Guests</p>
-                <div className="border-1 border-grayPrimary rounded-full w-12 h-12 p-2 flex items-center justify-center">{venue.maxGuests}</div>
-              </div>
-              <div className="flex flex-row justify-evenly my-4 gap-4 scale-80">
-                {[{ condition: venue.meta.wifi, icon: <FaWifi className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "WiFi included" },
-                  { condition: venue.meta.parking, icon: <MdLocalParking className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Parking included" },
-                  { condition: venue.meta.pets, icon: <MdFreeBreakfast className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Breakfast included" },
-                  { condition: venue.meta.breakfast, icon: <MdOutlinePets className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Pets allowed" }]
-                  .map(({ condition, icon, label }, index) => condition && (
-                    <div key={index} className="flex flex-col items-center gap-2">
-                      {icon}
-                      <p className="text-xs font-thin">{label}</p>
-                    </div>
-                  ))}
-              </div>
-            </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:text-lg lg:text-xl xl:text-2xl">
 
-                    {/* Media Section: Displaying all images only if media exists */}
-        {venue.media && venue.media.length > 0 && (
-        <div className="border-1 border-blackSecondary mx-2 my-4 flex justify-center items-center flex-col">
-            <h2>Media</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 justify-center items-center self-center">
-            {venue.media.map((mediaItem, index) => (
-                <div key={index} className="overflow-hidden">
-                <img
-                    src={mediaItem.url}
-                    alt={`Media ${index + 1}`}
-                    className="w-64 h-32 object-cover rounded-md"
-                    onError={handleImageError}
-                />
-                </div>
-            ))}
-            </div>
+<div className="border-1 border-blackSecondary mx-2 my-4">
+  <div className="flex flex-row justify-evenly items-center my-4 mx-2 gap-4">
+    <p className="">{venue.price} NOK / night</p>
+
+  </div>
+
+  {/* Display other venue details like max guests, amenities, etc. */}
+  <div className="flex flex-col justify-center items-center">
+    <p>Max Guests</p>
+    <div className="border-1 border-grayPrimary rounded-full min-w-16 min-h-16 p-2 flex items-center justify-center">{venue.maxGuests}</div>
+  </div>
+  <div className="flex flex-row justify-evenly my-4 gap-4 scale-80">
+    {[{ condition: venue.meta.wifi, icon: <FaWifi className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "WiFi included" },
+      { condition: venue.meta.parking, icon: <MdLocalParking className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Parking included" },
+      { condition: venue.meta.pets, icon: <MdFreeBreakfast className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Breakfast included" },
+      { condition: venue.meta.breakfast, icon: <MdOutlinePets className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Pets allowed" }].map(({ condition, icon, label }, index) => condition && (
+        <div key={index} className="flex flex-col items-center gap-2">
+          {icon}
+          <p className="text-xs md:text-lg font-thin">{label}</p>
         </div>
-        )}
+      ))}
+  </div>
+</div>
 
-        <div className="border-1 border-blackSecondary mx-2 p-8 my-8">
-            <h2>Owner</h2>
-            <div className="flex flex-row items-center justify-between gap-4">
-            <img
-                src={localStorage.getItem("avatar.url")}
-                className="rounded-full border-1 border-grayPrimary max-h-24 min-h-24 max-w-24 min-w-24 object-cover"
-                onError={handleImageError} // Handle error for the owner's avatar image
-            />
-            <p>{localStorage.getItem("name")}</p>
-            </div>
-        </div>
+{/* Owner Section */}
+<div className="border-1 border-blackSecondary mx-2 my-4 p-4 flex-col justify-center items-center">
+  <h2 className="font-bold mb-2">Venue Owner</h2>
+  <div className="justify-center items-center flex flex-col">
+  <p className="font-semibold">{owner}</p>
+  <img src={avatar} className="min-h-16 max-h-16 min-w-16 max-w-16 rounded-full" />
+  </div>
+</div>
 
-        <div className="flex justify-center items-center my-8">
+{hasLocationValues && (
+  <div className="border-1 border-blackSecondary mx-2 my-4 p-4">
+    <h2 className="font-bold mb-2">Location Details</h2>
+    <div className="text-whiteSecondary">
+      {venue.location.address && <p><strong>Address:</strong> {venue.location.address}</p>}
+      {venue.location.city && <p><strong>City:</strong> {venue.location.city}</p>}
+      {venue.location.zip && <p><strong>ZIP:</strong> {venue.location.zip}</p>}
+      {venue.location.country && <p><strong>Country:</strong> {venue.location.country}</p>}
+      {venue.location.continent && <p><strong>Continent:</strong> {venue.location.continent}</p>}
+    </div>
+  </div>
+)}
+
+
+
+
+
+
+
+</div>
+
+{/* Media Section */}
+{venue.media && venue.media.length > 0 && (
+<div className="border-1 border-blackSecondary mx-2 my-4 flex justify-center items-center flex-col h-max">
+<h2>Media</h2>
+<div
+  className={`grid gap-4 p-4 place-items-center ${
+    venue.media.length === 1
+      ? 'grid-cols-1'
+      : venue.media.length === 2
+      ? 'grid-cols-2'
+      : venue.media.length === 3
+      ? 'grid-cols-3'
+      : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+  }`}
+>
+  {venue.media.map((mediaItem, index) => (
+    <div
+      key={index}
+      className="overflow-hidden cursor-pointer"
+    >
+      <img
+        src={mediaItem.url}
+        alt={`Media ${index + 1}`}
+        className="w-64 h-32 object-cover rounded-md"
+        onError={handleImageError}
+      />
+    </div>
+  ))}
+</div>
+</div>
+)}
+
+<div className="flex justify-center items-center my-8">
         <button
             onClick={handleCreateVenue}
             className="bg-buttonPrimary hover:bg-buttonSecondary py-2 px-4 rounded duration-150 cursor-pointer"

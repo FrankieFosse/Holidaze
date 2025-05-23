@@ -70,7 +70,7 @@ const VenueCard = ({ venue }) => {
 
       {!isLoading && (
         <div className="bg-blackPrimary/90 max-h-42 w-full overflow-hidden px-2 md:px-4 py-2 flex flex-row items-center justify-between z-10">
-          <div className="w-full min-h-18 max-h-18 text-left flex flex-col justify-center">
+          <div className="w-3/4 min-h-18 max-h-18 text-left flex flex-col justify-center">
             <p className={`font-bold break-words ${venue.name.length > 8 ? "text-sm" : "text-md"}`}>
               {venue.name.length > 20 ? `${venue.name.slice(0, 20)}...` : venue.name}
             </p>
@@ -82,7 +82,7 @@ const VenueCard = ({ venue }) => {
           </div>
           {windowWidth >= 300 && (
             <div>
-              <p className="text-xs text-right">{venue.price}<br></br><p className="text-grayPrimary">NOK / night</p></p>
+              <div className="text-xs text-right">{venue.price}<br></br><p className="text-grayPrimary">NOK / night</p></div>
             </div>
           )}
         </div>

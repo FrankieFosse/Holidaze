@@ -115,7 +115,7 @@ const Browse = () => {
   return (
     <>
       {/* Search bar */}
-      <div className="pt-16 flex flex-row items-center justify-center mb-2">
+      <div className="pt-16 lg:pt-4 flex flex-row items-center justify-center mb-2">
         <div
           onClick={() => setShowFilters((prev) => !prev)}
           className="bg-blackSecondary h-8 w-8 flex justify-center items-center rounded-full mr-6 duration-150 cursor-pointer border-1 border-blackSecondary hover:border-grayPrimary"
@@ -145,13 +145,18 @@ const Browse = () => {
 
       <Pagination page={page} totalPages={totalPages} setPage={setPage} />
 
-      <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 grid-flow-dense">
-  {filteredVenues
-    .slice((page - 1) * pageSize, page * pageSize)
-    .map((venue, index) => (
-      <VenueCard key={`${venue.id}-${index}`} venue={venue} />
-    ))}
-</ul>
+      {filteredVenues.length === 0 ? (
+          <p className="text-center text-grayPrimary mt-8 text-lg">No venues found.</p>
+        ) : (
+          <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 grid-flow-dense">
+            {filteredVenues
+              .slice((page - 1) * pageSize, page * pageSize)
+              .map((venue, index) => (
+                <VenueCard key={`${venue.id}-${index}`} venue={venue} />
+              ))}
+          </ul>
+        )}
+
 
 
       <Pagination page={page} totalPages={totalPages} setPage={setPage} />
