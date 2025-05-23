@@ -87,7 +87,7 @@ const BookingsByProfile = () => {
                 backgroundImage: imageUrl ? `url(${imageUrl})` : "none",
               }}
             >
-              <div className="backdrop-blur-xs bg-blackPrimary/75 p-4 h-full w-full">
+              <div className="backdrop-blur-xs bg-blackPrimary/75 p-4 min-h-64 max-h-64 2xl:min-h-48 2xl:max-h-48 w-auto flex flex-col justify-center">
                 <p className={`font-bold break-words ${booking.venue.name.length > 8 ? "text-sm" : "text-md"}`}>
                   {booking.venue.name.length > 20
                     ? `${booking.venue.name.slice(0, 20)}...`

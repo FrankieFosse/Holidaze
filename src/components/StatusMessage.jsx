@@ -12,12 +12,21 @@ export default function StatusMessage({ message, type }) {
     }
   }, [message]);
 
+  if (!message) return null;
+
+
   const bgColorClass =
     type === "error"
       ? "bg-redSecondary"
       : type === "success"
       ? "bg-buttonPrimary"
       : "bg-buttonPrimary";
+
+      const containerPositionClass =
+        type === "error"
+          ? "items-end justify-end p-4" // Bottom-right with some padding
+          : "items-center justify-center";
+
 
   return (
     <AnimatePresence mode="wait">
@@ -28,7 +37,8 @@ export default function StatusMessage({ message, type }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className="fixed inset-0 lg:pl-72 z-50 flex items-center justify-center"
+          className={`fixed inset-0 lg:pl-72 z-10 flex pointer-events-none ${containerPositionClass}`}
+
         >
           {/* Conditionally render blur if loading */}
           {type === "loading" && (

@@ -37,11 +37,24 @@ function Create({ handleVenueCreated }) {
 
   const locationRef = useRef(null);
 
-  const [statusMessage, setStatusMessage] = useState("");
+  const [statusMessage, setStatusMessage] = useState(null);
   const [statusType, setStatusType] = useState("error"); // 'error' or 'success'
   const [invalidFields, setInvalidFields] = useState([]);
 
   const [showLocation, setShowLocation] = useState(false);
+
+  const [invalidImageURLs, setInvalidImageURLs] = useState([]);
+
+  function isValidImageUrl(url) {
+    const regex = /\.(jpeg|jpg|gif|png|webp|bmp|svg)$/i;
+    try {
+      const parsed = new URL(url);
+      return regex.test(parsed.pathname);
+    } catch {
+      return false;
+    }
+  }
+  
 
   // Handle adding a new media field
   const handleAddMedia = () => {
@@ -101,12 +114,15 @@ function Create({ handleVenueCreated }) {
 
     // Clear status message after 3 seconds
     setTimeout(() => {
-      setStatusMessage("");
-    }, 3000); // 3 seconds
+      setStatusMessage(null);
+    }, 2100); // 3 seconds
   };
 
   function validateVenueInputs() {
     const requiredFields = [];
+    const priceValue = parseFloat(price);
+    const maxGuestsValue = parseInt(maxGuests);
+  
     if (!name) requiredFields.push("name");
     if (!description) requiredFields.push("description");
     if (!price) requiredFields.push("price");
@@ -117,7 +133,16 @@ function Create({ handleVenueCreated }) {
     if (validMedia.length === 0) {
       showStatusMessage("You must provide at least one image with a description.", "error");
       return { isValid: false };
-      
+    }
+  
+    const invalidURLs = media
+      .map((item, index) => (!isValidImageUrl(item.url) ? index : null))
+      .filter((index) => index !== null);
+  
+    if (invalidURLs.length > 0) {
+      setInvalidImageURLs(invalidURLs);
+      showStatusMessage("One or more image URLs are invalid.", "error");
+      return { isValid: false };
     }
   
     const hasInvalidAlt = media.some((item) => item.url.trim() && !item.alt.trim());
@@ -133,7 +158,20 @@ function Create({ handleVenueCreated }) {
       return { isValid: false };
     }
   
+    // Additional bounds validation
+    if (priceValue < 0 || priceValue > 10000) {
+      showStatusMessage("Price must be between 0 and 10,000 NOK.", "error");
+      return { isValid: false };
+    }
+  
+    if (maxGuestsValue < 1 || maxGuestsValue > 100) {
+      showStatusMessage("Max guests must be between 1 and 100.", "error");
+      return { isValid: false };
+    }
+  
     setInvalidFields([]);
+    setInvalidImageURLs([]);
+  
     return {
       isValid: true,
       venueData: {
@@ -147,6 +185,8 @@ function Create({ handleVenueCreated }) {
       },
     };
   }
+  
+  
   
 
   async function handleSubmit(e) {
@@ -162,46 +202,17 @@ function Create({ handleVenueCreated }) {
   
     const validation = validateVenueInputs();
     if (!validation.isValid) return;
-
-    const requiredFields = [];
-    if (!name) requiredFields.push("name");
-    if (!description) requiredFields.push("description");
-    if (!price) requiredFields.push("price");
-    if (!maxGuests) requiredFields.push("maxGuests");
-
-    // Validate media
-    const validMedia = media.filter((item) => item.url.trim() !== "" && item.alt.trim() !== "");
-
-    if (validMedia.length === 0) {
-      showStatusMessage("You must provide at least one image with a description.", "error");
-      return;
-    }
-
-    const hasInvalidAlt = media.some((item) => item.url.trim() && !item.alt.trim());
-    if (hasInvalidAlt) {
-      showStatusMessage("All images must have a description.", "error");
-      return;
-    }
-
-    if (requiredFields.length > 0) {
-      setInvalidFields(requiredFields);
-      const fieldText = requiredFields.length === 1 ? "field" : "fields";
-      showStatusMessage(`Please fill out the required ${fieldText}.`, "error");
-      return;
-    } else {
-      setInvalidFields([]);
-    }
-
+  
     const venue = {
-      name,
-      description,
-      media: validMedia,
-      price: parseFloat(price),
-      maxGuests: parseInt(maxGuests),
-      meta,
-      location,
+      name: validation.venueData.name,
+      description: validation.venueData.description,
+      media: validation.venueData.media,
+      price: parseFloat(validation.venueData.price),
+      maxGuests: parseInt(validation.venueData.maxGuests),
+      meta: validation.venueData.meta,
+      location: validation.venueData.location,
     };
-
+  
     try {
       const response = await fetch("https://v2.api.noroff.dev/holidaze/venues", {
         method: "POST",
@@ -212,24 +223,27 @@ function Create({ handleVenueCreated }) {
         },
         body: JSON.stringify(venue),
       });
-
+  
       const data = await response.json();
-
+  
       if (!response.ok) {
         throw new Error(data.errors?.[0]?.message || "Failed to create venue.");
       }
-
-      showStatusMessage("Creating venue...", "loading"); // Spinner & message appear
-
-      setTimeout(() => {
+  
+      showStatusMessage("Creating venue...", "loading");
+  
+      // Let animation/rendering happen first
+      requestAnimationFrame(() => {
         navigate("/profile");
         localStorage.removeItem("draftVenue");
-      }, 2000);
+      });
+  
     } catch (err) {
       console.error(err);
       showStatusMessage(err.message, "error");
     }
   }
+  
 
   const amenityLabels = {
     wifi: "Wifi included",
@@ -239,7 +253,7 @@ function Create({ handleVenueCreated }) {
   };
 
   return (
-    <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-8 text-xs 2xl:text-lg">
+    <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-8 lg:mt-4 text-xs 2xl:text-lg">
       <StatusMessage message={statusMessage} type={statusType} />
       <h1 className="text-xl mb-4">Create New Venue</h1>
 
@@ -260,15 +274,13 @@ function Create({ handleVenueCreated }) {
         />
 
         <div className="flex flex-row items-center">
-          <input
-            type="number"
-            placeholder="Price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            min="0"
-            max="10000"
-            className={`p-2 min-h-8 w-full text-blackPrimary bg-whitePrimary rounded-l ${invalidFields.includes("price") ? "border-3 border-redPrimary" : ""}`}
-          />
+        <input
+          type="number"
+          placeholder="Price"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          className={`p-2 min-h-8 w-full text-blackPrimary bg-whitePrimary rounded-l ${invalidFields.includes("price") ? "border-3 border-redPrimary" : ""}`}
+        />
           <p className="w-42 min-h-8 bg-whitePrimary text-grayPrimary cursor-default flex justify-center items-center py-2 px-4 rounded-r">
             NOK / night
           </p>
@@ -279,8 +291,6 @@ function Create({ handleVenueCreated }) {
           placeholder="Max guests"
           value={maxGuests}
           onChange={(e) => setMaxGuests(e.target.value)}
-          min="1"
-          max="100"
           className={`p-2 text-blackPrimary bg-whitePrimary rounded ${invalidFields.includes("maxGuests") ? "border-3 border-redPrimary" : ""}`}
         />
 
@@ -299,11 +309,11 @@ function Create({ handleVenueCreated }) {
               className="flex flex-col gap-2 items-center w-full border-1 border-blackSecondary rounded p-4 overflow-hidden"
             >
               <input
-                type="url"
+                type="text"
                 placeholder="Image URL"
                 value={item.url}
                 onChange={(e) => handleMediaChange(index, "url", e.target.value)}
-                className="p-2 text-blackPrimary bg-whitePrimary flex w-full rounded"
+                className={`p-2 text-blackPrimary bg-whitePrimary flex w-full rounded ${invalidImageURLs.includes(index) ? "border-2 border-redPrimary" : ""}`}
               />
 
               <input

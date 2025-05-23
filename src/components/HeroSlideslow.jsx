@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaChevronRight, FaChevronLeft, FaLongArrowAltRight } from "react-icons/fa";
 import { Link } from "react-router";
+import LoadingSpinner from "./LoadingSpinner";
 
 const venueIds = [
   "85e8e3b6-1038-4dfb-bebf-a31f4c9a6ac0",
@@ -67,7 +68,7 @@ function HeroSlideshow() {
     setTouchStartX(null);
   };
 
-  if (slides.length === 0) return <div>Loading...</div>;
+  if (slides.length === 0) return <LoadingSpinner />
 
   return (
     <div
@@ -111,14 +112,14 @@ function HeroSlideshow() {
 
       {/* Slide info */}
       <div
-        className="absolute bottom-8 right-4 w-2/4 lg:w-1/3 z-30 text-left"
+        className="absolute bottom-18 lg:bottom-8 2xl:bottom-18 right-4 w-2/4 lg:w-1/3 z-30 text-left"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
-        <h1 className="text-xl font-bold lg:text-3xl">{slides[current].title}</h1>
-        <p className="font-thin text-xs mt-2 lg:text-lg">{slides[current].description}</p>
+        <h1 className="text-sm sm:text-lg lg:text-xl font-bold 2xl:text-3xl">{slides[current].title}</h1>
+        <p className="font-thin text-xs lg:text-sm mt-2 lg:text-lg">{slides[current].description}</p>
         <Link to={`/venues/${slides[current].id}`}>
-          <div className="flex items-center w-max py-2 px-4 bg-buttonPrimary hover:bg-buttonSecondary text-md mt-4 duration-150 cursor-pointer gap-4 rounded lg:text-2xl">
+          <div className="flex items-center w-max py-2 px-4 bg-buttonPrimary hover:bg-buttonSecondary text-sm mt-4 duration-150 cursor-pointer gap-4 rounded lg:text-lg 2xl:text-2xl">
             <p>View more</p>
             <FaLongArrowAltRight />
           </div>

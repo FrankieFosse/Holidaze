@@ -13,7 +13,6 @@ function ProfileEditor({ onCancel }) {
   const [bannerAlt, setBannerAlt] = useState("");
   const [venueManager, setVenueManager] = useState(false);
   const [pendingVenueManager, setPendingVenueManager] = useState(false);
-  const [error, setError] = useState("");
   const [isAvatarValid, setIsAvatarValid] = useState(false);
   const [isBannerValid, setIsBannerValid] = useState(false);
 
@@ -91,37 +90,45 @@ function ProfileEditor({ onCancel }) {
 
   async function updateProfile(event) {
     event.preventDefault();
-
+  
+    if (!avatarAlt.trim()) {
+      showStatusMessage("Avatar description is required.");
+      return;
+    }
+  
+    if (!bannerAlt.trim()) {
+      showStatusMessage("Banner description is required.");
+      return;
+    }
+  
     if (bannerUrl) {
       const validImage = await isImageLoadable(bannerUrl);
       if (!validImage) {
-        setError("Banner URL must point to a valid image.");
+        showStatusMessage("Banner URL must point to a valid image.");
         return;
       }
     }
-
+  
     if (avatarUrl) {
       const validAvatar = await isImageLoadable(avatarUrl);
       if (!validAvatar) {
-        setError("Avatar URL must point to a valid image.");
+        showStatusMessage("Avatar URL must point to a valid image.");
         return;
       }
-    }    
-     
-
+    }
+  
     if (bio.length > 160) {
-      setError("Bio must be 160 characters or less.");
+      showStatusMessage("Bio must be 160 characters or less.");
       return;
     }
-
+  
     setLoading(true);
-    setError("");
-    showStatusMessage("Updating profile...", "loading");    
-
+    showStatusMessage("Updating profile...", "loading");
+  
     try {
       const name = localStorage.getItem("name");
       const token = localStorage.getItem("token");
-
+  
       const body = {
         bio,
         avatar: {
@@ -134,7 +141,7 @@ function ProfileEditor({ onCancel }) {
         },
         venueManager: pendingVenueManager,
       };
-
+  
       const response = await fetch(`https://v2.api.noroff.dev/holidaze/profiles/${name}`, {
         method: "PUT",
         headers: {
@@ -144,13 +151,13 @@ function ProfileEditor({ onCancel }) {
         },
         body: JSON.stringify(body),
       });
-
+  
       const data = await response.json();
-
+  
       if (!response.ok) {
         throw new Error(data.errors?.[0]?.message || "Profile update failed.");
       }
-
+  
       localStorage.setItem("bio", bio);
       localStorage.setItem("avatar.url", avatarUrl);
       localStorage.setItem("avatar.alt", avatarAlt);
@@ -158,25 +165,22 @@ function ProfileEditor({ onCancel }) {
       localStorage.setItem("banner.alt", bannerAlt);
       setVenueManager(pendingVenueManager);
       localStorage.setItem("venueManager", pendingVenueManager.toString());
-
-      // Scroll to top
+  
       window.scrollTo({ top: 0, behavior: "smooth" });
-
+  
       setLoading(false);
       setStatusMessage("Saving changes...");
-
-      // Optional: Refresh after a delay
+  
       setTimeout(() => {
         location.reload();
       }, 1500);
-
     } catch (error) {
       console.error(error.message);
-      setError(error.message);
+      showStatusMessage(error.message || "Profile update failed.");
       setLoading(false);
-      setStatusMessage("");
     }
   }
+  
 
   function isValidUrl(string) {
     try {
@@ -329,9 +333,7 @@ function ProfileEditor({ onCancel }) {
           </div>
         </div>
 
-        {error && <p className="text-redSecondary bg-blackPrimary px-6 py-2 rounded text-sm">{error}</p>}
-
-        <div className="flex justify-between w-full md:w-3/4 lg:w-2/4 col-span-4">
+        <div className="flex justify-between w-full md:w-3/4 lg:w-2/4 2xl:w-full col-span-4 place-items-center">
           <button
             type="button"
             onClick={onCancel}

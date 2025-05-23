@@ -33,7 +33,7 @@ const UpcomingBookingsSection = () => {
 
   return (
     <div className="my-6 mx-2 relative min-h-[200px]">
-      <h2 className="text-xl font-bold mb-2 mx-2 mt-16">Upcoming Bookings Overview</h2>
+      <h2 className="text-xl font-bold mb-2 mx-2 mt-16 lg:mt-6">Upcoming Bookings Overview</h2>
 
       {loading ? (
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/20">

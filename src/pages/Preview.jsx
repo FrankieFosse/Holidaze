@@ -202,6 +202,15 @@ const Preview = () => {
 </div>
 )}
 
+<div className="flex justify-center items-center my-8">
+        <button
+            onClick={handleCreateVenue}
+            className="bg-buttonPrimary hover:bg-buttonSecondary py-2 px-4 rounded duration-150 cursor-pointer"
+        >
+            Create Venue
+        </button>
+        </div>
+
     </>
   );
 };
