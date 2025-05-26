@@ -226,7 +226,7 @@ const SingleVenue = () => {
         <h2 className="font-bold mb-2">Venue Owner</h2>
         <div className="justify-center items-center flex flex-col">
         <p className="font-semibold">{venue.owner.name}</p>
-        <img src={venue.owner.avatar.url} className="min-h-16 max-h-16 min-w-16 max-w-16 rounded-full" />
+        <img src={venue.owner.avatar.url} className="min-h-16 max-h-16 min-w-16 max-w-16 rounded-full object-cover" />
         </div>
       </div>
 
@@ -249,7 +249,7 @@ const SingleVenue = () => {
       {/* Booked Dates Overview */}
       {isOwner && bookings.length > 0 && (
         <div className="border-1 border-blackSecondary mx-2 my-4 p-4 col-span-1 md:col-span-3 justify-center items-center flex flex-col lg:text-lg">
-          <h2 className="font-bold mb-4">Booked Dates</h2>
+          <h2 className="font-bold mb-4">Upcoming Bookings</h2>
           <ul
             className={`list-none pl-5 flex flex-col lg:grid ${
               bookings.length === 1
@@ -261,21 +261,22 @@ const SingleVenue = () => {
                 : "grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
             } gap-2`}
           >
-            {bookings
-              .sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom))
-              .map((booking) => (
-                <li key={booking.id}>
-                  <Link
-                    to={`/booking/${booking.id}`}
-                    className="font-semibold bg-buttonPrimary hover:bg-buttonSecondary duration-150 px-6 py-1 rounded flex justify-center items-center w-max"
-                  >
-                    {format(new Date(booking.dateFrom), "dd.MM.yyyy")} →{" "}
-                    {format(new Date(booking.dateTo), "dd.MM.yyyy")}
-                    <br />
-                    ({booking.guests} guest{booking.guests > 1 ? "s" : ""})
-                  </Link>
-                </li>
-              ))}
+        {bookings
+          .filter((booking) => new Date(booking.dateTo) >= new Date()) // Only future or ongoing bookings
+          .sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom))
+          .map((booking) => (
+            <li key={booking.id}>
+              <Link
+                to={`/booking/${booking.id}`}
+                className="font-semibold bg-buttonPrimary hover:bg-buttonSecondary duration-150 px-6 py-1 rounded flex justify-center items-center w-max"
+              >
+                {format(new Date(booking.dateFrom), "dd.MM.yyyy")} →{" "}
+                {format(new Date(booking.dateTo), "dd.MM.yyyy")}
+                <br />
+                ({booking.guests} guest{booking.guests > 1 ? "s" : ""})
+              </Link>
+            </li>
+        ))}
           </ul>
         </div>
       )}

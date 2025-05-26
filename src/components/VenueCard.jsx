@@ -1,12 +1,15 @@
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 
-// Helper function to validate the image URL
-const validateImageUrl = (url) => {
+const loadAndValidateImage = (url) => {
   return new Promise((resolve) => {
     const img = new Image();
-    img.onload = () => resolve(url); // Valid image
-    img.onerror = () => resolve("/images/NoImagePlaceholder.jpg"); // Fallback image if error
+    img.onload = () => {
+      resolve({ url, isHorizontal: img.naturalWidth > img.naturalHeight });
+    };
+    img.onerror = () => {
+      resolve({ url: "/images/NoImagePlaceholder.jpg", isHorizontal: false });
+    };
     img.src = url;
   });
 };
@@ -21,33 +24,30 @@ const VenueCard = ({ venue }) => {
   useEffect(() => {
     const loadImage = async () => {
       setIsLoading(true);
-      const imageUrl = venue.media && venue.media.length > 0
-        ? await validateImageUrl(venue.media[0].url)
-        : "/images/NoImagePlaceholder.jpg";
-      
-      setBackgroundImage(imageUrl);
-
-      // Check if image is horizontal
-      const img = new Image();
-      img.onload = () => {
-        setIsHorizontal(img.naturalWidth > img.naturalHeight);
-        setIsLoading(false);
-      };
-      img.onerror = () => {
-        setIsHorizontal(false);
-        setIsLoading(false);
-      };
-      img.src = imageUrl;
+      const imageUrl = venue.media?.[0]?.url || "/images/NoImagePlaceholder.jpg";
+      const { url, isHorizontal } = await loadAndValidateImage(imageUrl);
+      setBackgroundImage(url);
+      setIsHorizontal(isHorizontal);
+      setIsLoading(false);
     };
-
+  
     loadImage();
   }, [venue]);
+  
 
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
+    let timeoutId;
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setWindowWidth(window.innerWidth);
+      }, 150);
+    };
+  
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  
 
   const handleClick = () => {
     navigate(`/venues/${venue.id}`);

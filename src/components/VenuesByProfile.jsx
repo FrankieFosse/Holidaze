@@ -30,7 +30,7 @@ function VenuesByProfile() {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [limit] = 10;
+  const [limit] = useState(10);
 
   useEffect(() => {
     const name = localStorage.getItem("name");
