@@ -3,6 +3,8 @@ import VenueCard from './VenueCard';
 import Pagination from './Pagination';
 import LoadingSpinner from './LoadingSpinner'; // <-- Import it here
 
+const API_KEY = import.meta.env.VITE_API_KEY;
+
 async function fetchVenuesByProfile(name, token, page = 1, limit = 10) {
   try {
     const response = await fetch(`https://v2.api.noroff.dev/holidaze/profiles/${name}/venues?page=${page}&limit=${limit}`, {
@@ -10,7 +12,7 @@ async function fetchVenuesByProfile(name, token, page = 1, limit = 10) {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-        "X-Noroff-API-Key": `178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9`,
+        "X-Noroff-API-Key": API_KEY,
       },
     });
 
@@ -28,7 +30,7 @@ function VenuesByProfile() {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [limit] = useState(10);
+  const [limit] = 10;
 
   useEffect(() => {
     const name = localStorage.getItem("name");

@@ -7,9 +7,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
 
 
     return (
-        <>
         <div className="border-blackSecondary border-1 p-4 m-2 flex-col flex lg:flex-row justify-center items-center lg:gap-8">
-          <div className="flex flex-row justify-center items-center">
         <div className="flex flex-row items-center justify-center mb-6 lg:mb-0 gap-2 border-1 border-blackSecondary rounded w-max pl-2">
           <p>Sort by</p>
         <select
@@ -23,7 +21,6 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
             <option value="priceHighToLow">Highest Price</option>
             <option value="priceLowToHigh">Lowest Price</option>
         </select>
-        </div>
         </div>
 
 
@@ -92,7 +89,6 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
         </Tooltip>
       </div>
       </div>
-      </>
     )
 }
 

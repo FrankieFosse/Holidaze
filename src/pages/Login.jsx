@@ -2,15 +2,13 @@ import { useState, useEffect } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import Register from "../components/Register";
-import StatusMessage from "../components/StatusMessage"; // <-- Add this
+import StatusMessage from "../components/StatusMessage";
 
 async function getToken(email, password) {
   try {
     const options = {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     };
     const response = await fetch("https://v2.api.noroff.dev/auth/login?_holidaze=true", options);
@@ -42,55 +40,49 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
-  const [messageType, setMessageType] = useState("error");
+  const [messageType, setMessageType] = useState(null);
   const [showRegister, setShowRegister] = useState(false);
   const navigate = useNavigate();
 
-    useEffect(() => {
-      document.title = "Log in | Holidaze";
-    }, []);  
+  useEffect(() => {
+    document.title = "Log in | Holidaze";
+  }, []);
+
+  const showMessage = (msg, type = "error", duration = 2000) => {
+    setMessage(msg);
+    setMessageType(type);
+    setTimeout(() => setMessage(null), duration);
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-  
-    // Basic validation
+
     if (!email || !password) {
-      setMessage("Please fill in both fields");
-      setMessageType("error");
-      setTimeout(() => setMessage(null), 2000);
+      showMessage("Please fill in both fields");
       return;
     }
-  
+
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
-      setMessage("Please enter a valid email address");
-      setMessageType("error");
-      setTimeout(() => setMessage(null), 2000);
+      showMessage("Please enter a valid email address");
       return;
     }
-  
-    // API request
+
     const result = await getToken(email, password);
-  
+
     if (!result.success) {
-      setMessage(result.message || "Login failed");
-      setMessageType("error");
-      setTimeout(() => setMessage(null), 2000);
+      showMessage(result.message || "Login failed");
     } else {
-      setMessage("Logging in...");
-      setMessageType("loading");
-  
+      showMessage("Logging in...", "success", 1500);
+
       setTimeout(() => {
-        setMessage(null);
         navigate("/");
       }, 1500);
     }
   };
-  
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
-      {/* Background Video */}
       <video
         className="absolute top-0 left-0 w-full h-full object-cover brightness-50"
         autoPlay
@@ -102,10 +94,8 @@ const Login = () => {
         Your browser does not support the video tag.
       </video>
 
-      {/* Status Message */}
-        <StatusMessage message={message} type={messageType} />
+      <StatusMessage message={message} type={messageType} />
 
-      {/* Content */}
       <div className="relative z-20 flex justify-center items-center w-full h-full">
         {showRegister ? (
           <Register onCancel={() => setShowRegister(false)} />
@@ -114,20 +104,20 @@ const Login = () => {
             className="bg-blackPrimary/90 w-3/4 max-w-md h-max py-8 px-8 flex justify-start items-center flex-col rounded text-sm lg:text-lg"
             onSubmit={handleLogin}
           >
-          <input
-            type="email"
-            placeholder="E-mail"
-            className="bg-whitePrimary p-2 w-full mb-8 mt-8 outline-none text-blackPrimary rounded"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="bg-whitePrimary p-2 w-full outline-none text-blackPrimary rounded"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+            <input
+              type="email"
+              placeholder="E-mail"
+              className="bg-whitePrimary p-2 w-full mb-8 mt-8 outline-none text-blackPrimary rounded"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              className="bg-whitePrimary p-2 w-full outline-none text-blackPrimary rounded"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
             <button
               type="submit"

@@ -6,7 +6,7 @@ import Modal from "./Modal";
 
 const EditBooking = ({ booking, venue, onClose }) => {
   const navigate = useNavigate();
-
+  const API_KEY = import.meta.env.VITE_API_KEY;
   const [guests, setGuests] = useState(booking.guests);
   const [dateFrom, setDateFrom] = useState(new Date(booking.dateFrom));
   const [dateTo, setDateTo] = useState(new Date(booking.dateTo));
@@ -15,7 +15,7 @@ const EditBooking = ({ booking, venue, onClose }) => {
   const [venueBookings, setVenueBookings] = useState([]); // Add state for venue bookings
   const [loadingBookings, setLoadingBookings] = useState(true); // Loading state for bookings
   const [hasChanges, setHasChanges] = useState(false); // Track changes to the booking
-
+  const [userBookings, setUserBookings] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const closeModal = () => {
@@ -29,7 +29,7 @@ const EditBooking = ({ booking, venue, onClose }) => {
         const res = await fetch(`https://v2.api.noroff.dev/holidaze/profiles/${profileName}/bookings?_venue=true`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "X-Noroff-API-Key": `178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9`,
+            "X-Noroff-API-Key": API_KEY,
           },
         });
         if (!res.ok) throw new Error("Failed to fetch user bookings");
@@ -88,7 +88,6 @@ useEffect(() => {
     setDateTo(dateTo);
   };
 
-  const [userBookings, setUserBookings] = useState([]);
   const [showConflictModal, setShowConflictModal] = useState(false);
   const [conflictBookingId, setConflictBookingId] = useState(null);
 
@@ -138,7 +137,7 @@ useEffect(() => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "X-Noroff-API-Key": `178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9`,
+            "X-Noroff-API-Key": API_KEY,
           },
           body: JSON.stringify(updatedBooking),
         });
@@ -178,14 +177,14 @@ useEffect(() => {
   
 
   return (
-    <div className="booking-container relative 2xl:text-xl text-xs 2xl:text-lg">
+    <div className="booking-container relative 2xl:text-xl text-xs flex flex-col justify-center items-center">
       <StatusMessage message={statusMessage} type={statusType} />
 
-      <h1 className="mb-4">
+      <h1 className="mb-4 w-max">
         Edit your booking at<br /> <b>{venue.name}</b>
       </h1>
 
-      <div className="venue-details mb-1 font-thin text-xs">
+      <div className="venue-details mb-1 font-thin text-xs lg:text-sm 2xl:text-lg">
         <p>{venue.price} NOK / night</p>
       </div>
 
@@ -201,7 +200,7 @@ useEffect(() => {
 
 
       <div className="mt-2 flex flex-row w-full justify-center items-center gap-2">
-        <label htmlFor="guests" className="text-xs">Guests</label>
+        <label htmlFor="guests" className="text-xs lg:text-sm 2xl:text-lg">Guests</label>
         <input
           type="number"
           id="guests"
@@ -218,10 +217,10 @@ useEffect(() => {
 
       {/* Dynamically display "Date From" and "Date To" */}
       <div className="mt-2 flex flex-col sm:flex-row w-full items-center gap-2 justify-evenly">
-        <p className="text-xs">
+        <p className="text-xs lg:text-sm">
           <strong>Date From:</strong> {formatDate(dateFrom)}
         </p>
-        <p className="text-xs">
+        <p className="text-xs lg:text-sm">
           <strong>Date To:</strong> {formatDate(dateTo)}
         </p>
       </div>
@@ -237,13 +236,13 @@ useEffect(() => {
       <div className="w-full flex justify-between mt-2">
         <button
           onClick={onClose}
-          className="border-blackSecondary border-1 py-2 px-4 rounded hover:border-grayPrimary duration-150 cursor-pointer text-xs"
+          className="border-blackSecondary border-1 py-2 px-4 rounded hover:border-grayPrimary duration-150 cursor-pointer text-xs lg:text-sm 2xl:text-lg"
         >
           Cancel
         </button>
         <button
             onClick={handleEditSubmit}
-            className={`bg-buttonPrimary p-2 rounded hover:bg-buttonSecondary duration-150 cursor-pointer text-xs ${isButtonDisabled ? "bg-grayPrimary hover:bg-grayPrimary cursor-not-allowed" : ""}`}
+            className={`bg-buttonPrimary p-2 rounded hover:bg-buttonSecondary duration-150 cursor-pointer text-xs lg:text-sm 2xl:text-lg ${isButtonDisabled ? "bg-grayPrimary hover:bg-grayPrimary cursor-not-allowed" : ""}`}
             disabled={isButtonDisabled} // Disable if only one date selected or if no changes
             >
             Save Changes
@@ -252,7 +251,7 @@ useEffect(() => {
       </div>
 
       <Modal isOpen={showConflictModal} onClose={() => setShowConflictModal(false)}>
-        <div className="text-center text-white">
+        <div className="text-center text">
           <p className="my-4">
             You already have another booking that overlaps with these dates.
             Do you want to view that booking?
@@ -263,13 +262,13 @@ useEffect(() => {
                 setShowConflictModal(false);
                 navigate(`/booking/${conflictBookingId}`);
               }}
-              className="bg-buttonPrimary px-4 py-2 rounded hover:bg-buttonSecondary transition text-sm cursor-pointer"
+              className="bg-buttonPrimary px-4 py-2 rounded hover:bg-buttonSecondary transition text-sm 2xl:text-lg cursor-pointer"
             >
               Yes
             </button>
             <button
               onClick={() => setShowConflictModal(false)}
-              className="border border-grayPrimary px-4 py-2 rounded hover:bg-grayPrimary transition text-sm cursor-pointer"
+              className="border border-grayPrimary px-4 py-2 rounded hover:bg-grayPrimary transition text-sm 2xl:text-lg cursor-pointer"
             >
               No
             </button>

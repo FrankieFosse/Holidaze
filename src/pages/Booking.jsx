@@ -4,8 +4,6 @@ import SingleVenueHero from "../components/SingleVenueHero";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import Return from "../components/Return";
 import StatusMessage from "../components/StatusMessage"; // ✅ Import the component
-import DeleteModal from "../components/DeleteModal";
-import BookingForm from "../components/BookingForm";
 import Modal from "../components/Modal";
 import EditBooking from "../components/EditBooking"; // ✅ Add this import
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -13,6 +11,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 
 
 const Booking = () => {
+  const API_KEY = import.meta.env.VITE_API_KEY;
   const { id } = useParams();
   const navigate = useNavigate();
   const [bookingDetails, setBookingDetails] = useState(null);
@@ -21,7 +20,7 @@ const Booking = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [statusType, setStatusType] = useState("success");
   const token = localStorage.getItem("token");
-  const currentUser = localStorage.getItem("name");   // <-- Get current logged in user
+  const currentUser = localStorage.getItem("name");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -84,7 +83,7 @@ const Booking = () => {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
-          "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
+          "X-Noroff-API-Key": API_KEY,
         },
       });
   
@@ -107,8 +106,6 @@ const Booking = () => {
 
   // Check if current user owns this booking
   const isOwner = customer?.name === currentUser;
-
-  console.log(bookingDetails)
 
   return (
     <div>
@@ -166,12 +163,25 @@ const Booking = () => {
         )}
       </div>
 
-      <DeleteModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleDeleteBooking}
-        message="Are you sure you want to delete this booking?"
-      />
+      <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
+        <div className="text-center">
+          <h2 className="text-xs lg:text-sm 2xl:text-lg font-semibold mb-4 pt-8">Are you sure you want to delete this booking?</h2>
+          <div className="flex justify-center gap-4 mt-6">
+            <button
+              onClick={handleDeleteBooking}
+              className="bg-redPrimary px-4 py-2 rounded hover:bg-redSecondary duration-150 cursor-pointer text-xs lg:text-sm 2xl:text-lg"
+            >
+              Yes, Delete
+            </button>
+            <button
+              onClick={() => setIsDeleteModalOpen(false)}
+              className="bg-grayPrimary/50 px-4 py-2 rounded hover:bg-grayPrimary duration-150 cursor-pointer text-xs lg:text-sm 2xl:text-lg"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
         <EditBooking

@@ -1,4 +1,4 @@
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronRight } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
 
@@ -50,10 +50,6 @@ const SingleVenueHero = ({ media, expanded }) => {
     }, 5000);
     return () => clearInterval(interval);
   }, [validMedia]);
-
-  const goToPrevious = () => {
-    setCurrentSlide((prev) => (prev === 0 ? validMedia.length - 1 : prev - 1));
-  };
 
   const goToNext = () => {
     setCurrentSlide((prev) => (prev + 1) % validMedia.length);

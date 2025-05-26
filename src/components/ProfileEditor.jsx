@@ -6,6 +6,7 @@ import Tooltip from "./Tooltip";
 
 
 function ProfileEditor({ onCancel }) {
+  const API_KEY = import.meta.env.VITE_API_KEY;
   const [bio, setBio] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [avatarAlt, setAvatarAlt] = useState("");
@@ -147,7 +148,7 @@ function ProfileEditor({ onCancel }) {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-          "X-Noroff-API-Key": `178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9`,
+          "X-Noroff-API-Key": API_KEY,
         },
         body: JSON.stringify(body),
       });

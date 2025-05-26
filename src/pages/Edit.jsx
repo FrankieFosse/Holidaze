@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,10 +7,9 @@ import StatusMessage from "../components/StatusMessage";
 import Return from "../components/Return";
 
 function Edit({ handleVenueUpdated }) {
+  const API_KEY = import.meta.env.VITE_API_KEY;
   const { id } = useParams(); // Assuming you're using React Router params
   const [venue, setVenue] = useState(null);
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [statusType, setStatusType] = useState("error"); // 'error' or 'success'
   const [invalidFields, setInvalidFields] = useState([]);
@@ -52,7 +51,7 @@ function Edit({ handleVenueUpdated }) {
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
-              "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
+              "X-Noroff-API-Key": API_KEY,
             },
           }
         );
@@ -190,7 +189,7 @@ function Edit({ handleVenueUpdated }) {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-            "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
+            "X-Noroff-API-Key": API_KEY,
           },
           body: JSON.stringify(updatedVenue),
         }
@@ -223,6 +222,21 @@ function Edit({ handleVenueUpdated }) {
     breakfast: "Breakfast included",
     pets: "Pets allowed",
   };
+
+  const renderLocationInputs = () =>
+    Object.keys(location)
+      .filter((field) => !["lat", "lng", "continent"].includes(field))
+      .map((field) => (
+        <input
+          key={field}
+          type={field === "zip" ? "number" : "text"}
+          placeholder={fieldPlaceholders[field] || field}
+          value={location[field]}
+          onChange={(e) => handleLocationChange(field, e.target.value)}
+          className="p-2 text-blackPrimary bg-whitePrimary rounded"
+        />
+      ));
+  
 
   return (
     <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-16 text-xs lg:text-sm 2xl:text-lg">
@@ -404,18 +418,7 @@ function Edit({ handleVenueUpdated }) {
         }}
       >
         <fieldset className="flex flex-col gap-2 mt-2">
-        {Object.keys(location)
-  .filter((field) => !["lat", "lng", "continent"].includes(field))
-  .map((field) => (
-    <input
-      key={field}
-      type={field === "zip" ? "number" : "text"}
-      placeholder={fieldPlaceholders[field] || field}
-      value={location[field]}
-      onChange={(e) => handleLocationChange(field, e.target.value)}
-      className="p-2 text-blackPrimary bg-whitePrimary rounded"
-    />
-))}
+        {renderLocationInputs()}
 
         </fieldset>
       </motion.div>
@@ -425,19 +428,7 @@ function Edit({ handleVenueUpdated }) {
         showLocation && (
             <div className="overflow-hidden w-full">
             <fieldset className="flex flex-col gap-2 mt-2">
-            {Object.keys(location)
-  .filter((field) => !["lat", "lng", "continent"].includes(field))
-  .map((field) => (
-    <input
-      key={field}
-      type={field === "zip" ? "number" : "text"}
-      placeholder={fieldPlaceholders[field] || field}
-      value={location[field]}
-      onChange={(e) => handleLocationChange(field, e.target.value)}
-      className="p-2 text-blackPrimary bg-whitePrimary rounded"
-    />
-))}
-
+            {renderLocationInputs()}
             </fieldset>
             </div>
         )
@@ -448,7 +439,7 @@ function Edit({ handleVenueUpdated }) {
         <div className="flex flex-col justify-center items-center">
         <button
           type="submit"
-          className="bg-buttonPrimary text-white py-2 px-4 hover:bg-buttonSecondary w-2/4 cursor-pointer"
+          className="bg-buttonPrimary text-white py-2 px-4 hover:bg-buttonSecondary w-2/4 cursor-pointer rounded duration-150"
         >
           Save changes
         </button>
