@@ -1,4 +1,5 @@
 import CategoryCard from "./CategoryCard";
+import { useNavigate } from "react-router";
 
 const categoryData = [
   {
@@ -28,6 +29,14 @@ const categoryData = [
 ];
 
 function Categories() {
+
+    const navigate = useNavigate();
+
+    const goToBrowse = (category) => {
+    navigate(`/browse?search=${encodeURIComponent(category)}`);
+
+  };
+
   return (
     <>
     <div className="flex flex-col justify-center items-center">
@@ -35,7 +44,7 @@ function Categories() {
         <h2 className="font-thin text-whiteSecondary">What are you looking for?</h2>
         <div className="flex flex-wrap justify-center gap-6 mt-6 sm:grid grid-cols-2 xl:grid-cols-3 place-items-center">
         {categoryData.map((category, idx) => (
-            <CategoryCard key={idx} title={category.title} image={category.image} />
+            <CategoryCard key={idx} title={category.title} image={category.image} onClick={goToBrowse}/>
         ))}
         </div>
     </div>

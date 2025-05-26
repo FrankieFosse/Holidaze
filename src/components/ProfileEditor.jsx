@@ -210,10 +210,10 @@ function ProfileEditor({ onCancel }) {
   }
 
   return (
-    <div className="bg-blackSecondary text-whitePrimary w-full p-4 mt-5">
+    <div className="bg-blackSecondary text-whitePrimary w-full p-4 mt-14 flex flex-col justify-center items-center">
       <StatusMessage message={statusMessage} type={statusType} />
 
-      <form onSubmit={updateProfile} className="flex flex-col 2xl:grid grid-cols-4 2xl:gap-8 gap-4 justify-center items-center 2xl:items-start text-xs lg:text-lg 2xl:px-12">
+      <form onSubmit={updateProfile} className="flex flex-col 2xl:grid grid-cols-4 2xl:gap-8 gap-4 justify-center items-center 2xl:items-start text-xs lg:text-lg 2xl:px-12 2xl:w-3/4">
         <div className="w-full flex flex-col justify-center items-center gap-1 col-span-4">
           <label htmlFor="bio">Bio (max 160 characters)</label>
           <textarea

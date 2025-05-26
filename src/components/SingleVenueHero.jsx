@@ -61,23 +61,38 @@ const SingleVenueHero = ({ media, expanded }) => {
 
   return (
     <div className="relative h-screen w-full overflow-hidden z-10 brightness-75">
-      {validMedia.map((item, index) => (
-        <div
-          key={index}
-          className={`absolute top-0 left-0 h-full w-full bg-center bg-cover transition-opacity duration-1000 ease-in-out ${
-            index === currentSlide
-              ? "opacity-100 z-10 pointer-events-auto"
-              : "opacity-0 z-0 pointer-events-none"
-          }`}
-          style={{ backgroundImage: `url(${item.url})` }}
-        ></div>
-      ))}
+      {validMedia.map((item, index) => {
+        const isActive = index === currentSlide;
+        return (
+          <div
+            key={index}
+            className={`absolute top-0 left-0 h-full w-full bg-center bg-cover transition-opacity duration-1000 ease-in-out ${
+              isActive ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 z-0 pointer-events-none"
+            }`}
+            style={{
+              backgroundImage: `url(${item.url})`,
+              transition: "opacity 1s ease-in-out, filter 0.7s ease-in-out",
+              filter: expanded ? "brightness(0.5)" : "brightness(1)",
+            }}
+          ></div>
+        );
+      })}
+
+<div
+  className="absolute top-0 left-0 w-full h-36 z-30 pointer-events-none"
+  style={{
+    backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.75), rgba(0,0,0,0))',
+  }}
+></div>
+
+
+
 
       <div
         id="overlay"
         className="absolute top-0 w-full h-screen z-20 pointer-events-none transition-opacity duration-1000 ease-in-out"
         style={{
-          opacity: expanded ? 0.9 : 0.5,
+          opacity: expanded ? 1 : 0.5,
           backgroundImage: 'linear-gradient(to bottom, transparent 1%, #0e0e0e 100%)',
         }}
       ></div>

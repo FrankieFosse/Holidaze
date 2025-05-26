@@ -12,6 +12,10 @@ const Profile = () => {
   const toggleEditorVisibility = () => {
     setIsEditorVisible((prevState) => !prevState);
   };
+  
+    useEffect(() => {
+      document.title = `${localStorage.getItem("name")} | Holidaze`;
+    }, []);  
 
   useEffect(() => {
     if (isEditorVisible && editorRef.current) {
@@ -60,30 +64,30 @@ const [activeTab, setActiveTab] = useState("venues");
 
 
   return (
-    <div>
-      <div className="absolute top-0 left-0 w-full z-0 lg:pl-72">
+    <div className="mt-16">
+      <div className="absolute top-16 left-0 w-full z-0">
         <img
           src={localStorage.getItem("banner.url")}
           alt={localStorage.getItem("banner.alt") || "Banner"}
-          className="w-full h-88 object-cover brightness-75"
+          className="w-full h-92 object-cover brightness-75"
         />
       </div>
 
       {/* Profile Details */}
       <div className="w-full flex justify-center items-center">
-      <div className="relative z-10 mt-20 mx-4 h-64 w-full md:w-2/3 xl:w-2/4 bg-blackPrimary/25 border border-blackSecondary p-4 flex flex-row">
+      <div className="relative z-10 mt-3 mx-4 h-86 w-full md:w-2/3 xl:w-2/4 bg-blackPrimary/25 border border-blackSecondary p-4 flex flex-col justify-center items-center lg:flex-row">
         <div className="w-2/4 flex justify-center items-center">
           <img
             src={localStorage.getItem("avatar.url")}
             alt={localStorage.getItem("avatar.alt") || "User avatar"}
-            className="rounded-full min-h-24 min-w-24 max-h-36 max-w-36 object-cover border-1 border-blackSecondary"
+            className="rounded-full min-h-16 min-w-16 max-h-16 max-w-16 lg:min-h-36 lg:min-w-36 object-cover border-1 border-blackSecondary"
           />
         </div>
         <div className="w-2/4 flex flex-col justify-between items-center">
-        <div className="text-center pt-8">
+        <div className="text-center pt-2">
           <h1 className="text-xl font-bold">{localStorage.getItem("name")}</h1>
           {localStorage.getItem("bio") && localStorage.getItem("bio") !== "null" && (
-            <p className="font-thin text-xs">{localStorage.getItem("bio")}</p>
+            <p className="font-thin text-xs break-all overflow-hidden line-clamp-6 min-w-36">{localStorage.getItem("bio")}</p>
           )}
         </div>
           <button
@@ -107,7 +111,7 @@ const [activeTab, setActiveTab] = useState("venues");
       </div>
 
       {/* Tab Controls */}
-      <div className="mt-10">
+      <div className="mt-18">
         <div className="flex justify-center gap-4 border-b border-blackSecondary mb-4">
           <button
             onClick={() => setActiveTab("venues")}

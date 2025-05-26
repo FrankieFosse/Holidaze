@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import Register from "../components/Register";
@@ -45,6 +45,10 @@ const Login = () => {
   const [messageType, setMessageType] = useState("error");
   const [showRegister, setShowRegister] = useState(false);
   const navigate = useNavigate();
+
+    useEffect(() => {
+      document.title = "Log in | Holidaze";
+    }, []);  
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -136,7 +140,7 @@ const Login = () => {
             <p className="text-whitePrimary font-thin">Don't have an account?</p>
             <button
               type="button"
-              className="text-whitePrimary text-xl duration-150 cursor-pointer hover:underline hover:scale-105"
+              className="text-whitePrimary text-xl duration-150 cursor-pointer hover:scale-102 border-1 border-grayPrimary/50 hover:border-grayPrimary/100 rounded px-3 py-1"
               onClick={() => setShowRegister(true)}
             >
               Sign Up

@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router";
 import { FaLongArrowAltRight, FaLongArrowAltLeft, FaWifi } from "react-icons/fa";
 import { MdLocalParking, MdFreeBreakfast, MdOutlinePets } from "react-icons/md";
 import Return from "../components/Return";
+import StatusMessage from "../components/StatusMessage";
 
 const Preview = () => {
   const location = useLocation();
@@ -41,7 +42,7 @@ const Preview = () => {
     const token = localStorage.getItem("token");
   
     if (!token || !owner) {
-      alert("You must be logged in to create a venue.");
+      showStatusMessage("You must be logged in to create a venue.", "error");
       return;
     }
   
@@ -56,6 +57,8 @@ const Preview = () => {
     };
   
     try {
+      showStatusMessage("Creating venue...", "loading");
+  
       const response = await fetch("https://v2.api.noroff.dev/holidaze/venues", {
         method: "POST",
         headers: {
@@ -71,19 +74,22 @@ const Preview = () => {
       if (!response.ok) {
         throw new Error(data.errors?.[0]?.message || "Failed to create venue.");
       }
-
-      showStatusMessage("Creating venue...", "loading"); // Spinner & message appear
-
+  
+      // Show success message
+      showStatusMessage("Venue created successfully!", "success");
+  
+      // Delay 1 second before navigating
       setTimeout(() => {
-        navigate("/profile");
         localStorage.removeItem("draftVenue");
-      }, 2000);
-
+        navigate("/profile");
+      }, 1000);
+  
     } catch (error) {
-      alert(error.message);
       console.error("Create venue error:", error);
+      showStatusMessage(error.message || "Failed to create venue.", "error");
     }
   };
+  
   
 
   const handleImageError = (event) => {
@@ -102,7 +108,10 @@ const Preview = () => {
     <>
       <SingleVenueHero media={venue.media} expanded={expanded} />
 
-      <div className="absolute left-0 z-30 p-4 bottom-4 lg:bottom-16 lg:p-16 w-full lg:pl-80 overflow-hidden flex flex-row justify-between items-center gap-4 pointer-events-none">
+      <StatusMessage message={statusMessage} type={statusType} />
+
+
+      <div className="absolute left-0 z-30 p-4 bottom-4 lg:bottom-16 lg:p-16 w-full overflow-hidden flex flex-row justify-between items-center gap-4 pointer-events-none">
         <div className="text-left w-3/5 pointer-events-auto">
           <h2 className={`font-bold break-words overflow-hidden text-ellipsis ${venue.name.length > 100 ? "text-sm lg:text-xl" : "text-xl lg:text-3xl"}`}>
             {venue.name}

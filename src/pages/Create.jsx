@@ -37,6 +37,10 @@ function Create({ handleVenueCreated }) {
 
   const locationRef = useRef(null);
 
+    useEffect(() => {
+      document.title = "Create venue | Holidaze";
+    }, []);  
+
   const [statusMessage, setStatusMessage] = useState(null);
   const [statusType, setStatusType] = useState("error"); // 'error' or 'success'
   const [invalidFields, setInvalidFields] = useState([]);
@@ -253,7 +257,7 @@ function Create({ handleVenueCreated }) {
   };
 
   return (
-    <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-8 lg:mt-4 text-xs 2xl:text-lg">
+    <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-16 text-xs 2xl:text-lg">
       <StatusMessage message={statusMessage} type={statusType} />
       <h1 className="text-xl mb-4">Create New Venue</h1>
 
@@ -296,7 +300,9 @@ function Create({ handleVenueCreated }) {
 
         {/* Media section */}
         <div className="border-y-1 py-4 border-blackSecondary">
-          <h3 className="text-sm">Images</h3>
+        <h3 className="text-sm">
+          Images {media.length > 1 && <span className="text-grayPrimary">({media.length})</span>}
+        </h3>
           <div className="flex flex-col gap-4 mb-4 items-center justify-center">
             <AnimatePresence>
             {media.map((item, index) => (
@@ -413,14 +419,14 @@ function Create({ handleVenueCreated }) {
                   {Object.keys(location)
                     .filter((field) => !["lat", "lng", "continent"].includes(field))
                     .map((field) => (
-                      <input
-                        key={field}
-                        type="text"
-                        placeholder={fieldPlaceholders[field] || field}
-                        value={location[field]}
-                        onChange={(e) => handleLocationChange(field, e.target.value)}
-                        className="p-2 text-blackPrimary bg-whitePrimary rounded"
-                      />
+                    <input
+                      key={field}
+                      type={field === "zip" ? "number" : "text"}
+                      placeholder={fieldPlaceholders[field] || field}
+                      value={location[field]}
+                      onChange={(e) => handleLocationChange(field, e.target.value)}
+                      className="p-2 text-blackPrimary bg-whitePrimary rounded"
+                    />
                     ))}
                 </fieldset>
               </motion.div>
@@ -437,10 +443,17 @@ function Create({ handleVenueCreated }) {
         onClick={() => {
           const validation = validateVenueInputs();
           if (!validation.isValid) return;
-
+        
+          const totalValidImages = validation.venueData.media.length;
+          if (totalValidImages > 8) {
+            showStatusMessage("You cannot have more than 8 images", "error");
+            return;
+          }
+        
           localStorage.setItem("draftVenue", JSON.stringify(validation.venueData));
           navigate("/preview", { state: validation.venueData });
         }}
+        
         className="bg-buttonPrimary text-white py-2 px-4 hover:bg-buttonSecondary cursor-pointer duration-150 rounded"
       >
         Preview Venue

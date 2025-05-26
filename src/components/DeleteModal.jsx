@@ -5,7 +5,7 @@ const DeleteModal = ({ isOpen, onClose, onConfirm, message = "Are you sure you w
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 lg:pl-72 z-50 bg-blackPrimary/25 backdrop-blur-xs flex items-center justify-center text-xs">
+    <div className="fixed inset-0 z-50 bg-blackPrimary/25 backdrop-blur-xs flex items-center justify-center text-xs">
       <div className="bg-blackPrimary border-grayPrimary border-1 rounded-xl p-6 w-full mx-4 max-w-sm text-center">
         <p className="text-sm mb-6">{message}</p>
         <div className="flex justify-center gap-4">

@@ -224,7 +224,7 @@ const handleBookingSubmit = async () => {
           }
           min="1"
           max={maxGuests}
-          className="border-1 border-blackSecondary rounded px-1 w-1/4"
+          className="border-1 border-blackSecondary bg-whitePrimary text-blackPrimary rounded px-1 w-1/4 sm:w-1/8"
         />
         <p>/ {maxGuests}</p>
       </div>

@@ -1,6 +1,9 @@
-function CategoryCard({ title, image }) {
+function CategoryCard({ title, image, onClick }) {
     return (
-      <div className="relative w-full h-36 2xl:h-64 sm:h-48 group cursor-pointer duration-300 bottom-0 hover:bottom-0.5">
+      <div
+        onClick={() => onClick(title)}
+        className="relative w-full h-36 2xl:h-64 sm:h-48 group cursor-pointer duration-300 bottom-0 hover:bottom-0.5"
+      >
         <img
           src={image}
           className="w-full h-full object-cover brightness-50 rounded-2xl"

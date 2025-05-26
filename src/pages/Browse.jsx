@@ -29,6 +29,10 @@ const Browse = () => {
   const location = useLocation();
 
   useEffect(() => {
+    document.title = "Browse | Holidaze";
+  }, []);  
+
+  useEffect(() => {
     const params = new URLSearchParams(location.search);
     const search = params.get("search");
     if (search) {
@@ -115,7 +119,7 @@ const Browse = () => {
   return (
     <>
       {/* Search bar */}
-      <div className="pt-16 lg:pt-4 flex flex-row items-center justify-center mb-2">
+      <div className="mt-16 py-4 flex flex-row items-center justify-center bg-blackBackground/50">
         <div
           onClick={() => setShowFilters((prev) => !prev)}
           className="bg-blackSecondary h-8 w-8 flex justify-center items-center rounded-full mr-6 duration-150 cursor-pointer border-1 border-blackSecondary hover:border-grayPrimary"
