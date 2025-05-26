@@ -108,7 +108,6 @@ const Profile = () => {
           </button>
         </div>
 
-        {/* Conditional Rendering */}
         {activeTab === "venues" ? <VenuesByProfile /> : <BookingsByProfile />}
       </div>
     </div>

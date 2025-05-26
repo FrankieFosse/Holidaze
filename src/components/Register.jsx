@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { BsQuestionLg } from "react-icons/bs";
-import StatusMessage from "../components/StatusMessage"; // Import here
+import StatusMessage from "../components/StatusMessage";
 import Tooltip from "./Tooltip";
 
 // Register new user
@@ -36,23 +36,19 @@ function Register({ onCancel }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [venueManager, setVenueManager] = useState(false);
   const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState("error"); // error | success | loading
+  const [messageType, setMessageType] = useState("error");
 
   const timeoutRef = useRef(null);
 
-  // Whenever message changes, start a timer to clear it after 3 seconds
   useEffect(() => {
     if (message) {
-      // Clear previous timer if any
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-      // Set timer to clear message after 3 seconds
       timeoutRef.current = setTimeout(() => {
         setMessage("");
       }, 3000);
     }
-    // Cleanup on unmount
     return () => clearTimeout(timeoutRef.current);
   }, [message]);
 
@@ -88,7 +84,7 @@ function Register({ onCancel }) {
       setMessage("User created! You can now log in.");
       setTimeout(() => {
         onCancel();
-        setMessage(""); // clear message after navigating back
+        setMessage("");
       }, 2000);
     } else {
       setMessageType("error");
@@ -142,7 +138,7 @@ function Register({ onCancel }) {
             </Tooltip>
           </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="checkbox" className="text-whitePrimary">
+            <label htmlFor="checkbox">
               Yes
             </label>
             <input
@@ -159,7 +155,7 @@ function Register({ onCancel }) {
         <div className="flex flex-col justify-between w-full">
           <button
             type="submit"
-            className="bg-buttonPrimary text-whitePrimary py-2 px-3 flex flex-row justify-center items-center gap-4 my-4 duration-150 cursor-pointer hover:bg-buttonSecondary text-sm rounded lg:text-xl"
+            className="bg-buttonPrimary py-2 px-3 flex flex-row justify-center items-center gap-4 my-4 duration-150 cursor-pointer hover:bg-buttonSecondary text-sm rounded lg:text-xl"
           >
             Register
             <FaLongArrowAltRight />
@@ -167,14 +163,13 @@ function Register({ onCancel }) {
           <button
             type="button"
             onClick={onCancel}
-            className="text-whitePrimary flex justify-center items-center py-2 gap-2 duration-150 cursor-pointer hover:scale-105 hover:border-grayPrimary rounded border-1 border-blackSecondary"
+            className="flex justify-center items-center py-2 gap-2 duration-150 cursor-pointer hover:border-grayPrimary rounded border-1 border-blackSecondary"
           >
             <IoClose /> Cancel
           </button>
         </div>
       </form>
 
-      {/* Status message outside the form for better overlay handling */}
       <StatusMessage message={message} type={messageType} />
     </>
   );

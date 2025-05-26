@@ -10,9 +10,8 @@ const BookingsByProfile = () => {
   const [loadingBookings, setLoadingBookings] = useState(true);
   const [bookingsError, setBookingsError] = useState(null);
 
-  // Pagination state
   const [page, setPage] = useState(1);
-  const itemsPerPage = 10;  // You can adjust this number
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchBookings = async () => {

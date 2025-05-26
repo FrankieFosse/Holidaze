@@ -3,9 +3,9 @@ import { useParams, useNavigate } from "react-router";
 import SingleVenueHero from "../components/SingleVenueHero";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import Return from "../components/Return";
-import StatusMessage from "../components/StatusMessage"; // ✅ Import the component
+import StatusMessage from "../components/StatusMessage";
 import Modal from "../components/Modal";
-import EditBooking from "../components/EditBooking"; // ✅ Add this import
+import EditBooking from "../components/EditBooking";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 
@@ -42,7 +42,7 @@ const Booking = () => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-            "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
+            "X-Noroff-API-Key": API_KEY,
           },
         });
 
@@ -74,7 +74,7 @@ const Booking = () => {
   };
 
   const handleDeleteBooking = async () => {
-    setIsDeleteModalOpen(false); // Close the modal first
+    setIsDeleteModalOpen(false);
   
     try {
       showTemporaryMessage("Deleting booking...", "loading");
@@ -189,7 +189,6 @@ const Booking = () => {
           venue={venue}
           onClose={() => {
             setIsEditing(false);
-            // Optionally, refetch bookingDetails if needed
           }}
         />
       </Modal>

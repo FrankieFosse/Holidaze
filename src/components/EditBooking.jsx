@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import BookingCalendar from "./BookingCalendar";
 import StatusMessage from "./StatusMessage";
 import Modal from "./Modal";
+import LoadingSpinner from "./LoadingSpinner";
 
 const EditBooking = ({ booking, venue, onClose }) => {
   const navigate = useNavigate();
@@ -12,9 +13,9 @@ const EditBooking = ({ booking, venue, onClose }) => {
   const [dateTo, setDateTo] = useState(new Date(booking.dateTo));
   const [statusMessage, setStatusMessage] = useState("");
   const [statusType, setStatusType] = useState(null);
-  const [venueBookings, setVenueBookings] = useState([]); // Add state for venue bookings
-  const [loadingBookings, setLoadingBookings] = useState(true); // Loading state for bookings
-  const [hasChanges, setHasChanges] = useState(false); // Track changes to the booking
+  const [venueBookings, setVenueBookings] = useState([]);
+  const [loadingBookings, setLoadingBookings] = useState(true);
+  const [hasChanges, setHasChanges] = useState(false);
   const [userBookings, setUserBookings] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -44,7 +45,6 @@ const EditBooking = ({ booking, venue, onClose }) => {
   }, []);
 
 
-  // Fetch bookings when the component mounts
   useEffect(() => {
     const fetchBookings = async () => {
       try {
@@ -62,13 +62,11 @@ const EditBooking = ({ booking, venue, onClose }) => {
     fetchBookings();
   }, [venue.id]);
 
-// Track changes to booking fields
 useEffect(() => {
-    // Ensure dateFrom and dateTo are valid Dates
+
     const isValidDateFrom = dateFrom instanceof Date && !isNaN(dateFrom);
     const isValidDateTo = dateTo instanceof Date && !isNaN(dateTo);
   
-    // Check if both dates are selected and ensure dateFrom < dateTo
     const dateChanged =
       (isValidDateFrom && dateFrom.toDateString() !== new Date(booking.dateFrom).toDateString()) ||
       (isValidDateTo && dateTo.toDateString() !== new Date(booking.dateTo).toDateString());
@@ -81,9 +79,8 @@ useEffect(() => {
   // Button should be disabled if either date is missing or invalid
   const isButtonDisabled = !(dateFrom && dateTo && dateFrom < dateTo && hasChanges);
   
-  // Function to handle date selection change in BookingCalendar
+
   const handleDateChange = ({ dateFrom, dateTo }) => {
-    // Check if the new date range has only one date selected, disable the button
     setDateFrom(dateFrom);
     setDateTo(dateTo);
   };
@@ -122,7 +119,6 @@ useEffect(() => {
     setStatusMessage("Updating booking...");
     setStatusType("loading");
   
-    // Add a 1-second delay before executing the update
     setTimeout(async () => {
       try {
         const updatedBooking = {
@@ -164,14 +160,12 @@ useEffect(() => {
   };
   
   
-
-  // Helper function to format date
   const formatDate = (date) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return date ? new Date(date).toLocaleDateString(undefined, options) : '';
   };
 
-  if (loadingBookings) return <p>Loading bookings...</p>; // Handle loading state
+  if (loadingBookings) return <LoadingSpinner />;
 
 
   
@@ -190,12 +184,12 @@ useEffect(() => {
 
       <BookingCalendar
         closeModal={closeModal}
-        excludedBookings={venueBookings.filter((b) => b.id !== booking.id)} // current venue bookings
+        excludedBookings={venueBookings.filter((b) => b.id !== booking.id)}
         onDateChange={handleDateChange}
         defaultDateFrom={dateFrom}
         defaultDateTo={dateTo}
-        userBookings={userBookings} // pass user bookings here
-        currentVenueId={venue.id}   // also pass current venue id
+        userBookings={userBookings}
+        currentVenueId={venue.id}
       />
 
 
@@ -243,7 +237,7 @@ useEffect(() => {
         <button
             onClick={handleEditSubmit}
             className={`bg-buttonPrimary p-2 rounded hover:bg-buttonSecondary duration-150 cursor-pointer text-xs lg:text-sm 2xl:text-lg ${isButtonDisabled ? "bg-grayPrimary hover:bg-grayPrimary cursor-not-allowed" : ""}`}
-            disabled={isButtonDisabled} // Disable if only one date selected or if no changes
+            disabled={isButtonDisabled}
             >
             Save Changes
             </button>

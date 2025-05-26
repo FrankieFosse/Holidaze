@@ -1,6 +1,6 @@
 import { BsQuestionLg } from "react-icons/bs";
 import { useState, useEffect } from "react";
-import clsx from "clsx"; // Optional: for cleaner class toggling
+import clsx from "clsx";
 import StatusMessage from "./StatusMessage";
 import Tooltip from "./Tooltip";
 
@@ -196,22 +196,21 @@ function ProfileEditor({ onCancel }) {
   function isImageLoadable(url) {
     return new Promise((resolve) => {
       const img = new Image();
-      img.onload = () => resolve(true); // Loads successfully
-      img.onerror = () => resolve(false); // Fails to load
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
       img.src = url;
     });
   }
   
   
 
-  // New function to handle default banner click and update alt text
   function handleBannerClick(url, alt) {
     setBannerUrl(url);
-    setBannerAlt(alt); // Set alt text when banner is selected
+    setBannerAlt(alt);
   }
 
   return (
-    <div className="bg-blackSecondary text-whitePrimary w-full p-4 mt-14 flex flex-col justify-center items-center">
+    <div className="bg-blackSecondary w-full p-4 mt-14 flex flex-col justify-center items-center">
       <StatusMessage message={statusMessage} type={statusType} />
 
       <form onSubmit={updateProfile} className="flex flex-col 2xl:grid grid-cols-4 2xl:gap-8 gap-4 justify-center items-center 2xl:items-start text-xs lg:text-lg 2xl:px-12 2xl:w-3/4">
@@ -328,7 +327,7 @@ function ProfileEditor({ onCancel }) {
                     ? "border-buttonPrimary scale-105"
                     : "border-transparent hover:border-grayPrimary"
                 )}
-                onClick={() => handleBannerClick(banner.url, banner.alt)} // Update both URL and alt
+                onClick={() => handleBannerClick(banner.url, banner.alt)}
               />
             ))}
           </div>

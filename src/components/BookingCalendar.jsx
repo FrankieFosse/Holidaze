@@ -12,7 +12,7 @@ import {
 } from "date-fns";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import StatusMessage from "./StatusMessage";
-import { useNavigate } from "react-router"; // Only useNavigate needed
+import { useNavigate } from "react-router";
 import Tooltip from "./Tooltip";
 
 const BookingCalendar = ({

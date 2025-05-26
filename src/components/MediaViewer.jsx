@@ -14,7 +14,7 @@ const MediaViewer = ({ mediaItems, currentIndex, onClose, onNavigate }) => {
     event.target.src = "/images/NoImagePlaceholder.jpg";
   };
 
-  // 👇 Keyboard navigation effect
+  // Keyboard navigation effect
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "ArrowRight") {
@@ -22,13 +22,13 @@ const MediaViewer = ({ mediaItems, currentIndex, onClose, onNavigate }) => {
       } else if (event.key === "ArrowLeft") {
         handleNavigate(-1);
       } else if (event.key === "Escape") {
-        onClose(); // Optional: close modal on Escape
+        onClose();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentIndex, mediaItems.length]); // Only reattach if relevant values change
+  }, [currentIndex, mediaItems.length]);
 
   return (
     <div className="fixed inset-0 bg-blackPrimary/90 flex justify-center items-center z-50">

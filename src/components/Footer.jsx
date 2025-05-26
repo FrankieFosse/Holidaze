@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <footer className="bg-blackBackground px-16 py-10">
       <div className="max-w-screen-2xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-sm">
-        {/* Info Links */}
+        {/* Links */}
         <div className="flex flex-col items-center sm:items-start">
           <h3 className="text-md font-semibold mb-2">Links</h3>
           <ul className="text-center sm:text-left space-y-1 text-grayPrimary cursor-pointer">

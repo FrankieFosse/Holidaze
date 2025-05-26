@@ -5,13 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaLocationDot } from "react-icons/fa6";
 import StatusMessage from "../components/StatusMessage";
 import Return from "../components/Return";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function Edit({ handleVenueUpdated }) {
   const API_KEY = import.meta.env.VITE_API_KEY;
-  const { id } = useParams(); // Assuming you're using React Router params
+  const { id } = useParams();
   const [venue, setVenue] = useState(null);
   const [statusMessage, setStatusMessage] = useState("");
-  const [statusType, setStatusType] = useState("error"); // 'error' or 'success'
+  const [statusType, setStatusType] = useState("error");
   const [invalidFields, setInvalidFields] = useState([]);
   const [showLocation, setShowLocation] = useState(false);
 
@@ -36,7 +37,6 @@ function Edit({ handleVenueUpdated }) {
 
   // Fetch the venue data
   useEffect(() => {
-    // Fetch venue details using the venueId
     const fetchVenueData = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -74,7 +74,7 @@ function Edit({ handleVenueUpdated }) {
 
         if (hasLocationData) {
             setShowLocation(true);
-            setShouldAnimateLocation(false); // Prevent animation for auto-open
+            setShouldAnimateLocation(false);
           }
           
 
@@ -213,7 +213,7 @@ function Edit({ handleVenueUpdated }) {
   };
 
   if (!venue) {
-    return <div>Loading...</div>; // Placeholder while the venue data is being fetched
+    return <LoadingSpinner />
   }
 
   const amenityLabels = {
@@ -239,7 +239,7 @@ function Edit({ handleVenueUpdated }) {
   
 
   return (
-    <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-16 text-xs lg:text-sm 2xl:text-lg">
+    <div className="p-6 max-w-3xl mx-auto mt-16 text-xs lg:text-sm 2xl:text-lg">
       <Return />
       <StatusMessage message={statusMessage} type={statusType} />
       <h1 className="text-xl mb-4">Edit Venue</h1>

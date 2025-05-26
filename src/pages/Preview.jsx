@@ -13,7 +13,6 @@ const Preview = () => {
   const navigate = useNavigate();
   const venue = location.state;
 
-  // Redirect if no venue data
   if (!venue) {
     navigate("/create");
     return null;
@@ -28,7 +27,6 @@ const Preview = () => {
   const [statusType, setStatusType] = useState("error");
   const [expanded, setExpanded] = useState(false);
 
-  // Helper to show status messages
   const showStatusMessage = (message, type = "error", duration = 3000) => {
     setStatusMessage(message);
     setStatusType(type);
@@ -54,7 +52,7 @@ const Preview = () => {
       name: venue.name,
       description: venue.description,
       media: venue.media,
-      price: Number(venue.price), // parseFloat replaced with Number for clarity
+      price: Number(venue.price),
       maxGuests: Number(venue.maxGuests),
       meta: venue.meta,
       location: venue.location,
@@ -91,7 +89,6 @@ const Preview = () => {
     }
   };
 
-  // Image fallback on error
   const handleImageError = (event) => {
     event.target.src = "/images/NoImagePlaceholder.jpg";
   };
@@ -126,7 +123,6 @@ const Preview = () => {
           <p>Max Guests</p>
           <div className="border border-grayPrimary rounded-full w-16 h-16 flex items-center justify-center">{venue.maxGuests}</div>
 
-          {/* Amenities */}
           <div className="flex justify-evenly gap-4 xl:gap-10 scale-90 mt-4">
             {[
               { cond: venue.meta.wifi, icon: <FaWifi className="h-10 w-10 p-2 rounded-full bg-blackSecondary border border-blackSecondary text-grayPrimary" />, label: "WiFi included" },

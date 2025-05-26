@@ -135,16 +135,16 @@ const Login = () => {
 
             <button
               type="submit"
-              className="bg-buttonPrimary text-whitePrimary py-2 px-4 flex flex-row justify-center items-center gap-4 mt-8 mb-8 duration-150 cursor-pointer hover:bg-buttonSecondary rounded"
+              className="bg-buttonPrimary py-2 px-4 flex flex-row justify-center items-center gap-4 mt-8 mb-8 duration-150 cursor-pointer hover:bg-buttonSecondary rounded"
             >
               Log in
               <FaLongArrowAltRight />
             </button>
 
-            <p className="text-whitePrimary font-thin">Don't have an account?</p>
+            <p className="font-thin">Don't have an account?</p>
             <button
               type="button"
-              className="text-whitePrimary text-xl duration-150 cursor-pointer hover:scale-102 border-1 border-grayPrimary/50 hover:border-grayPrimary/100 rounded px-3 py-1"
+              className="text-xl duration-150 cursor-pointer hover:scale-102 border-1 border-grayPrimary/50 hover:border-grayPrimary/100 rounded px-3 py-1"
               onClick={() => setShowRegister(true)}
             >
               Sign Up

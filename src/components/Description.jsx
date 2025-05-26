@@ -13,12 +13,11 @@ const Description = ({ text, onExpandToggle }) => {
   };
 
   useEffect(() => {
-    // Listen for window resize to detect XL breakpoint (≥1280px)
     const checkScreenSize = () => {
       setIsXL(window.innerWidth >= 1280);
     };
 
-    checkScreenSize(); // Initial check
+    checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);

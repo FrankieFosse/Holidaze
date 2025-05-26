@@ -28,7 +28,7 @@ function HomePageCard() {
                     }}
                 ></div>
                 <div className="absolute top-0 left-0 w-2/4 h-full flex justify-center items-center">
-                    <p className="text-whitePrimary text-xl sm:text-2xl z-20 transform transition-transform duration-300 group-hover:scale-110 px-4 py-2 rounded font-black">
+                    <p className="text-xl sm:text-2xl z-20 transform transition-transform duration-300 group-hover:scale-110 px-4 py-2 rounded font-black">
                         PARIS
                     </p>
                 </div>
@@ -53,7 +53,7 @@ function HomePageCard() {
                     }}
                 ></div>
                 <div className="absolute top-0 right-0 w-2/4 h-full flex justify-center items-center">
-                    <p className="text-whitePrimary text-xl sm:text-2xl z-20 transform transition-transform duration-300 group-hover:scale-110 font-black px-4 py-2 rounded">
+                    <p className="text-xl sm:text-2xl z-20 transform transition-transform duration-300 group-hover:scale-110 font-black px-4 py-2 rounded">
                         LONDON
                     </p>
                 </div>
@@ -78,7 +78,7 @@ function HomePageCard() {
                     }}
                 ></div>
                 <div className="absolute top-0 left-0 w-2/4 h-full flex justify-center items-center">
-                    <p className="text-whitePrimary text-xl sm:text-2xl z-20 transform transition-transform duration-300 group-hover:scale-110 font-black px-4 py-2 rounded">
+                    <p className="text-xl sm:text-2xl z-20 transform transition-transform duration-300 group-hover:scale-110 font-black px-4 py-2 rounded">
                         BERGEN
                     </p>
                 </div>

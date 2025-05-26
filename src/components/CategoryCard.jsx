@@ -10,7 +10,7 @@ function CategoryCard({ title, image, onClick }) {
           alt={`${title} card`}
         />
         <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
-          <p className="text-whitePrimary text-lg sm:text-2xl z-20 transform transition-transform duration-300 group-hover:scale-110 font-black px-4 py-2 rounded">
+          <p className="text-lg sm:text-2xl z-20 transform transition-transform duration-300 group-hover:scale-110 font-black px-4 py-2 rounded">
             {title}
           </p>
         </div>

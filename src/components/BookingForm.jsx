@@ -13,7 +13,7 @@ const BookingForm = ({
     defaultDateFrom = null,
     defaultDateTo = null,
     onClose,
-    bookingId = null, // <- Add this
+    bookingId = null,
   }) => {
   
   const API_KEY = import.meta.env.VITE_API_KEY;
@@ -29,7 +29,6 @@ const BookingForm = ({
 
   const currentUser = JSON.parse(localStorage.getItem("user"))?.name;
 
-// Inside BookingForm component
 const [bookings, setBookings] = useState([]);
 
 const [userBookingId, setUserBookingId] = useState(null);
@@ -80,7 +79,6 @@ useEffect(() => {
   fetchBookings();
 }, [venueId, currentUser]);
 
-    // Helper function to format date
     const formatDate = (date) => {
       const options = { year: "numeric", month: "long", day: "numeric" };
       return date ? new Date(date).toLocaleDateString(undefined, options) : '';
@@ -88,7 +86,7 @@ useEffect(() => {
 
 
 const handleBookingSubmit = async () => {
-    // Check for overlapping bookings
+
     const overlappingBooking = userBookings.find(b => {
         const existingFrom = new Date(b.dateFrom);
         const existingTo = new Date(b.dateTo);
@@ -134,7 +132,7 @@ const handleBookingSubmit = async () => {
     setStatusType("loading");
   
     try {
-      // If user has an existing booking (and it's NOT the one being edited), delete it
+
       if (userBookingId && userBookingId !== bookingId) {
         const deleteRes = await fetch(`https://v2.api.noroff.dev/holidaze/bookings/${userBookingId}`, {
           method: "DELETE",
@@ -186,9 +184,6 @@ const handleBookingSubmit = async () => {
       setStatusType("error");
     }
   };
-  
-  
-  
 
   return (
     <div className="booking-container p-0 relative">
@@ -206,10 +201,10 @@ const handleBookingSubmit = async () => {
           setDateFrom(dateFrom);
           setDateTo(dateTo);
         }}
-        userBookings={userBookings}           // <-- Add this
-        currentVenueId={venueId}              // <-- Add this
-        defaultDateFrom={defaultDateFrom}     // (optional, keep as is)
-        defaultDateTo={defaultDateTo}         // (optional, keep as is)
+        userBookings={userBookings}
+        currentVenueId={venueId}
+        defaultDateFrom={defaultDateFrom}
+        defaultDateTo={defaultDateTo}
       />
 
 
