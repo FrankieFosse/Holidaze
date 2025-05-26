@@ -124,7 +124,7 @@ function HeroSlideshow({ onLoadComplete }) {
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
-        <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold 2xl:text-6xl">{slides[current].title}</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-4xl font-black 2xl:text-6xl">{slides[current].title}</h1>
         <p className="font-thin text-xs lg:text-sm mt-2 lg:text-lg">{slides[current].description}</p>
         <Link to={`/venues/${slides[current].id}`}>
           <div className="flex items-center w-max py-2 px-4 bg-buttonPrimary hover:bg-buttonSecondary text-sm mt-4 duration-150 cursor-pointer gap-4 rounded lg:text-lg 2xl:text-2xl">

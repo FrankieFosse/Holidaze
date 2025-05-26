@@ -143,7 +143,7 @@ const SingleVenue = () => {
     <StatusMessage message={statusMessage} type={statusType} />
       <SingleVenueHero media={venue.media} expanded={expanded} />
 
-      <div className="absolute left-0 z-30 p-4 bottom-4 lg:bottom-16 lg:p-16 w-full overflow-hidden flex flex-row justify-between items-center gap-4 pointer-events-none">
+      <div className="absolute left-0 z-30 p-4 bottom-4 2xl:bottom-16 lg:p-16 w-full overflow-hidden flex flex-row justify-between items-center gap-4 pointer-events-none">
         <div className="text-left w-3/5 pointer-events-auto">
           <h2 className={`font-bold break-words overflow-hidden text-ellipsis ${venue.name.length > 100 ? "text-sm lg:text-xl" : "text-xl lg:text-3xl"}`}>
             {venue.name}

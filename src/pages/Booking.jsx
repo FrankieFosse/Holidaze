@@ -149,7 +149,7 @@ const Booking = () => {
 
         {/* Conditionally show Edit/Delete buttons only if user owns the booking */}
         {isOwner && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 mt-4">
             <button
               onClick={() => setIsEditing(true)}
               className="bg-buttonPrimary px-3 py-1 duration-150 cursor-pointer hover:bg-buttonSecondary w-52 rounded"

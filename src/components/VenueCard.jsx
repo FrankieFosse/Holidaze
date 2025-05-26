@@ -57,7 +57,7 @@ const VenueCard = ({ venue }) => {
     <div
       onClick={handleClick}
       className={`relative bg-cover bg-center max-w-full min-h-80 max-h-96 flex flex-col justify-end items-center m-4 duration-150 cursor-pointer hover:scale-102 rounded 
-        ${isHorizontal ? "sm:col-span-2" : ""}`}
+        ${isHorizontal ? "sm:col-span-2 md:col-span-1 lg:col-span-2 xl:col-span-1 2xl:col-span-2" : ""}`}
       style={{
         backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
       }}
