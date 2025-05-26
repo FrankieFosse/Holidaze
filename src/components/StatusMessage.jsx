@@ -22,10 +22,8 @@ export default function StatusMessage({ message, type }) {
       ? "bg-buttonPrimary"
       : "bg-buttonPrimary";
 
-      const containerPositionClass =
-        type === "error"
-          ? "items-end justify-end p-4" // Bottom-right with some padding
-          : "items-center justify-center";
+      const containerPositionClass = "items-end justify-end p-4";
+
 
 
   return (
@@ -37,7 +35,7 @@ export default function StatusMessage({ message, type }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className={`fixed inset-0 lg:pl-72 z-10 flex pointer-events-none ${containerPositionClass}`}
+          className={`fixed inset-0 z-90 flex pointer-events-none ${containerPositionClass}`}
 
         >
           {/* Conditionally render blur if loading */}
@@ -57,12 +55,12 @@ export default function StatusMessage({ message, type }) {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="z-10 px-6 py-4 rounded text-sm lg:text-xl flex items-center"
+            className="z-90 px-6 py-4 rounded text-sm lg:text-xl flex items-center"
           >
             {type === "loading" && (
               <div className="border-4 border-white border-t-transparent rounded-full w-6 h-6 animate-spin mr-4" />
             )}
-            <span className={`${bgColorClass} px-6 py-3 rounded text-white`}>
+            <span className={`${bgColorClass} px-6 py-3 rounded z-90`}>
               {message}
             </span>
           </motion.div>

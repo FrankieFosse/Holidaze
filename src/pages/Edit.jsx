@@ -225,7 +225,7 @@ function Edit({ handleVenueUpdated }) {
   };
 
   return (
-    <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-8 text-xs">
+    <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-16 text-xs">
       <Return />
       <StatusMessage message={statusMessage} type={statusType} />
       <h1 className="text-xl mb-4">Edit Venue</h1>
@@ -351,7 +351,7 @@ function Edit({ handleVenueUpdated }) {
           </div>
         </div>
 
-        <fieldset className="flex flex-col items-left justify-center border-b-1 border-blackSecondary pb-8 gap-4 w-max">
+        <fieldset className="flex flex-col items-left justify-center pb-8 gap-4 w-max">
           {Object.entries(meta).map(([key, value]) => (
             <label key={key} className="flex items-center gap-2">
               <input
@@ -365,7 +365,7 @@ function Edit({ handleVenueUpdated }) {
           ))}
         </fieldset>
 
-        <div className="flex flex-col gap-2 justify-center items-center">
+        <div className="flex flex-col gap-2 justify-center items-center border-t-1 border-blackSecondary pt-8">
           <h3 className="text-sm">Location (Optional)</h3>
 
           {!showLocation && (
@@ -404,18 +404,19 @@ function Edit({ handleVenueUpdated }) {
         }}
       >
         <fieldset className="flex flex-col gap-2 mt-2">
-          {Object.keys(location)
-            .filter((field) => !["lat", "lng", "continent"].includes(field))
-            .map((field) => (
-              <input
-                key={field}
-                type="text"
-                placeholder={fieldPlaceholders[field] || field}
-                value={location[field]}
-                onChange={(e) => handleLocationChange(field, e.target.value)}
-                className="p-2 text-blackPrimary bg-whitePrimary rounded"
-              />
-            ))}
+        {Object.keys(location)
+  .filter((field) => !["lat", "lng", "continent"].includes(field))
+  .map((field) => (
+    <input
+      key={field}
+      type={field === "zip" ? "number" : "text"}
+      placeholder={fieldPlaceholders[field] || field}
+      value={location[field]}
+      onChange={(e) => handleLocationChange(field, e.target.value)}
+      className="p-2 text-blackPrimary bg-whitePrimary rounded"
+    />
+))}
+
         </fieldset>
       </motion.div>
     )}
@@ -424,18 +425,19 @@ function Edit({ handleVenueUpdated }) {
         showLocation && (
             <div className="overflow-hidden w-full">
             <fieldset className="flex flex-col gap-2 mt-2">
-                {Object.keys(location)
-                .filter((field) => !["lat", "lng", "continent"].includes(field))
-                .map((field) => (
-                    <input
-                    key={field}
-                    type="text"
-                    placeholder={fieldPlaceholders[field] || field}
-                    value={location[field]}
-                    onChange={(e) => handleLocationChange(field, e.target.value)}
-                    className="p-2 text-blackPrimary bg-whitePrimary rounded"
-                    />
-                ))}
+            {Object.keys(location)
+  .filter((field) => !["lat", "lng", "continent"].includes(field))
+  .map((field) => (
+    <input
+      key={field}
+      type={field === "zip" ? "number" : "text"}
+      placeholder={fieldPlaceholders[field] || field}
+      value={location[field]}
+      onChange={(e) => handleLocationChange(field, e.target.value)}
+      className="p-2 text-blackPrimary bg-whitePrimary rounded"
+    />
+))}
+
             </fieldset>
             </div>
         )
@@ -443,12 +445,14 @@ function Edit({ handleVenueUpdated }) {
 
         </div>
 
+        <div className="flex flex-col justify-center items-center">
         <button
           type="submit"
-          className="bg-buttonPrimary text-white py-2 px-4 hover:bg-buttonSecondary"
+          className="bg-buttonPrimary text-white py-2 px-4 hover:bg-buttonSecondary w-2/4 cursor-pointer"
         >
           Save changes
         </button>
+        </div>
       </form>
     </div>
   );

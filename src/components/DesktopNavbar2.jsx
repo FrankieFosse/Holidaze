@@ -1,33 +1,19 @@
-import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
 import { FaHome, FaCalendarAlt, FaUser } from "react-icons/fa";
 import { MdExplore } from "react-icons/md";
 import { FiLogIn } from "react-icons/fi";
 import { FaCirclePlus } from "react-icons/fa6";
-import { PiList } from "react-icons/pi";
 import StatusMessage from "./StatusMessage";
 import Modal from "./Modal";
-import Navbar from "./Navbar";
 
-function Header() {
+function DesktopNavbar2() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isVenueManager, setIsVenueManager] = useState(false);
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState("success");
   const [showVenueModal, setShowVenueModal] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10); // Change threshold as needed
-    };
-  
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-  
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -51,15 +37,12 @@ function Header() {
   };
 
   const handleCreateClick = () => {
-    if (!isLoggedIn) {
-      navigate("/login");
-    } else if (isVenueManager) {
+    if (isVenueManager) {
       navigate("/create");
     } else {
       setShowVenueModal(true);
     }
   };
-  
 
   const handleBecomeVenueManager = async () => {
     setLoading(true);
@@ -68,7 +51,7 @@ function Header() {
 
     try {
       const response = await fetch(`https://v2.api.noroff.dev/holidaze/profiles/${name}`, {
-        method: "PUT",
+        method: "PUT", // or PATCH if that's what your API supports
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -100,13 +83,15 @@ function Header() {
     }
   };
 
-  const handleCloseModal = () => setShowVenueModal(false);
+  const handleCloseModal = () => {
+    setShowVenueModal(false);
+  };
 
   const userName = localStorage.getItem("name");
   const avatarUrl = localStorage.getItem("avatar.url");
 
   return (
-    <header>
+    <>
       <StatusMessage message={message} type={messageType} />
 
       <Modal isOpen={showVenueModal} onClose={handleCloseModal}>
@@ -116,14 +101,14 @@ function Header() {
           <div className="flex gap-4 mt-4">
             <button
               onClick={handleBecomeVenueManager}
-              className="bg-buttonPrimary hover:bg-buttonSecondary px-4 py-2 rounded disabled:opacity-50 cursor-pointer duration-150"
+              className="bg-buttonPrimary hover:bg-buttonSecondary text-white px-4 py-2 rounded disabled:opacity-50"
               disabled={loading}
             >
               {loading ? "Updating..." : "Yes, make me one"}
             </button>
             <button
               onClick={handleCloseModal}
-              className="border border-grayPrimary px-4 py-2 rounded hover:bg-grayPrimary/20 cursor-pointer duration-150"
+              className="border border-grayPrimary px-4 py-2 rounded hover:bg-grayPrimary/20"
             >
               Cancel
             </button>
@@ -131,47 +116,27 @@ function Header() {
         </div>
       </Modal>
 
-      <div
-        id="headerBar"
-        className={`w-full h-16 flex items-center justify-between fixed top-0 left-0 z-40 px-6 transition-colors duration-1000 ${
-          scrolled ? "bg-blackPrimary/75 backdrop-blur-xs" : "bg-blackPrimary/0"
-        }`}
-      >
-        {/* Logo */}
-        <Link to="/">
-          <img
-            src="/images/Holidaze Logo v1.png"
-            className="w-20 max-h-16 mb-0.5"
-            alt="Holidaze logo"
-          />
-        </Link>
-
-        {/* Centered nav links */}
-        <div className="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 gap-6">
-          <Link to="/" className="nav-link"><FaHome size={20} /> Home</Link>
-          <Link to="/browse" className="nav-link"><MdExplore size={20} /> Browse</Link>
-          <button onClick={handleCreateClick} className="nav-link">
+      <nav className="fixed top-0 left-0 w-full h-16 text-sm z-40 flex justify-between items-center px-6 py-0 border-grayPrimary">
+        {/* Centered nav links container */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 flex gap-6">
+            <Link to="/" className="nav-link"><FaHome size={20} /> Home</Link>
+            <Link to="/browse" className="nav-link"><MdExplore size={20} /> Browse</Link>
+            <button onClick={handleCreateClick} className="nav-link">
             <FaCirclePlus size={20} /> Create venue
-          </button>
+            </button>
         </div>
 
-
-        {/* Right-aligned user profile */}
+        {/* Right-aligned profile button */}
         {isLoggedIn && (
-          <Link
-            to={`/profile/`}
-            className="ml-auto flex items-center gap-3 px-3 py-2 rounded-lg mr-10 transition-colors duration-150"
-          >
-            <p className="text-whitePrimary font-thin text-xs xl:text-sm hidden sm:block">{userName}</p>
+            <div id="profileButton" className="ml-auto flex items-center gap-3 bg-blackSecondary px-3 py-2 rounded-lg">
             <img src={avatarUrl} alt="User avatar" className="w-10 h-10 rounded-full" />
-          </Link>
+            <p className="text-whitePrimary font-semibold">{userName}</p>
+            </div>
         )}
-      </div>
+        </nav>
 
-      {/* Mobile / Burger Navbar */}
-      <Navbar />
-    </header>
+    </>
   );
 }
 
-export default Header;
+export default DesktopNavbar2;

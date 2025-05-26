@@ -15,6 +15,7 @@ import EditBooking from "../components/EditBooking";  // Import the EditBooking 
 import BookingCalendar from "../components/BookingCalendar";
 import { format } from "date-fns";
 import StatusMessage from "../components/StatusMessage";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 
 
@@ -36,6 +37,13 @@ const SingleVenue = () => {
   // Assume current user is stored in localStorage
   const currentUser = localStorage.getItem("name");
   const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (venue) {
+      document.title = `${venue.name} | Holidaze`;
+    }
+  }, [venue]);
+  
 
   const [statusMessage, setStatusMessage] = useState(null);
   const [statusType, setStatusType] = useState(null);
@@ -120,7 +128,7 @@ const SingleVenue = () => {
     fetchVenue();
   }, [id]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <LoadingSpinner />;
   if (error) return <p>Error: {error}</p>;
   if (!venue) return <p>No venue found</p>;
 
@@ -128,12 +136,14 @@ const SingleVenue = () => {
 
   const hasLocationValues = venue.location && Object.values(venue.location).some(value => value);
 
+ 
+
   return (
     <>
     <StatusMessage message={statusMessage} type={statusType} />
       <SingleVenueHero media={venue.media} expanded={expanded} />
 
-      <div className="absolute left-0 z-30 p-4 bottom-4 lg:bottom-16 lg:p-16 w-full lg:pl-80 overflow-hidden flex flex-row justify-between items-center gap-4 pointer-events-none">
+      <div className="absolute left-0 z-30 p-4 bottom-4 lg:bottom-16 lg:p-16 w-full overflow-hidden flex flex-row justify-between items-center gap-4 pointer-events-none">
         <div className="text-left w-3/5 pointer-events-auto">
           <h2 className={`font-bold break-words overflow-hidden text-ellipsis ${venue.name.length > 100 ? "text-sm lg:text-xl" : "text-xl lg:text-3xl"}`}>
             {venue.name}

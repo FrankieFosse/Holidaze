@@ -102,7 +102,6 @@ useEffect(() => {
       return;
     }
   
-    // Check for overlapping bookings at a different venue
     const overlappingBooking = userBookings.find(b => {
       const existingFrom = new Date(b.dateFrom);
       const existingTo = new Date(b.dateTo);
@@ -124,43 +123,47 @@ useEffect(() => {
     setStatusMessage("Updating booking...");
     setStatusType("loading");
   
-    try {
-      const updatedBooking = {
-        dateFrom: dateFrom.toISOString(),
-        dateTo: dateTo.toISOString(),
-        guests,
-        venueId: venue.id,
-      };
+    // Add a 1-second delay before executing the update
+    setTimeout(async () => {
+      try {
+        const updatedBooking = {
+          dateFrom: dateFrom.toISOString(),
+          dateTo: dateTo.toISOString(),
+          guests,
+          venueId: venue.id,
+        };
   
-      const res = await fetch(`https://v2.api.noroff.dev/holidaze/bookings/${booking.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "X-Noroff-API-Key": `178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9`,
-        },
-        body: JSON.stringify(updatedBooking),
-      });
-  
-      if (!res.ok) throw new Error("Failed to update booking.");
-      const data = await res.json();
-  
-      setStatusMessage("Booking updated!");
-      setStatusType("success");
-      location.reload();
-  
-      setTimeout(() => {
-        onClose();
-        navigate(`/booking/${data.data.id}`, {
-          state: { bookingData: data.data },
+        const res = await fetch(`https://v2.api.noroff.dev/holidaze/bookings/${booking.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "X-Noroff-API-Key": `178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9`,
+          },
+          body: JSON.stringify(updatedBooking),
         });
-      }, 1000);
-    } catch (err) {
-      console.error("Edit error:", err);
-      setStatusMessage("Update failed. Please try again.");
-      setStatusType("error");
-    }
+  
+        if (!res.ok) throw new Error("Failed to update booking.");
+        const data = await res.json();
+  
+        setStatusMessage("Booking updated!");
+        setStatusType("success");
+        location.reload();
+  
+        setTimeout(() => {
+          onClose();
+          navigate(`/booking/${data.data.id}`, {
+            state: { bookingData: data.data },
+          });
+        }, 1000);
+      } catch (err) {
+        console.error("Edit error:", err);
+        setStatusMessage("Update failed. Please try again.");
+        setStatusType("error");
+      }
+    }, 1000);
   };
+  
   
 
   // Helper function to format date
@@ -175,7 +178,7 @@ useEffect(() => {
   
 
   return (
-    <div className="booking-container relative 2xl:text-xl text-xs lg:text-lg">
+    <div className="booking-container relative 2xl:text-xl text-xs 2xl:text-lg">
       <StatusMessage message={statusMessage} type={statusType} />
 
       <h1 className="mb-4">
@@ -208,7 +211,7 @@ useEffect(() => {
           }
           min="1"
           max={venue.maxGuests}
-          className="border-1 border-blackSecondary rounded px-1 w-1/4"
+          className="border-1 border-blackSecondary bg-whitePrimary text-blackPrimary rounded px-1 w-1/4 sm:w-1/8"
         />
         <p>/ {venue.maxGuests}</p>
       </div>
@@ -260,13 +263,13 @@ useEffect(() => {
                 setShowConflictModal(false);
                 navigate(`/booking/${conflictBookingId}`);
               }}
-              className="bg-buttonPrimary px-4 py-2 rounded hover:bg-buttonSecondary transition text-sm"
+              className="bg-buttonPrimary px-4 py-2 rounded hover:bg-buttonSecondary transition text-sm cursor-pointer"
             >
               Yes
             </button>
             <button
               onClick={() => setShowConflictModal(false)}
-              className="border border-grayPrimary px-4 py-2 rounded hover:bg-grayPrimary transition text-sm"
+              className="border border-grayPrimary px-4 py-2 rounded hover:bg-grayPrimary transition text-sm cursor-pointer"
             >
               No
             </button>

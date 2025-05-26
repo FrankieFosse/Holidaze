@@ -191,7 +191,7 @@ const userOtherVenueBookings = userBookings
       </div>
 
       {/* Calendar Days */}
-      <div className="grid grid-cols-7 gap-1 text-sm sm:mx-8 lg:mx-0">
+      <div className="grid grid-cols-7 gap-1 text-sm sm:mx-10 lg:mx-0">
         {Array(startOfMonth(currentMonth).getDay()).fill(null).map((_, i) => (
           <div key={`empty-${i}`} />
         ))}

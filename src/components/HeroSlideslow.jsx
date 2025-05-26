@@ -9,11 +9,19 @@ const venueIds = [
   "95d632f7-95e9-461c-af8f-03c2827e7050",
 ];
 
-function HeroSlideshow() {
+function HeroSlideshow({ onLoadComplete }) {
   const [slides, setSlides] = useState([]);
   const [current, setCurrent] = useState(0);
   const [touchStartX, setTouchStartX] = useState(null);
   const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    // Simulate loading with timeout or trigger this after real data/images are ready
+    const timer = setTimeout(() => {
+      onLoadComplete();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [onLoadComplete]);
 
   useEffect(() => {
     const fetchVenues = async () => {
@@ -112,15 +120,15 @@ function HeroSlideshow() {
 
       {/* Slide info */}
       <div
-        className="absolute bottom-18 lg:bottom-8 2xl:bottom-18 right-4 w-2/4 lg:w-1/3 z-30 text-left"
+        className="absolute bottom-18 lg:bottom-8 2xl:bottom-18 left-8 2xl:left-24 w-2/4 lg:w-1/3 z-30 text-left"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
-        <h1 className="text-sm sm:text-lg lg:text-xl font-bold 2xl:text-3xl">{slides[current].title}</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold 2xl:text-6xl">{slides[current].title}</h1>
         <p className="font-thin text-xs lg:text-sm mt-2 lg:text-lg">{slides[current].description}</p>
         <Link to={`/venues/${slides[current].id}`}>
           <div className="flex items-center w-max py-2 px-4 bg-buttonPrimary hover:bg-buttonSecondary text-sm mt-4 duration-150 cursor-pointer gap-4 rounded lg:text-lg 2xl:text-2xl">
-            <p>View more</p>
+            <p>View venue</p>
             <FaLongArrowAltRight />
           </div>
         </Link>

@@ -100,7 +100,7 @@ function Register({ onCancel }) {
     <>
       <form
         onSubmit={handleSubmit}
-        className="bg-blackPrimary/90 w-3/4 max-w-md h-max py-8 px-8 flex justify-start items-center flex-col text-xs rounded lg:text-lg"
+        className="bg-blackPrimary/90 w-3/4 max-w-md h-max py-8 px-8 flex justify-start items-center flex-col text-xs rounded lg:text-md 2xl:text-lg"
       >
         <input
           type="text"

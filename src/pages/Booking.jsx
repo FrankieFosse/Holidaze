@@ -8,6 +8,7 @@ import DeleteModal from "../components/DeleteModal";
 import BookingForm from "../components/BookingForm";
 import Modal from "../components/Modal";
 import EditBooking from "../components/EditBooking"; // ✅ Add this import
+import LoadingSpinner from "../components/LoadingSpinner";
 
 
 
@@ -23,6 +24,12 @@ const Booking = () => {
   const currentUser = localStorage.getItem("name");   // <-- Get current logged in user
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (bookingDetails) {
+      document.title = `${bookingDetails.venue.name} | Holidaze`;
+    }
+  }, [bookingDetails]);
 
 
   useEffect(() => {
@@ -91,7 +98,7 @@ const Booking = () => {
   };
   
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <LoadingSpinner />;
   if (error) return <p>Error: {error}</p>;
   if (!bookingDetails) return <p>No booking found</p>;
 
@@ -112,7 +119,7 @@ const Booking = () => {
         <SingleVenueHero media={venue.media} />
       </div>
 
-      <div className="venue-details mb-4 absolute w-full top-16 lg:right-0 lg:pl-72 z-10 flex flex-col justify-center items-center 2xl:text-xl">
+      <div className="venue-details mb-4 absolute w-full 2xl:top-36 lg:top-20 top-16 lg:right-0 z-10 flex flex-col justify-center items-center 2xl:text-xl">
         <h1 className="text-lg 2xl:text-2xl font-semibold mb-2 w-3/5">{venue?.name}</h1>
         <button
           onClick={handleViewVenue}
@@ -137,6 +144,7 @@ const Booking = () => {
 
         <div>
           <p>Booked by {bookingDetails.customer.name}</p>
+          <p className="text-xs md:text-sm font-thin opacity-75">Booked {bookingDetails.created.slice(0, 10).split('-').reverse().join('.')}</p>
         </div>
 
         {/* Conditionally show Edit/Delete buttons only if user owns the booking */}

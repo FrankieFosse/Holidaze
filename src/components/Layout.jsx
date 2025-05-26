@@ -35,7 +35,7 @@ const Layout = () => {
     <div>
       <Header />
       {message && (
-        <div className="lg:pl-72 max-w-full">
+        <div className="max-w-full">
         <div
         className={`bg-green-500 text-whitePrimary text-center py-2 absolute top-10 z-50 w-full 
           transition-opacity transition-transform duration-500 ease-in-out 
@@ -48,7 +48,7 @@ const Layout = () => {
       
       
       )}
-      <main className="w-full lg:pl-72">
+      <main className="w-full">
         <Outlet />
       </main>
     </div>
