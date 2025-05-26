@@ -11,6 +11,7 @@ import Modal from "./Modal";
 import { motion, AnimatePresence } from "framer-motion";
 
 function Navbar() {
+  const API_KEY = import.meta.env.VITE_API_KEY;
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isVenueManager, setIsVenueManager] = useState(false);
@@ -91,7 +92,7 @@ function Navbar() {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-          "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
+          "X-Noroff-API-Key": API_KEY,
         },
         body: JSON.stringify({ venueManager: true }),
       });

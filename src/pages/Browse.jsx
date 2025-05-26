@@ -149,19 +149,17 @@ const Browse = () => {
 
       <Pagination page={page} totalPages={totalPages} setPage={setPage} />
 
-      {filteredVenues.length === 0 ? (
-          <p className="text-center text-grayPrimary mt-8 text-lg">No venues found.</p>
-        ) : (
-          <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 grid-flow-dense">
-            {filteredVenues
-              .slice((page - 1) * pageSize, page * pageSize)
-              .map((venue, index) => (
-                <VenueCard key={`${venue.id}-${index}`} venue={venue} />
-              ))}
-          </ul>
-        )}
-
-
+      {!loading && filteredVenues.length === 0 ? (
+        <p className="text-center text-grayPrimary mt-8 text-lg">No venues found.</p>
+      ) : (
+        <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 grid-flow-dense">
+      {filteredVenues
+        .slice((page - 1) * pageSize, page * pageSize)
+        .map((venue, index) => (
+          <VenueCard key={`${venue.id ?? 'no-id'}-${index}`} venue={venue} />
+        ))}
+        </ul>
+      )}
 
       <Pagination page={page} totalPages={totalPages} setPage={setPage} />
     </>

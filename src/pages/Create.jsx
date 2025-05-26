@@ -4,10 +4,10 @@ import { FaPlus, FaTrash } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaLocationDot } from "react-icons/fa6";
 import StatusMessage from "../components/StatusMessage";
-import VenuePreview from "../components/VenuePreview";
 
 
 function Create({ handleVenueCreated }) {
+  const API_KEY = import.meta.env.VITE_API_KEY;
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [media, setMedia] = useState([{ url: "", alt: "" }]);
@@ -24,18 +24,10 @@ function Create({ handleVenueCreated }) {
     city: "",
     zip: "",
     country: "",
-    continent: "",
-    lat: 0,
-    lng: 0,
   });
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const [showPreview, setShowPreview] = useState(false);
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const locationRef = useRef(null);
 
     useEffect(() => {
       document.title = "Create venue | Holidaze";
@@ -223,7 +215,7 @@ function Create({ handleVenueCreated }) {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-          "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
+          "X-Noroff-API-Key": API_KEY,
         },
         body: JSON.stringify(venue),
       });
@@ -433,8 +425,6 @@ function Create({ handleVenueCreated }) {
             )}
           </AnimatePresence>
         </div>
-
-        {error && <p className="text-redPrimary">{error}</p>}
 
         <div className="flex justify-evenly w-full gap-4">
 

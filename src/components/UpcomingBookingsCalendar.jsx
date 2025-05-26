@@ -6,13 +6,11 @@ import {
   format,
   isAfter,
   isBefore,
-  isSameDay,
   isWithinInterval,
   startOfMonth,
 } from "date-fns";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router";
-import BookingsByProfile from "./BookingsByProfile";
 
 const UpcomingBookingsCalendar = ({ bookings = [] }) => {
   const today = new Date();
@@ -38,15 +36,8 @@ const UpcomingBookingsCalendar = ({ bookings = [] }) => {
     end: endOfMonth(currentMonth),
   });
 
-  const isBooked = (date) =>
-    bookedIntervals.some((interval) => isWithinInterval(date, interval));
-
   const getBookingForDay = (date) =>
     bookedIntervals.find((interval) => isWithinInterval(date, interval));
-
-  // Check if the date is the first or last day of a booking
-  const isFirstDayOfBooking = (date, booking) => isSameDay(date, booking.start);
-  const isLastDayOfBooking = (date, booking) => isSameDay(date, booking.end);
 
   return (
     <div className="p-2 border border-grayPrimary bg-blackSecondary/25 rounded w-full max-w-md mx-auto min-h-80 max-h-120 mb-4">

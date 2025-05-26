@@ -5,6 +5,7 @@ import LoadingSpinner from "./LoadingSpinner";
 
 
 const BookingsByProfile = () => {
+  const API_KEY = import.meta.env.VITE_API_KEY;
   const [bookings, setBookings] = useState([]);
   const [loadingBookings, setLoadingBookings] = useState(true);
   const [bookingsError, setBookingsError] = useState(null);
@@ -23,7 +24,7 @@ const BookingsByProfile = () => {
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
-              "X-Noroff-API-Key": `178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9`,
+              "X-Noroff-API-Key": API_KEY,
             },
           }
         );

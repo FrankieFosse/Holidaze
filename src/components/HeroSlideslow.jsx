@@ -19,7 +19,7 @@ function HeroSlideshow({ onLoadComplete }) {
     // Simulate loading with timeout or trigger this after real data/images are ready
     const timer = setTimeout(() => {
       onLoadComplete();
-    }, 100);
+    }, 1000);
     return () => clearTimeout(timer);
   }, [onLoadComplete]);
 

@@ -16,6 +16,7 @@ const BookingForm = ({
     bookingId = null, // <- Add this
   }) => {
   
+  const API_KEY = import.meta.env.VITE_API_KEY;
   const [guests, setGuests] = useState(defaultGuests);
   const [dateFrom, setDateFrom] = useState(defaultDateFrom);
   const [dateTo, setDateTo] = useState(defaultDateTo);
@@ -42,7 +43,7 @@ useEffect(() => {
       const res = await fetch(`https://v2.api.noroff.dev/holidaze/profiles/${profileName}/bookings?_venue=true`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "X-Noroff-API-Key": `178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9`,
+          "X-Noroff-API-Key": API_KEY,
         },
       });
       if (!res.ok) throw new Error("Failed to fetch user bookings");
@@ -139,7 +140,7 @@ const handleBookingSubmit = async () => {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
+            "X-Noroff-API-Key": API_KEY,
           },
         });
         if (!deleteRes.ok) throw new Error("Failed to delete existing booking.");
@@ -161,7 +162,7 @@ const handleBookingSubmit = async () => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
+            "X-Noroff-API-Key": API_KEY,
           },
           body: JSON.stringify(bookingData),
         }
@@ -193,9 +194,9 @@ const handleBookingSubmit = async () => {
     <div className="booking-container p-0 relative">
       <StatusMessage message={statusMessage} type={statusType} />
 
-      <h1 className="text-xs mb-4">Book your stay at<br></br> <b>{venueName}</b></h1>
+      <h1 className="text-xs lg:text-sm 2xl:text-lg mb-4">Book your stay at<br></br> <b>{venueName}</b></h1>
 
-      <div className="venue-details mb-1 font-thin text-sm">
+      <div className="venue-details mb-1 font-thin text-xs lg:text-sm 2xl:text-lg">
         <p>{price} NOK / night</p>
       </div>
 
@@ -214,7 +215,7 @@ const handleBookingSubmit = async () => {
 
 
       <div className="mt-4 flex flex-row w-full justify-center items-center gap-2">
-        <label htmlFor="guests" className="text-xs">Guests</label>
+        <label htmlFor="guests" className="text-xs 2xl:text-lg">Guests</label>
         <input
           type="number"
           id="guests"
@@ -231,10 +232,10 @@ const handleBookingSubmit = async () => {
 
       {/* Dynamically display "Date From" and "Date To" */}
       <div className="mt-2 flex flex-col sm:flex-row w-full items-center gap-2 justify-evenly">
-        <p className="text-xs">
+        <p className="text-xs 2xl:text-sm">
           <strong>Date From:</strong> {formatDate(dateFrom)}
         </p>
-        <p className="text-xs">
+        <p className="text-xs 2xl:text-sm">
           <strong>Date To:</strong> {formatDate(dateTo)}
         </p>
       </div>
@@ -249,19 +250,19 @@ const handleBookingSubmit = async () => {
     <div className="w-full flex justify-between mt-2">
         <button
             onClick={onClose}
-            className="border-blackSecondary border-1 py-2 px-4 rounded hover:border-grayPrimary duration-150 cursor-pointer text-xs"
+            className="border-blackSecondary border-1 py-2 px-4 rounded hover:border-grayPrimary duration-150 cursor-pointer text-xs lg:text-sm 2xl:text-lg"
         >
             Cancel
         </button>
       <button
         onClick={handleBookingSubmit}
-        className="bg-buttonPrimary p-2 rounded hover:bg-buttonSecondary duration-150 cursor-pointer text-xs"
+        className="bg-buttonPrimary p-2 rounded hover:bg-buttonSecondary duration-150 cursor-pointer text-xs lg:text-sm 2xl:text-lg"
       >
         Confirm Booking
       </button>
       </div>
       <Modal isOpen={showConflictModal} onClose={() => setShowConflictModal(false)}>
-        <div className="text-center text-white">
+        <div className="text-center">
             <p className="my-4">
             You already have a booking in your calendar that overlaps with these dates.
             Do you want to view this booking now?
@@ -269,13 +270,13 @@ const handleBookingSubmit = async () => {
             <div className="flex justify-center gap-4 mt-4">
             <button
                 onClick={() => navigate(`/booking/${conflictBookingId}`)}
-                className="bg-buttonPrimary px-4 py-2 rounded hover:bg-buttonSecondary transition text-sm"
+                className="bg-buttonPrimary px-4 py-2 rounded hover:bg-buttonSecondary transition text-sm 2xl:text-lg cursor-pointer"
             >
                 Yes
             </button>
             <button
                 onClick={() => setShowConflictModal(false)}
-                className="border border-grayPrimary px-4 py-2 rounded hover:bg-grayPrimary transition text-sm"
+                className="border border-grayPrimary px-4 py-2 rounded hover:bg-grayPrimary transition text-sm 2xl:text-lg cursor-pointer"
             >
                 No
             </button>

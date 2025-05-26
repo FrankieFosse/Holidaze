@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import { FaHome, FaCalendarAlt, FaUser } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import { MdExplore } from "react-icons/md";
-import { FiLogIn } from "react-icons/fi";
 import { FaCirclePlus } from "react-icons/fa6";
-import { PiList } from "react-icons/pi";
 import StatusMessage from "./StatusMessage";
 import Modal from "./Modal";
 import Navbar from "./Navbar";
 
 function Header() {
+  const API_KEY = import.meta.env.VITE_API_KEY;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isVenueManager, setIsVenueManager] = useState(false);
   const [message, setMessage] = useState(null);
@@ -72,7 +71,7 @@ function Header() {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-          "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
+          "X-Noroff-API-Key": API_KEY,
         },
         body: JSON.stringify({ venueManager: true }),
       });

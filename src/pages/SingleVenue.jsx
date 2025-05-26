@@ -3,16 +3,12 @@ import { useState, useEffect } from "react";
 import SingleVenueHero from "../components/SingleVenueHero";
 import Rating from "../components/Rating";
 import Description from "../components/Description";
-import { FaLongArrowAltRight, FaWifi, FaLongArrowAltLeft } from "react-icons/fa";
+import { FaWifi } from "react-icons/fa";
 import { MdLocalParking, MdFreeBreakfast, MdOutlinePets } from "react-icons/md";
 import MediaViewer from "../components/MediaViewer";  // Importing MediaViewer
 import BookingForm from "../components/BookingForm";
 import Return from "../components/Return";
-import DeleteModal from "../components/DeleteModal";
 import Modal from "../components/Modal";
-import BookingsOnVenue from "../components/BookingsOnVenue";
-import EditBooking from "../components/EditBooking";  // Import the EditBooking component
-import BookingCalendar from "../components/BookingCalendar";
 import { format } from "date-fns";
 import StatusMessage from "../components/StatusMessage";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -214,8 +210,8 @@ const SingleVenue = () => {
         <div className="flex flex-row justify-evenly my-4 gap-4 scale-80">
           {[{ condition: venue.meta.wifi, icon: <FaWifi className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "WiFi included" },
             { condition: venue.meta.parking, icon: <MdLocalParking className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Parking included" },
-            { condition: venue.meta.pets, icon: <MdFreeBreakfast className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Breakfast included" },
-            { condition: venue.meta.breakfast, icon: <MdOutlinePets className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Pets allowed" }].map(({ condition, icon, label }, index) => condition && (
+            { condition: venue.meta.pets, icon: <MdFreeBreakfast className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Pets allowed" },
+            { condition: venue.meta.breakfast, icon: <MdOutlinePets className="h-10 w-10 p-2 rounded-full bg-blackSecondary border-1 border-blackSecondary text-grayPrimary" />, label: "Breakfast included" }].map(({ condition, icon, label }, index) => condition && (
               <div key={index} className="flex flex-col items-center gap-2">
                 {icon}
                 <p className="text-xs md:text-lg font-thin">{label}</p>
@@ -348,12 +344,26 @@ const SingleVenue = () => {
         />
       )}
 
-      <DeleteModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleDelete}
-        message="Are you sure you want to delete this venue?"
-      />
+      <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
+        <div className="flex flex-col gap-6 items-center text-center">
+          <p className="text-xs lg:text-sm 2xl:text-lg pt-8">Are you sure you want to delete this venue?</p>
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={handleDelete}
+              className="bg-redPrimary hover:bg-redSecondary px-4 py-2 rounded text-xs lg:text-sm 2xl:text-lg duration-150 cursor-pointer"
+            >
+              Yes, delete
+            </button>
+            <button
+              onClick={() => setIsDeleteModalOpen(false)}
+              className="bg-grayPrimary/50 hover:bg-grayPrimary px-4 py-2 rounded text-xs lg:text-sm 2xl:text-lg duration-150 cursor-pointer"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </Modal>
+
 
     {isOwner && (
       <div className="flex justify-center gap-4 my-6">
