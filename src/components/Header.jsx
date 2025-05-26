@@ -162,7 +162,7 @@ function Header() {
             className="ml-auto flex items-center gap-3 px-3 py-2 rounded-lg mr-10 transition-colors duration-150"
           >
             <p className="text-whitePrimary font-thin text-xs xl:text-sm hidden sm:block">{userName}</p>
-            <img src={avatarUrl} alt="User avatar" className="w-10 h-10 rounded-full" />
+            <img src={avatarUrl} alt="User avatar" className="w-10 h-10 rounded-full object-cover" />
           </Link>
         )}
       </div>
