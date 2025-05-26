@@ -225,7 +225,7 @@ function Edit({ handleVenueUpdated }) {
   };
 
   return (
-    <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-16 text-xs">
+    <div className="text-whitePrimary p-6 max-w-3xl mx-auto mt-16 text-xs lg:text-sm 2xl:text-lg">
       <Return />
       <StatusMessage message={statusMessage} type={statusType} />
       <h1 className="text-xl mb-4">Edit Venue</h1>
@@ -254,9 +254,9 @@ function Edit({ handleVenueUpdated }) {
             onChange={(e) => setVenue({ ...venue, price: Number(e.target.value) })}
             min="0"
             max="10000"
-            className={`p-2 h-8 w-full rounded-l text-blackPrimary bg-whitePrimary ${invalidFields.includes("price") ? "border-3 border-redPrimary" : ""}`}
+            className={`p-2 min-h-8 w-full rounded-l text-blackPrimary bg-whitePrimary ${invalidFields.includes("price") ? "border-3 border-redPrimary" : ""}`}
           />
-          <p className="w-42 h-8 bg-whitePrimary rounded-r text-grayPrimary cursor-default flex justify-center items-center px-4">
+          <p className="p-2 w-42 min-h-8 bg-whitePrimary rounded-r text-grayPrimary cursor-default flex justify-center items-center px-4">
             NOK / night
           </p>
         </div>

@@ -39,7 +39,7 @@ function Categories() {
 
   return (
     <>
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center mb-8 xl:mb-0">
     <div className="border-y-1 border-blackSecondary py-8 w-11/12 sm:w-3/4 md:w-2/3 2xl:w-full">
         <h2 className="font-thin text-whiteSecondary">What are you looking for?</h2>
         <div className="flex flex-wrap justify-center gap-6 mt-6 sm:grid grid-cols-2 xl:grid-cols-3 place-items-center">
