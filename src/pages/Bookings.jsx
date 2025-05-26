@@ -7,11 +7,7 @@ const UpcomingBookingsSection = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const API_KEY = import.meta.env.VITE_API_KEY;
-
-
-
 
     useEffect(() => {
       document.title = "Bookings | Holidaze";

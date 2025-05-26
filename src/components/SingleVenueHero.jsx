@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
 
 
-// Validate each image URL
 const validateImageUrl = (url) => {
   return new Promise((resolve) => {
     const img = new Image();
@@ -12,8 +11,6 @@ const validateImageUrl = (url) => {
     img.src = url;
   });
 };
-
-
 
 
 const SingleVenueHero = ({ media, expanded }) => {
@@ -97,7 +94,7 @@ const SingleVenueHero = ({ media, expanded }) => {
         <>
           <button
             onClick={goToNext}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blackPrimary/50 text-whitePrimary p-2 rounded-full z-50 hover:bg-blackPrimary/70 cursor-pointer duration-150 text-md lg:text-3xl"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blackPrimary/50 p-2 rounded-full z-50 hover:bg-blackPrimary/70 cursor-pointer duration-150 text-md lg:text-3xl"
           >
             <FaChevronRight className="pl-0.5" />
           </button>

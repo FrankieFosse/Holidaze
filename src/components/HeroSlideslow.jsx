@@ -16,7 +16,7 @@ function HeroSlideshow({ onLoadComplete }) {
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    // Simulate loading with timeout or trigger this after real data/images are ready
+
     const timer = setTimeout(() => {
       onLoadComplete();
     }, 1000);
@@ -84,7 +84,6 @@ function HeroSlideshow({ onLoadComplete }) {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Overlay moved here */}
       <div
         className="absolute top-0 left-0 w-full h-full z-20 pointer-events-none"
         style={{

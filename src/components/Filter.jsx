@@ -24,8 +24,8 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
         </div>
 
 
-      {/* Filter buttons (unchanged) */}
-      <div className="text-whitePrimary text-xl flex flex-row items-center justify-center gap-4">
+      {/* Filter buttons */}
+      <div className="text-xl flex flex-row items-center justify-center gap-4">
         {/* Wifi */}
         <Tooltip text="Wifi included">
           <button
@@ -33,7 +33,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
             onClick={() => toggleFilter("wifi")}
             className={`p-2 rounded-full duration-150 cursor-pointer ${
               filters.wifi
-                ? "bg-buttonPrimary text-whitePrimary border-1 border-buttonPrimary"
+                ? "bg-buttonPrimary border-1 border-buttonPrimary"
                 : "bg-blackSecondary border-1 border-blackSecondary text-grayPrimary hover:border-grayPrimary hover:text-whitePrimary"
             }`}
           >
@@ -49,7 +49,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
             onClick={() => toggleFilter("parking")}
             className={`p-2 rounded-full duration-150 cursor-pointer ${
               filters.parking
-                ? "bg-buttonPrimary text-whitePrimary border-1 border-buttonPrimary"
+                ? "bg-buttonPrimary border-1 border-buttonPrimary"
                 : "bg-blackSecondary border-1 border-blackSecondary text-grayPrimary hover:border-grayPrimary hover:text-whitePrimary"
             }`}
           >
@@ -65,7 +65,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
             onClick={() => toggleFilter("breakfast")}
             className={`p-2 rounded-full duration-150 cursor-pointer ${
               filters.breakfast
-                ? "bg-buttonPrimary text-whitePrimary border-1 border-buttonPrimary"
+                ? "bg-buttonPrimary border-1 border-buttonPrimary"
                 : "bg-blackSecondary border-1 border-blackSecondary text-grayPrimary hover:border-grayPrimary hover:text-whitePrimary"
             }`}
           >
@@ -80,7 +80,7 @@ function Filter({ sortBy, setSortBy, filters, toggleFilter }) {
             onClick={() => toggleFilter("pets")}
             className={`p-2 rounded-full duration-150 cursor-pointer ${
               filters.pets
-                ? "bg-buttonPrimary text-whitePrimary border-1 border-buttonPrimary"
+                ? "bg-buttonPrimary border-1 border-buttonPrimary"
                 : "bg-blackSecondary border-1 border-blackSecondary text-grayPrimary hover:border-grayPrimary hover:text-whitePrimary"
             }`}
           >

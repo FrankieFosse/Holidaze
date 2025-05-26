@@ -5,7 +5,7 @@ import VenueCard from "../components/VenueCard";
 import Filter from "../components/Filter";
 import Pagination from "../components/Pagination";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
-import LoadingSpinner from "../components/LoadingSpinner"; // ✅ Import the spinner
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Browse = () => {
   const [venues, setVenues] = useState([]);

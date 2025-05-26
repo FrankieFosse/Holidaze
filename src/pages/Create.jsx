@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
@@ -27,14 +27,12 @@ function Create({ handleVenueCreated }) {
   });
   const navigate = useNavigate();
 
-  const [showPreview, setShowPreview] = useState(false);
-
     useEffect(() => {
       document.title = "Create venue | Holidaze";
     }, []);  
 
   const [statusMessage, setStatusMessage] = useState(null);
-  const [statusType, setStatusType] = useState("error"); // 'error' or 'success'
+  const [statusType, setStatusType] = useState("error");
   const [invalidFields, setInvalidFields] = useState([]);
 
   const [showLocation, setShowLocation] = useState(false);
@@ -51,7 +49,6 @@ function Create({ handleVenueCreated }) {
     }
   }
   
-
   // Handle adding a new media field
   const handleAddMedia = () => {
     setMedia([...media, { url: "", alt: "" }]);
@@ -108,10 +105,10 @@ function Create({ handleVenueCreated }) {
     setStatusMessage(message);
     setStatusType(type);
 
-    // Clear status message after 3 seconds
+    // Clear status message
     setTimeout(() => {
       setStatusMessage(null);
-    }, 2100); // 3 seconds
+    }, 2100);
   };
 
   function validateVenueInputs() {
@@ -154,7 +151,6 @@ function Create({ handleVenueCreated }) {
       return { isValid: false };
     }
   
-    // Additional bounds validation
     if (priceValue < 0 || priceValue > 10000) {
       showStatusMessage("Price must be between 0 and 10,000 NOK.", "error");
       return { isValid: false };
@@ -228,7 +224,6 @@ function Create({ handleVenueCreated }) {
   
       showStatusMessage("Creating venue...", "loading");
   
-      // Let animation/rendering happen first
       requestAnimationFrame(() => {
         navigate("/profile");
         localStorage.removeItem("draftVenue");
@@ -457,9 +452,6 @@ function Create({ handleVenueCreated }) {
             Create Venue
           </button>
         </div>
-
-
-      
 
       </form>
     </div>

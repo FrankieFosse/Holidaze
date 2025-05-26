@@ -5,7 +5,7 @@ import Rating from "../components/Rating";
 import Description from "../components/Description";
 import { FaWifi } from "react-icons/fa";
 import { MdLocalParking, MdFreeBreakfast, MdOutlinePets } from "react-icons/md";
-import MediaViewer from "../components/MediaViewer";  // Importing MediaViewer
+import MediaViewer from "../components/MediaViewer";
 import BookingForm from "../components/BookingForm";
 import Return from "../components/Return";
 import Modal from "../components/Modal";
@@ -17,6 +17,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 
 
 const SingleVenue = () => {
+  const API_KEY = import.meta.env.VITE_API_KEY;
   const { id } = useParams();
   const [venue, setVenue] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,9 +29,8 @@ const SingleVenue = () => {
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [bookings, setBookings] = useState([]);
   const [userBooking, setUserBooking] = useState(null);
-  const [isAddingNewBooking, setIsAddingNewBooking] = useState(false); // New state for distinguishing the "Add Another Booking"
+  const [isAddingNewBooking, setIsAddingNewBooking] = useState(false);
 
-  // Assume current user is stored in localStorage
   const currentUser = localStorage.getItem("name");
   const token = localStorage.getItem("token");
 
@@ -52,7 +52,7 @@ const SingleVenue = () => {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-        "X-Noroff-API-Key": "178dd2f7-0bd8-4d9b-9ff9-78d8d5ac9bc9",
+        "X-Noroff-API-Key": API_KEY,
       },
     })
       .then((res) => {
@@ -61,7 +61,7 @@ const SingleVenue = () => {
         setStatusType("success");
         setTimeout(() => {
           navigate("/profile");
-        }, 1500); // Delay to let user see the message
+        }, 1500);
       })
       .catch((err) => {
         console.error(err);
@@ -95,9 +95,8 @@ const SingleVenue = () => {
     setSelectedImageIndex(newIndex);
   };
 
-  // Fallback image handler
   const handleImageError = (event) => {
-    event.target.src = "/images/NoImagePlaceholder.jpg"; // Use the fallback image
+    event.target.src = "/images/NoImagePlaceholder.jpg";
   };
 
   useEffect(() => {
@@ -107,7 +106,7 @@ const SingleVenue = () => {
         if (!response.ok) throw new Error("Failed to fetch venue");
         const json = await response.json();
         setVenue(json.data);
-        setBookings(json.data.bookings); // Save bookings here
+        setBookings(json.data.bookings);
 
         // Check if the current user already has a booking for this venue
         const userBooking = json.data.bookings.find(
@@ -202,7 +201,6 @@ const SingleVenue = () => {
           </div>
         </div>
 
-        {/* Display other venue details like max guests, amenities, etc. */}
         <div className="flex flex-col justify-center items-center">
           <p>Max Guests</p>
           <div className="border-1 border-grayPrimary rounded-full min-w-16 min-h-16 p-2 flex items-center justify-center">{venue.maxGuests}</div>
@@ -243,9 +241,6 @@ const SingleVenue = () => {
         </div>
       )}
 
-
-
-
       {/* Booked Dates Overview */}
       {isOwner && bookings.length > 0 && (
         <div className="border-1 border-blackSecondary mx-2 my-4 p-4 col-span-1 md:col-span-3 justify-center items-center flex flex-col lg:text-lg">
@@ -262,7 +257,7 @@ const SingleVenue = () => {
             } gap-2`}
           >
         {bookings
-          .filter((booking) => new Date(booking.dateTo) >= new Date()) // Only future or ongoing bookings
+          .filter((booking) => new Date(booking.dateTo) >= new Date())
           .sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom))
           .map((booking) => (
             <li key={booking.id}>
@@ -328,7 +323,7 @@ const SingleVenue = () => {
             venueName={venue.name}
             price={venue.price}
             maxGuests={venue.maxGuests}
-            isAddingNewBooking={isAddingNewBooking}  // Pass the flag to BookingForm
+            isAddingNewBooking={isAddingNewBooking}
             onClose={() => setShowBookingForm(false)}
             excludedBookings={bookings}
           />

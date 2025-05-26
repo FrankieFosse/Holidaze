@@ -20,7 +20,7 @@ function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10); // Change threshold as needed
+      setScrolled(window.scrollY > 10);
     };
   
     window.addEventListener("scroll", handleScroll);
@@ -109,7 +109,7 @@ function Header() {
       <StatusMessage message={message} type={messageType} />
 
       <Modal isOpen={showVenueModal} onClose={handleCloseModal}>
-        <div className="flex flex-col items-center gap-4 text-whitePrimary p-6">
+        <div className="flex flex-col items-center gap-4 p-6">
           <h2 className="text-lg font-semibold">Become a Venue Manager?</h2>
           <p>This will let you create and manage venues.</p>
           <div className="flex gap-4 mt-4">
@@ -145,7 +145,7 @@ function Header() {
           />
         </Link>
 
-        {/* Centered nav links */}
+        {/* Nav links */}
         <div className="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 gap-6">
           <Link to="/" className="nav-link"><FaHome size={20} /> Home</Link>
           <Link to="/browse" className="nav-link"><MdExplore size={20} /> Browse</Link>
@@ -155,19 +155,19 @@ function Header() {
         </div>
 
 
-        {/* Right-aligned user profile */}
+        {/* User profile */}
         {isLoggedIn && (
           <Link
             to={`/profile/`}
             className="ml-auto flex items-center gap-3 px-3 py-2 rounded-lg mr-10 transition-colors duration-150"
           >
-            <p className="text-whitePrimary font-thin text-xs xl:text-sm hidden sm:block">{userName}</p>
+            <p className="font-thin text-xs xl:text-sm hidden sm:block">{userName}</p>
             <img src={avatarUrl} alt="User avatar" className="w-10 h-10 rounded-full object-cover" />
           </Link>
         )}
       </div>
 
-      {/* Mobile / Burger Navbar */}
+      {/* Mobile Navbar */}
       <Navbar />
     </header>
   );

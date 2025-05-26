@@ -71,7 +71,7 @@ function Navbar() {
   };
 
   const handleCreateClick = () => {
-    setIsOpen(false); // Close the Navbar first
+    setIsOpen(false);
   
     if (isVenueManager) {
       navigate("/create");
@@ -127,7 +127,7 @@ function Navbar() {
       <StatusMessage message={message} type={messageType} />
 
       <Modal isOpen={showVenueModal} onClose={handleCloseModal}>
-        <div className="flex flex-col items-center gap-4 text-whitePrimary p-6">
+        <div className="flex flex-col items-center gap-4 p-6">
           <h2 className="text-lg font-semibold">Become a Venue Manager?</h2>
           <p>This will let you create and manage venues.</p>
           <div className="flex gap-4 mt-4">

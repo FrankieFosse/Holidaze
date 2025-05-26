@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import VenueCard from './VenueCard';
 import Pagination from './Pagination';
-import LoadingSpinner from './LoadingSpinner'; // <-- Import it here
+import LoadingSpinner from './LoadingSpinner';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -53,7 +53,7 @@ function VenuesByProfile() {
   }, [page, limit]);
 
   if (loading) {
-    return <LoadingSpinner />; // <-- Updated line
+    return <LoadingSpinner />;
   }
 
   if (error) {

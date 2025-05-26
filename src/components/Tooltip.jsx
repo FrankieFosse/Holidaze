@@ -8,7 +8,7 @@ const Tooltip = ({ children, text }) => {
   const showTooltip = () => {
     timeoutRef.current = setTimeout(() => {
       setVisible(true);
-    }, 300); // 1 second delay
+    }, 300);
     setShouldShow(true);
   };
 
@@ -29,7 +29,7 @@ const Tooltip = ({ children, text }) => {
       onMouseLeave={hideTooltip}
       onFocus={showTooltip}
       onBlur={hideTooltip}
-      onClick={() => setVisible((v) => !v)} // still toggle on mobile/tap
+      onClick={() => setVisible((v) => !v)}
       tabIndex={0}
       style={{ outline: "none" }}
     >

@@ -38,7 +38,6 @@ export default function StatusMessage({ message, type }) {
           className={`fixed inset-0 z-90 flex pointer-events-none ${containerPositionClass}`}
 
         >
-          {/* Conditionally render blur if loading */}
           {type === "loading" && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -49,7 +48,6 @@ export default function StatusMessage({ message, type }) {
             />
           )}
 
-          {/* Animated Message */}
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}

@@ -1,7 +1,7 @@
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 
 function Pagination({ page, totalPages, setPage }) {
-  if (totalPages <= 1) return null; // Hide pagination if only one page
+  if (totalPages <= 1) return null;
 
   return (
     <div className="pagination-controls flex flex-row justify-center items-center mb-2 py-2 gap-8 bg-blackBackground/25">
